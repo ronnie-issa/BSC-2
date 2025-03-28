@@ -1,26 +1,67 @@
 
 import { useEffect, useRef } from 'react';
 import { ArrowDown } from 'lucide-react';
-import { useGSAP, useSplitTextReveal, useParallax } from '@/lib/gsap';
+import { useGSAP } from '@/lib/gsap';
 
 const HeroSection = () => {
   const { gsap } = useGSAP();
   const heroRef = useRef<HTMLDivElement>(null);
-  const headingRef = useSplitTextReveal('.animate-heading', { y: 100, stagger: 0.02 });
-  const subHeadingRef = useGSAPReveal({ y: 20, delay: 0.5 });
-  const bgImageRef = useParallax({ speed: 0.1 });
+  const headingRef = useRef<HTMLHeadingElement>(null);
+  const subHeadingRef = useRef<HTMLParagraphElement>(null);
+  const bgImageRef = useRef<HTMLDivElement>(null);
   const arrowRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (!arrowRef.current) return;
+    const ctx = gsap.context(() => {
+      // Split text animation for heading
+      if (headingRef.current) {
+        const spans = headingRef.current.querySelectorAll('.animate-heading');
+        gsap.from(spans, {
+          y: 100,
+          opacity: 0,
+          stagger: 0.02,
+          duration: 0.8,
+          ease: "power2.out",
+        });
+      }
 
-    gsap.to(arrowRef.current, {
-      y: 10,
-      repeat: -1,
-      yoyo: true,
-      duration: 1.5,
-      ease: "power1.inOut",
-    });
+      // Fade in subheading
+      if (subHeadingRef.current) {
+        gsap.from(subHeadingRef.current, {
+          y: 20,
+          opacity: 0,
+          duration: 0.8,
+          delay: 0.5,
+          ease: "power2.out",
+        });
+      }
+
+      // Parallax effect for background
+      if (bgImageRef.current) {
+        gsap.to(bgImageRef.current, {
+          y: 100,
+          scrollTrigger: {
+            trigger: heroRef.current,
+            start: "top top",
+            end: "bottom top",
+            scrub: 0.1,
+          }
+        });
+      }
+
+      // Arrow bounce animation
+      if (arrowRef.current) {
+        gsap.to(arrowRef.current, {
+          y: 10,
+          repeat: -1,
+          yoyo: true,
+          duration: 1.5,
+          ease: "power1.inOut",
+        });
+      }
+    }, heroRef);
+
+    return () => ctx.revert();
   }, [gsap]);
 
   return (
@@ -78,51 +119,6 @@ const HeroSection = () => {
       </div>
     </section>
   );
-};
-
-const useGSAPReveal = (
-  options?: {
-    delay?: number;
-    y?: number;
-    opacity?: number;
-    duration?: number;
-  }
-) => {
-  const ref = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const element = ref.current;
-    
-    if (!element) return;
-
-    const defaults = {
-      delay: 0,
-      y: 50,
-      opacity: 0,
-      duration: 0.8,
-    };
-
-    const mergedOptions = { ...defaults, ...options };
-    
-    const { gsap } = useGSAP();
-    
-    gsap.fromTo(
-      element,
-      {
-        y: mergedOptions.y,
-        opacity: mergedOptions.opacity,
-      },
-      {
-        y: 0,
-        opacity: 1,
-        duration: mergedOptions.duration,
-        delay: mergedOptions.delay,
-        ease: "power2.out",
-      }
-    );
-  }, [options]);
-
-  return ref;
 };
 
 export default HeroSection;

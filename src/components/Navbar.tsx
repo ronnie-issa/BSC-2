@@ -38,10 +38,11 @@ const Navbar = () => {
 
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center space-x-8">
-          <NavLink href="#about">ABOUT</NavLink>
-          <NavLink href="#collection">COLLECTION</NavLink>
+          <NavLink to="/about">ABOUT</NavLink>
+          <NavLink to="/collections">COLLECTIONS</NavLink>
           <NavLink to="/shop">SHOP</NavLink>
-          <NavLink href="#contact">CONTACT</NavLink>
+          <NavLink to="/help">HELP</NavLink>
+          <NavLink to="/legal">LEGAL</NavLink>
         </nav>
 
         {/* Mobile Menu Button */}
@@ -61,10 +62,11 @@ const Navbar = () => {
           )}
         >
           <nav className="flex flex-col items-center space-y-8 text-2xl">
-            <MobileNavLink href="#about" onClick={toggleMenu}>ABOUT</MobileNavLink>
-            <MobileNavLink href="#collection" onClick={toggleMenu}>COLLECTION</MobileNavLink>
+            <MobileNavLink to="/about" onClick={toggleMenu}>ABOUT</MobileNavLink>
+            <MobileNavLink to="/collections" onClick={toggleMenu}>COLLECTIONS</MobileNavLink>
             <MobileNavLink to="/shop" onClick={toggleMenu}>SHOP</MobileNavLink>
-            <MobileNavLink href="#contact" onClick={toggleMenu}>CONTACT</MobileNavLink>
+            <MobileNavLink to="/help" onClick={toggleMenu}>HELP</MobileNavLink>
+            <MobileNavLink to="/legal" onClick={toggleMenu}>LEGAL</MobileNavLink>
           </nav>
         </div>
       </div>
@@ -72,49 +74,26 @@ const Navbar = () => {
   );
 };
 
-const NavLink = ({ href, to, children }: { href?: string; to?: string; children: React.ReactNode }) => {
-  if (to) {
-    return (
-      <Link 
-        to={to} 
-        className="text-omnis-white text-sm tracking-wider font-medium hover:text-gray-300 transition-colors relative after:absolute after:bottom-0 after:left-0 after:w-full after:h-[1px] after:bg-omnis-white after:origin-bottom-right after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-300 hover:after:origin-bottom-left"
-      >
-        {children}
-      </Link>
-    );
-  }
-  
+const NavLink = ({ to, children }: { to: string; children: React.ReactNode }) => {
   return (
-    <a 
-      href={href} 
+    <Link 
+      to={to} 
       className="text-omnis-white text-sm tracking-wider font-medium hover:text-gray-300 transition-colors relative after:absolute after:bottom-0 after:left-0 after:w-full after:h-[1px] after:bg-omnis-white after:origin-bottom-right after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-300 hover:after:origin-bottom-left"
     >
       {children}
-    </a>
+    </Link>
   );
 };
 
-const MobileNavLink = ({ href, to, onClick, children }: { href?: string; to?: string; onClick: () => void; children: React.ReactNode }) => {
-  if (to) {
-    return (
-      <Link 
-        to={to} 
-        className="text-omnis-white tracking-widest font-medium"
-        onClick={onClick}
-      >
-        {children}
-      </Link>
-    );
-  }
-  
+const MobileNavLink = ({ to, onClick, children }: { to: string; onClick: () => void; children: React.ReactNode }) => {
   return (
-    <a 
-      href={href} 
+    <Link 
+      to={to} 
       className="text-omnis-white tracking-widest font-medium"
       onClick={onClick}
     >
       {children}
-    </a>
+    </Link>
   );
 };
 

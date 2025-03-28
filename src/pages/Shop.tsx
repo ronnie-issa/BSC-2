@@ -148,22 +148,14 @@ const Shop = () => {
     const loadGSAP = async () => {
       try {
         const gsapModule = await import('@/lib/gsap');
-        const { ScrollTrigger } = await import('gsap/ScrollTrigger');
         
-        gsapModule.gsap.registerPlugin(ScrollTrigger);
-        
-        // Animation for products
-        if (productsGridRef.current) {
+        if (productsGridRef.current && gsapModule.gsap) {
           gsapModule.gsap.from(productsGridRef.current.children, {
             opacity: 0,
             y: 50,
             duration: 0.8,
             stagger: 0.1,
-            scrollTrigger: {
-              trigger: productsGridRef.current,
-              start: "top bottom-=100",
-              toggleActions: "play none none none"
-            }
+            ease: "power3.out"
           });
         }
         
@@ -500,8 +492,7 @@ const Shop = () => {
                     key={size} 
                     value={size} 
                     className="border-omnis-gray data-[state=on]:bg-omnis-white data-[state=on]:text-omnis-black"
-                    pressed={selectedSizes.includes(size)}
-                    onPressedChange={() => toggleSize(size)}
+                    onClick={() => toggleSize(size)}
                   >
                     {size}
                   </ToggleGroupItem>

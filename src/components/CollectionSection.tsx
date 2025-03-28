@@ -1,6 +1,7 @@
 
 import { useEffect, useRef, useState } from 'react';
-import { useGSAP, useGSAPReveal, useImageReveal } from '@/lib/gsap';
+import { Link } from 'react-router-dom';
+import { useGSAP } from '@/lib/gsap';
 
 const products = [
   {
@@ -31,17 +32,28 @@ const products = [
 
 const CollectionSection = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
-  const titleRef = useGSAPReveal({ y: 50 });
-  const { gsap, ScrollTrigger } = useGSAP();
+  const titleRef = useRef<HTMLDivElement>(null);
+  const { gsap } = useGSAP();
   const [activeProduct, setActiveProduct] = useState(0);
   
   useEffect(() => {
-    if (!sectionRef.current) return;
+    if (!sectionRef.current || !titleRef.current) return;
 
     const section = sectionRef.current;
     const cards = section.querySelectorAll('.product-card');
     
     let ctx = gsap.context(() => {
+      // Title animation
+      gsap.from(titleRef.current, {
+        y: 50,
+        opacity: 0,
+        duration: 0.8,
+        scrollTrigger: {
+          trigger: section,
+          start: "top 80%",
+        }
+      });
+      
       // Create a timeline for each card with scroll trigger
       cards.forEach((card, index) => {
         gsap.fromTo(
@@ -66,7 +78,7 @@ const CollectionSection = () => {
     });
 
     return () => ctx.revert();
-  }, [gsap, ScrollTrigger]);
+  }, [gsap]);
 
   // Automatically rotate through products
   useEffect(() => {
@@ -101,12 +113,12 @@ const CollectionSection = () => {
         </div>
 
         <div className="text-center mt-16">
-          <a 
-            href="#shop" 
+          <Link 
+            to="/collections" 
             className="inline-block border border-omnis-white px-8 py-4 text-sm font-medium tracking-widest hover:bg-omnis-white hover:text-omnis-black transition-all duration-300"
           >
             VIEW ALL
-          </a>
+          </Link>
         </div>
       </div>
     </section>
