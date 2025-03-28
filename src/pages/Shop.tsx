@@ -1,566 +1,619 @@
-import { useEffect, useState, useRef } from 'react';
-import { Filter, Search, X } from 'lucide-react';
+
+import { useState, useEffect, useRef } from 'react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
+import { useGSAP } from '@/lib/gsap';
+import { Search, X, ChevronDown, SlidersHorizontal } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { Separator } from '@/components/ui/separator';
 import { Checkbox } from '@/components/ui/checkbox';
-import { 
-  Collapsible, 
-  CollapsibleContent, 
-  CollapsibleTrigger 
-} from '@/components/ui/collapsible';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
-  ToggleGroup,
-  ToggleGroupItem,
-} from "@/components/ui/toggle-group";
-import { 
-  Pagination, 
-  PaginationContent, 
-  PaginationItem, 
-  PaginationLink, 
-  PaginationNext, 
-  PaginationPrevious 
-} from '@/components/ui/pagination';
+import { Slider } from '@/components/ui/slider';
+import { cn } from '@/lib/utils';
 
-// Product type definition
-type Product = {
-  id: number;
-  name: string;
-  price: number;
-  category: string;
-  color: string;
-  size: string[];
-  image: string;
-  isNew: boolean;
-};
+// Define product categories
+const categories = ["All", "Jackets", "Hoodies", "T-Shirts", "Pants", "Accessories"];
 
-// Sample product data
-const products: Product[] = [
+// Define product colors
+const colors = [
+  { name: "Black", value: "black" },
+  { name: "White", value: "white" },
+  { name: "Gray", value: "gray" },
+  { name: "Navy", value: "navy" },
+  { name: "Olive", value: "olive" }
+];
+
+// Define product sizes
+const sizes = ["XS", "S", "M", "L", "XL", "XXL"];
+
+// Define sorting options
+const sortOptions = [
+  { name: "Newest", value: "newest" },
+  { name: "Price: Low to High", value: "price-asc" },
+  { name: "Price: High to Low", value: "price-desc" },
+  { name: "Name: A-Z", value: "name-asc" },
+  { name: "Name: Z-A", value: "name-desc" }
+];
+
+// Sample products data
+const products = [
   {
     id: 1,
-    name: "VOID HOODIE",
-    price: 160,
-    category: "Hoodies",
-    color: "Black",
+    name: "ZENITH JACKET",
+    price: 450,
+    category: "Jackets",
+    color: "black",
     size: ["S", "M", "L", "XL"],
-    image: "/placeholder.svg",
-    isNew: true
+    image: "https://images.unsplash.com/photo-1591047139829-d91aecb6caea?q=80&w=1036&auto=format&fit=crop&ixlib=rb-4.0.3"
   },
   {
     id: 2,
-    name: "ECLIPSE T-SHIRT",
-    price: 90,
-    category: "T-Shirts",
-    color: "Black",
-    size: ["S", "M", "L", "XL"],
-    image: "/placeholder.svg",
-    isNew: false
+    name: "VOID HOODIE",
+    price: 280,
+    category: "Hoodies",
+    color: "gray",
+    size: ["XS", "S", "M", "L", "XL"],
+    image: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?q=80&w=1480&auto=format&fit=crop&ixlib=rb-4.0.3"
   },
   {
     id: 3,
-    name: "ONYX JOGGERS",
-    price: 130,
+    name: "ECLIPSE PANTS",
+    price: 320,
     category: "Pants",
-    color: "Black",
+    color: "navy",
     size: ["S", "M", "L", "XL"],
-    image: "/placeholder.svg",
-    isNew: true
+    image: "https://images.unsplash.com/photo-1603252109303-2751441dd157?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.0.3"
   },
   {
     id: 4,
-    name: "GHOST JACKET",
-    price: 220,
-    category: "Jackets",
-    color: "White",
-    size: ["S", "M", "L", "XL"],
-    image: "/placeholder.svg",
-    isNew: false
+    name: "SHADOW TEE",
+    price: 180,
+    category: "T-Shirts",
+    color: "black",
+    size: ["XS", "S", "M", "L", "XL", "XXL"],
+    image: "https://images.unsplash.com/photo-1576566588028-4147f3842f27?q=80&w=1064&auto=format&fit=crop&ixlib=rb-4.0.3"
   },
   {
     id: 5,
-    name: "SHADOW CAP",
-    price: 80,
-    category: "Accessories",
-    color: "Black",
-    size: ["One Size"],
-    image: "/placeholder.svg",
-    isNew: false
+    name: "MONOLITH SWEATER",
+    price: 320,
+    category: "Hoodies",
+    color: "gray",
+    size: ["S", "M", "L"],
+    image: "https://images.unsplash.com/photo-1578587018452-892bacefd3f2?q=80&w=1287&auto=format&fit=crop&ixlib=rb-4.0.3"
   },
   {
     id: 6,
-    name: "MONOLITH SWEATER",
-    price: 150,
-    category: "Sweaters",
-    color: "Gray",
-    size: ["S", "M", "L", "XL"],
-    image: "/placeholder.svg",
-    isNew: true
+    name: "ORIGIN TOTE",
+    price: 160,
+    category: "Accessories",
+    color: "black",
+    size: ["ONE SIZE"],
+    image: "https://images.unsplash.com/photo-1622560480605-d83c853bc5c3?q=80&w=1964&auto=format&fit=crop&ixlib=rb-4.0.3"
   },
   {
     id: 7,
-    name: "ORIGIN TOTE",
-    price: 95,
-    category: "Accessories",
-    color: "Black",
-    size: ["One Size"],
-    image: "/placeholder.svg",
-    isNew: false
+    name: "GHOST JACKET",
+    price: 380,
+    category: "Jackets",
+    color: "white",
+    size: ["S", "M", "L", "XL"],
+    image: "https://images.unsplash.com/photo-1591369822096-ffd140ec948f?q=80&w=1287&auto=format&fit=crop&ixlib=rb-4.0.3"
   },
   {
     id: 8,
-    name: "ETHER LONG SLEEVE",
-    price: 110,
+    name: "ETHER TEE",
+    price: 140,
     category: "T-Shirts",
-    color: "White",
-    size: ["S", "M", "L", "XL"],
-    image: "/placeholder.svg",
-    isNew: true
+    color: "white",
+    size: ["XS", "S", "M", "L", "XL"],
+    image: "https://images.unsplash.com/photo-1583744946564-b52ac1c389c8?q=80&w=1287&auto=format&fit=crop&ixlib=rb-4.0.3"
   }
 ];
 
-// Filter categories
-const categories = ["All", "Hoodies", "T-Shirts", "Pants", "Jackets", "Sweaters", "Accessories"];
-const colors = ["All", "Black", "White", "Gray"];
-const sizes = ["S", "M", "L", "XL", "One Size"];
-
 const Shop = () => {
-  const [filteredProducts, setFilteredProducts] = useState<Product[]>(products);
-  const [searchQuery, setSearchQuery] = useState("");
+  // State for filters
   const [selectedCategory, setSelectedCategory] = useState("All");
-  const [selectedColors, setSelectedColors] = useState<string[]>(["All"]);
+  const [selectedColors, setSelectedColors] = useState<string[]>([]);
   const [selectedSizes, setSelectedSizes] = useState<string[]>([]);
-  const [sortBy, setSortBy] = useState("featured");
-  const [isFilterOpen, setIsFilterOpen] = useState(false);
-
-  // Reference for GSAP animations
-  const productsGridRef = useRef<HTMLDivElement>(null);
-
+  const [priceRange, setPriceRange] = useState([0, 600]);
+  const [sortBy, setSortBy] = useState("newest");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
+  
+  // Refs for animations
+  const shopRef = useRef<HTMLDivElement>(null);
+  const { gsap } = useGSAP();
+  
+  // State for filtered products
+  const [filteredProducts, setFilteredProducts] = useState(products);
+  
+  // Apply filters and sorting
   useEffect(() => {
-    // Dynamically import GSAP and its plugins to avoid SSR issues
-    const loadGSAP = async () => {
-      try {
-        const gsapModule = await import('@/lib/gsap');
-        
-        if (productsGridRef.current && gsapModule.gsap) {
-          gsapModule.gsap.from(productsGridRef.current.children, {
-            opacity: 0,
-            y: 50,
-            duration: 0.8,
-            stagger: 0.1,
-            ease: "power3.out"
-          });
-        }
-        
-        console.log('GSAP loaded successfully for Shop page');
-      } catch (error) {
-        console.error('Failed to load GSAP:', error);
-      }
-    };
+    let result = [...products];
     
-    loadGSAP();
-  }, [filteredProducts]); // Re-run when filtered products change
-
-  // Apply filters
-  useEffect(() => {
-    let results = [...products];
-    
-    // Search filter
-    if (searchQuery) {
-      results = results.filter(product => 
-        product.name.toLowerCase().includes(searchQuery.toLowerCase())
-      );
-    }
-    
-    // Category filter
+    // Filter by category
     if (selectedCategory !== "All") {
-      results = results.filter(product => product.category === selectedCategory);
+      result = result.filter(product => product.category === selectedCategory);
     }
     
-    // Color filter
-    if (selectedColors.length && !selectedColors.includes("All")) {
-      results = results.filter(product => selectedColors.includes(product.color));
+    // Filter by color
+    if (selectedColors.length > 0) {
+      result = result.filter(product => selectedColors.includes(product.color));
     }
     
-    // Size filter
-    if (selectedSizes.length) {
-      results = results.filter(product => 
+    // Filter by size
+    if (selectedSizes.length > 0) {
+      result = result.filter(product => 
         product.size.some(size => selectedSizes.includes(size))
       );
     }
     
-    // Sorting
-    switch (sortBy) {
-      case "price-low":
-        results.sort((a, b) => a.price - b.price);
+    // Filter by price range
+    result = result.filter(product => 
+      product.price >= priceRange[0] && product.price <= priceRange[1]
+    );
+    
+    // Filter by search query
+    if (searchQuery) {
+      const query = searchQuery.toLowerCase();
+      result = result.filter(product => 
+        product.name.toLowerCase().includes(query) || 
+        product.category.toLowerCase().includes(query)
+      );
+    }
+    
+    // Apply sorting
+    switch(sortBy) {
+      case "price-asc":
+        result.sort((a, b) => a.price - b.price);
         break;
-      case "price-high":
-        results.sort((a, b) => b.price - a.price);
+      case "price-desc":
+        result.sort((a, b) => b.price - a.price);
+        break;
+      case "name-asc":
+        result.sort((a, b) => a.name.localeCompare(b.name));
+        break;
+      case "name-desc":
+        result.sort((a, b) => b.name.localeCompare(a.name));
         break;
       case "newest":
-        results.sort((a, b) => (b.isNew === a.isNew) ? 0 : b.isNew ? 1 : -1);
-        break;
-      default: // featured or any other case
-        // Keep original order
+      default:
+        // For simplicity, we'll consider the order in the array as "newest"
         break;
     }
     
-    setFilteredProducts(results);
-  }, [searchQuery, selectedCategory, selectedColors, selectedSizes, sortBy]);
-
-  // Toggle a color in the selection
+    setFilteredProducts(result);
+  }, [selectedCategory, selectedColors, selectedSizes, priceRange, sortBy, searchQuery]);
+  
+  // Animation for products
+  useEffect(() => {
+    if (!shopRef.current) return;
+    
+    const ctx = gsap.context(() => {
+      // Header animation
+      gsap.from('.shop-header', {
+        y: 30,
+        opacity: 0,
+        duration: 0.8,
+        ease: "power2.out"
+      });
+      
+      // Products animation
+      gsap.from('.product-card', {
+        y: 50,
+        opacity: 0,
+        stagger: 0.1,
+        duration: 0.6,
+        ease: "power2.out",
+        delay: 0.3
+      });
+    }, shopRef);
+    
+    return () => ctx.revert();
+  }, [filteredProducts]);
+  
+  // Toggle color selection
   const toggleColor = (color: string) => {
-    if (color === "All") {
-      setSelectedColors(["All"]);
-      return;
-    }
-    
-    let newColors = [...selectedColors];
-    
-    // Remove "All" if it's there
-    newColors = newColors.filter(c => c !== "All");
-    
-    if (newColors.includes(color)) {
-      newColors = newColors.filter(c => c !== color);
-    } else {
-      newColors.push(color);
-    }
-    
-    // If empty, add "All" back
-    if (newColors.length === 0) {
-      newColors = ["All"];
-    }
-    
-    setSelectedColors(newColors);
+    setSelectedColors(prev => 
+      prev.includes(color)
+        ? prev.filter(c => c !== color)
+        : [...prev, color]
+    );
   };
-
-  // Toggle a size in the selection
+  
+  // Toggle size selection
   const toggleSize = (size: string) => {
     setSelectedSizes(prev => 
-      prev.includes(size) 
-        ? prev.filter(s => s !== size) 
+      prev.includes(size)
+        ? prev.filter(s => s !== size)
         : [...prev, size]
     );
   };
-
+  
   // Reset all filters
   const resetFilters = () => {
-    setSearchQuery("");
     setSelectedCategory("All");
-    setSelectedColors(["All"]);
+    setSelectedColors([]);
     setSelectedSizes([]);
-    setSortBy("featured");
+    setPriceRange([0, 600]);
+    setSearchQuery("");
+    setSortBy("newest");
   };
 
   return (
-    <div className="relative bg-omnis-black text-omnis-white min-h-screen">
+    <div className="relative bg-omnis-black text-omnis-white min-h-screen" ref={shopRef}>
       <Navbar />
       
-      <main className="pt-32 pb-20 px-6 md:px-8 lg:px-12 max-w-7xl mx-auto">
-        <header className="mb-10">
-          <h1 className="text-4xl md:text-5xl font-heading font-bold tracking-wider mb-4">SHOP</h1>
-          <p className="text-omnis-lightgray max-w-2xl">
-            Explore our collection of premium streetwear essentials. Each piece is crafted with meticulous attention to detail and quality materials.
-          </p>
-        </header>
-        
-        {/* Mobile Filter Button */}
-        <div className="lg:hidden flex justify-between items-center mb-6">
-          <Button 
-            variant="outline" 
-            className="border-omnis-gray text-omnis-white flex items-center gap-2"
-            onClick={() => setIsFilterOpen(!isFilterOpen)}
-          >
-            <Filter size={16} />
-            Filters
-          </Button>
+      <main className="pt-32 pb-20">
+        <div className="container mx-auto px-6">
+          <header className="shop-header text-center mb-16">
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 uppercase tracking-tight">SHOP</h1>
+            <div className="w-20 h-0.5 bg-omnis-white mx-auto mb-8"></div>
+            <p className="text-omnis-lightgray max-w-2xl mx-auto">
+              Browse our collection of premium streetwear essentials. Each piece is crafted with meticulous attention to detail, ensuring unparalleled quality and distinctive style.
+            </p>
+          </header>
           
-          <div className="flex items-center">
-            <Select value={sortBy} onValueChange={setSortBy}>
-              <SelectTrigger className="w-[180px] border-omnis-gray bg-omnis-darkgray">
-                <SelectValue placeholder="Sort by" />
-              </SelectTrigger>
-              <SelectContent className="bg-omnis-darkgray border-omnis-gray">
-                <SelectItem value="featured">Featured</SelectItem>
-                <SelectItem value="newest">Newest</SelectItem>
-                <SelectItem value="price-low">Price: Low to High</SelectItem>
-                <SelectItem value="price-high">Price: High to Low</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-        </div>
-        
-        {/* Mobile Filters Drawer */}
-        <Collapsible
-          open={isFilterOpen}
-          onOpenChange={setIsFilterOpen}
-          className="lg:hidden mb-8 bg-omnis-darkgray border border-omnis-gray rounded-md overflow-hidden"
-        >
-          <CollapsibleContent className="p-4">
-            <div className="flex justify-between items-center mb-4">
-              <h3 className="font-heading font-semibold text-lg">Filters</h3>
-              <Button variant="ghost" size="sm" onClick={() => setIsFilterOpen(false)}>
-                <X size={18} />
-              </Button>
-            </div>
+          {/* Mobile Filters Button */}
+          <div className="md:hidden mb-6 flex justify-between items-center">
+            <Button 
+              variant="outline" 
+              className="border-omnis-gray/30 text-omnis-white"
+              onClick={() => setMobileFiltersOpen(true)}
+            >
+              <SlidersHorizontal size={16} className="mr-2" />
+              Filters
+            </Button>
             
-            <div className="space-y-6">
-              {/* Search */}
-              <div>
-                <h4 className="text-sm font-medium mb-2">Search</h4>
-                <div className="relative">
-                  <Search className="absolute left-2 top-1/2 -translate-y-1/2 h-4 w-4 text-omnis-lightgray" />
-                  <Input
-                    type="text"
-                    placeholder="Search products..."
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className="pl-8 bg-omnis-black border-omnis-gray"
+            <div className="flex items-center space-x-2">
+              <span className="text-sm text-omnis-lightgray">Sort:</span>
+              <select
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value)}
+                className="bg-transparent border border-omnis-gray/30 text-omnis-white text-sm p-2 focus:outline-none focus:border-omnis-white"
+              >
+                {sortOptions.map((option) => (
+                  <option 
+                    key={option.value} 
+                    value={option.value}
+                    className="bg-omnis-black"
+                  >
+                    {option.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+          
+          {/* Mobile Filters Drawer */}
+          <div 
+            className={cn(
+              "fixed inset-0 bg-omnis-black z-50 md:hidden transition-transform duration-300",
+              mobileFiltersOpen ? "translate-x-0" : "translate-x-full"
+            )}
+          >
+            <div className="h-full overflow-y-auto p-6">
+              <div className="flex justify-between items-center mb-8">
+                <h2 className="text-xl font-bold">Filters</h2>
+                <Button 
+                  variant="ghost" 
+                  className="p-1 text-omnis-white hover:bg-transparent"
+                  onClick={() => setMobileFiltersOpen(false)}
+                >
+                  <X size={24} />
+                </Button>
+              </div>
+              
+              {/* Mobile Filters Content */}
+              <div className="space-y-8">
+                {/* Search */}
+                <div>
+                  <h3 className="text-lg font-medium mb-4">Search</h3>
+                  <div className="relative">
+                    <input
+                      type="text"
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      placeholder="Search products..."
+                      className="w-full px-4 py-3 bg-transparent border border-omnis-gray/30 focus:border-omnis-white focus:outline-none text-omnis-white pr-10"
+                    />
+                    <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 text-omnis-lightgray" size={18} />
+                  </div>
+                </div>
+                
+                {/* Categories */}
+                <div>
+                  <h3 className="text-lg font-medium mb-4">Categories</h3>
+                  <div className="space-y-2">
+                    {categories.map((category) => (
+                      <div key={category} className="flex items-center">
+                        <button
+                          onClick={() => setSelectedCategory(category)}
+                          className={cn(
+                            "text-sm py-1",
+                            selectedCategory === category 
+                              ? "text-omnis-white font-medium" 
+                              : "text-omnis-lightgray"
+                          )}
+                        >
+                          {category}
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                
+                {/* Colors */}
+                <div>
+                  <h3 className="text-lg font-medium mb-4">Colors</h3>
+                  <div className="space-y-2">
+                    {colors.map((color) => (
+                      <div key={color.value} className="flex items-center">
+                        <Checkbox
+                          id={`mobile-color-${color.value}`}
+                          checked={selectedColors.includes(color.value)}
+                          onCheckedChange={() => toggleColor(color.value)}
+                          className="border-omnis-gray/30"
+                        />
+                        <label
+                          htmlFor={`mobile-color-${color.value}`}
+                          className="ml-2 text-sm text-omnis-lightgray"
+                        >
+                          {color.name}
+                        </label>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                
+                {/* Sizes */}
+                <div>
+                  <h3 className="text-lg font-medium mb-4">Sizes</h3>
+                  <div className="flex flex-wrap gap-2">
+                    {sizes.map((size) => (
+                      <button
+                        key={size}
+                        onClick={() => toggleSize(size)}
+                        className={cn(
+                          "min-w-[40px] h-10 px-3 text-sm border",
+                          selectedSizes.includes(size)
+                            ? "border-omnis-white text-omnis-white bg-omnis-black"
+                            : "border-omnis-gray/30 text-omnis-lightgray"
+                        )}
+                      >
+                        {size}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+                
+                {/* Price Range */}
+                <div>
+                  <h3 className="text-lg font-medium mb-4">Price Range</h3>
+                  <Slider
+                    defaultValue={priceRange}
+                    min={0}
+                    max={600}
+                    step={10}
+                    onValueChange={setPriceRange}
+                    className="mb-4"
                   />
+                  <div className="flex justify-between text-sm text-omnis-lightgray">
+                    <span>${priceRange[0]}</span>
+                    <span>${priceRange[1]}</span>
+                  </div>
+                </div>
+                
+                {/* Actions */}
+                <div className="pt-4 space-y-4">
+                  <Button 
+                    variant="outline" 
+                    className="w-full border-omnis-white text-omnis-white"
+                    onClick={() => {
+                      resetFilters();
+                      setMobileFiltersOpen(false);
+                    }}
+                  >
+                    Reset Filters
+                  </Button>
+                  <Button 
+                    className="w-full bg-omnis-white text-omnis-black hover:bg-omnis-lightgray"
+                    onClick={() => setMobileFiltersOpen(false)}
+                  >
+                    Apply Filters
+                  </Button>
                 </div>
               </div>
+            </div>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+            {/* Desktop Sidebar Filters */}
+            <div className="hidden md:block space-y-8">
+              {/* Search */}
+              <div>
+                <h3 className="text-lg font-medium mb-4">Search</h3>
+                <div className="relative">
+                  <input
+                    type="text"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder="Search products..."
+                    className="w-full px-4 py-3 bg-transparent border border-omnis-gray/30 focus:border-omnis-white focus:outline-none text-omnis-white pr-10"
+                  />
+                  <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 text-omnis-lightgray" size={18} />
+                </div>
+              </div>
+              
+              {/* Sort By (Desktop) */}
+              <div>
+                <h3 className="text-lg font-medium mb-4">Sort By</h3>
+                <select
+                  value={sortBy}
+                  onChange={(e) => setSortBy(e.target.value)}
+                  className="w-full px-4 py-3 bg-transparent border border-omnis-gray/30 text-omnis-white focus:outline-none focus:border-omnis-white"
+                >
+                  {sortOptions.map((option) => (
+                    <option 
+                      key={option.value} 
+                      value={option.value}
+                      className="bg-omnis-black"
+                    >
+                      {option.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              
+              <Separator className="bg-omnis-gray/20" />
               
               {/* Categories */}
               <div>
-                <h4 className="text-sm font-medium mb-2">Category</h4>
-                <div className="space-y-1">
+                <h3 className="text-lg font-medium mb-4">Categories</h3>
+                <div className="space-y-2">
                   {categories.map((category) => (
-                    <Button
-                      key={category}
-                      variant={selectedCategory === category ? "default" : "ghost"}
-                      size="sm"
-                      className={`w-full justify-start ${
-                        selectedCategory === category 
-                          ? "bg-omnis-gray text-omnis-white" 
-                          : "text-omnis-lightgray hover:text-omnis-white"
-                      }`}
-                      onClick={() => setSelectedCategory(category)}
-                    >
-                      {category}
-                    </Button>
+                    <div key={category} className="flex items-center">
+                      <button
+                        onClick={() => setSelectedCategory(category)}
+                        className={cn(
+                          "text-sm py-1",
+                          selectedCategory === category 
+                            ? "text-omnis-white font-medium" 
+                            : "text-omnis-lightgray hover:text-omnis-white transition-colors"
+                        )}
+                      >
+                        {category}
+                      </button>
+                    </div>
                   ))}
                 </div>
               </div>
+              
+              <Separator className="bg-omnis-gray/20" />
               
               {/* Colors */}
               <div>
-                <h4 className="text-sm font-medium mb-2">Color</h4>
-                <div className="flex flex-wrap gap-2">
+                <h3 className="text-lg font-medium mb-4">Colors</h3>
+                <div className="space-y-2">
                   {colors.map((color) => (
-                    <Button
-                      key={color}
-                      variant="outline"
-                      size="sm"
-                      className={`border ${
-                        selectedColors.includes(color) 
-                          ? "border-omnis-white" 
-                          : "border-omnis-gray text-omnis-lightgray"
-                      }`}
-                      onClick={() => toggleColor(color)}
-                    >
-                      {color}
-                    </Button>
+                    <div key={color.value} className="flex items-center">
+                      <Checkbox
+                        id={`color-${color.value}`}
+                        checked={selectedColors.includes(color.value)}
+                        onCheckedChange={() => toggleColor(color.value)}
+                        className="border-omnis-gray/30"
+                      />
+                      <label
+                        htmlFor={`color-${color.value}`}
+                        className="ml-2 text-sm text-omnis-lightgray"
+                      >
+                        {color.name}
+                      </label>
+                    </div>
                   ))}
                 </div>
               </div>
+              
+              <Separator className="bg-omnis-gray/20" />
               
               {/* Sizes */}
               <div>
-                <h4 className="text-sm font-medium mb-2">Size</h4>
+                <h3 className="text-lg font-medium mb-4">Sizes</h3>
                 <div className="flex flex-wrap gap-2">
                   {sizes.map((size) => (
-                    <Button
+                    <button
                       key={size}
-                      variant="outline"
-                      size="sm"
-                      className={`border ${
-                        selectedSizes.includes(size) 
-                          ? "border-omnis-white" 
-                          : "border-omnis-gray text-omnis-lightgray"
-                      }`}
                       onClick={() => toggleSize(size)}
+                      className={cn(
+                        "min-w-[40px] h-10 px-3 text-sm border",
+                        selectedSizes.includes(size)
+                          ? "border-omnis-white text-omnis-white"
+                          : "border-omnis-gray/30 text-omnis-lightgray hover:border-omnis-white hover:text-omnis-white transition-colors"
+                      )}
                     >
                       {size}
-                    </Button>
+                    </button>
                   ))}
                 </div>
               </div>
               
+              <Separator className="bg-omnis-gray/20" />
+              
+              {/* Price Range */}
+              <div>
+                <h3 className="text-lg font-medium mb-4">Price Range</h3>
+                <Slider
+                  defaultValue={priceRange}
+                  min={0}
+                  max={600}
+                  step={10}
+                  onValueChange={setPriceRange}
+                  className="mb-4"
+                />
+                <div className="flex justify-between text-sm text-omnis-lightgray">
+                  <span>${priceRange[0]}</span>
+                  <span>${priceRange[1]}</span>
+                </div>
+              </div>
+              
+              <Separator className="bg-omnis-gray/20" />
+              
+              {/* Reset Filters */}
               <Button 
                 variant="outline" 
-                size="sm"
-                className="w-full border-omnis-gray hover:border-red-500 hover:text-red-500"
+                className="w-full border-omnis-white text-omnis-white hover:bg-omnis-white hover:text-omnis-black"
                 onClick={resetFilters}
               >
                 Reset Filters
               </Button>
             </div>
-          </CollapsibleContent>
-        </Collapsible>
-        
-        <div className="flex flex-col lg:flex-row gap-8">
-          {/* Desktop Sidebar Filters */}
-          <aside className="hidden lg:block w-64 space-y-8 h-fit sticky top-32">
-            {/* Search */}
-            <div>
-              <h3 className="font-heading font-medium mb-3">SEARCH</h3>
-              <div className="relative">
-                <Search className="absolute left-2 top-1/2 -translate-y-1/2 h-4 w-4 text-omnis-lightgray" />
-                <Input
-                  type="text"
-                  placeholder="Search products..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-8 bg-omnis-darkgray border-omnis-gray"
-                />
+            
+            {/* Product Grid */}
+            <div className="md:col-span-3">
+              {/* Products Count */}
+              <div className="flex justify-between items-center mb-6">
+                <p className="text-omnis-lightgray">
+                  {filteredProducts.length} products
+                </p>
               </div>
-            </div>
-            
-            {/* Sort By */}
-            <div>
-              <h3 className="font-heading font-medium mb-3">SORT BY</h3>
-              <Select value={sortBy} onValueChange={setSortBy}>
-                <SelectTrigger className="w-full border-omnis-gray bg-omnis-darkgray">
-                  <SelectValue placeholder="Sort by" />
-                </SelectTrigger>
-                <SelectContent className="bg-omnis-darkgray border-omnis-gray">
-                  <SelectItem value="featured">Featured</SelectItem>
-                  <SelectItem value="newest">Newest</SelectItem>
-                  <SelectItem value="price-low">Price: Low to High</SelectItem>
-                  <SelectItem value="price-high">Price: High to Low</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            
-            {/* Categories */}
-            <div>
-              <h3 className="font-heading font-medium mb-3">CATEGORY</h3>
-              <div className="space-y-1">
-                {categories.map((category) => (
-                  <Button
-                    key={category}
-                    variant={selectedCategory === category ? "default" : "ghost"}
-                    className={`w-full justify-start ${
-                      selectedCategory === category 
-                        ? "bg-omnis-gray text-omnis-white" 
-                        : "text-omnis-lightgray hover:text-omnis-white"
-                    }`}
-                    onClick={() => setSelectedCategory(category)}
-                  >
-                    {category}
-                  </Button>
-                ))}
-              </div>
-            </div>
-            
-            {/* Colors */}
-            <div>
-              <h3 className="font-heading font-medium mb-3">COLOR</h3>
-              <div className="space-y-2">
-                {colors.map((color) => (
-                  <div key={color} className="flex items-center">
-                    <Checkbox 
-                      id={`color-${color}`} 
-                      checked={selectedColors.includes(color)}
-                      onCheckedChange={() => toggleColor(color)}
-                      className="border-omnis-gray data-[state=checked]:bg-omnis-white data-[state=checked]:text-omnis-black"
-                    />
-                    <label 
-                      htmlFor={`color-${color}`}
-                      className="ml-2 text-sm cursor-pointer"
-                    >
-                      {color}
-                    </label>
-                  </div>
-                ))}
-              </div>
-            </div>
-            
-            {/* Sizes */}
-            <div>
-              <h3 className="font-heading font-medium mb-3">SIZE</h3>
-              <ToggleGroup type="multiple" variant="outline" className="justify-start flex-wrap gap-2">
-                {sizes.map((size) => (
-                  <ToggleGroupItem 
-                    key={size} 
-                    value={size} 
-                    className="border-omnis-gray data-[state=on]:bg-omnis-white data-[state=on]:text-omnis-black"
-                    onClick={() => toggleSize(size)}
-                  >
-                    {size}
-                  </ToggleGroupItem>
-                ))}
-              </ToggleGroup>
-            </div>
-            
-            <Button 
-              variant="outline"
-              className="w-full border-omnis-gray hover:border-red-500 hover:text-red-500"
-              onClick={resetFilters}
-            >
-              Reset Filters
-            </Button>
-          </aside>
-          
-          {/* Products Grid */}
-          <div className="flex-1">
-            <div className="mb-6">
-              <p className="text-omnis-lightgray">
-                Showing {filteredProducts.length} {filteredProducts.length === 1 ? 'product' : 'products'}
-              </p>
-            </div>
-            
-            <div ref={productsGridRef} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filteredProducts.map((product) => (
-                <div key={product.id} className="group">
-                  <div className="aspect-[3/4] bg-omnis-darkgray relative overflow-hidden">
-                    <img 
-                      src={product.image} 
-                      alt={product.name}
-                      className="w-full h-full object-cover object-center transform group-hover:scale-105 transition-transform duration-500"
-                    />
-                    {product.isNew && (
-                      <div className="absolute top-3 right-3 bg-omnis-white text-omnis-black text-xs font-medium px-2 py-1">
-                        NEW
+              
+              {/* Products */}
+              {filteredProducts.length > 0 ? (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                  {filteredProducts.map((product) => (
+                    <div key={product.id} className="product-card group cursor-pointer">
+                      <div className="relative overflow-hidden aspect-[3/4] mb-4">
+                        <img 
+                          src={product.image} 
+                          alt={product.name}
+                          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                          style={{ filter: 'grayscale(100%)' }}
+                        />
+                        <div className="absolute inset-0 bg-omnis-black/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                          <span className="text-omnis-white text-sm tracking-widest font-medium px-4 py-2 border border-white/50 backdrop-blur-sm bg-black/20">
+                            VIEW
+                          </span>
+                        </div>
                       </div>
-                    )}
-                  </div>
-                  <div className="mt-4 space-y-1">
-                    <h3 className="font-heading font-medium">{product.name}</h3>
-                    <p className="text-omnis-lightgray text-sm">{product.category}</p>
-                    <p className="font-medium">${product.price}</p>
-                  </div>
+                      <h3 className="text-lg font-medium mb-1">{product.name}</h3>
+                      <p className="text-omnis-lightgray">${product.price}</p>
+                    </div>
+                  ))}
                 </div>
-              ))}
+              ) : (
+                <div className="text-center py-16">
+                  <p className="text-xl text-omnis-lightgray mb-4">No products found</p>
+                  <p className="text-omnis-lightgray mb-8">Try adjusting your filters or search query</p>
+                  <Button 
+                    variant="outline" 
+                    className="border-omnis-white text-omnis-white hover:bg-omnis-white hover:text-omnis-black"
+                    onClick={resetFilters}
+                  >
+                    Reset Filters
+                  </Button>
+                </div>
+              )}
             </div>
-            
-            {/* Pagination */}
-            <Pagination className="mt-12">
-              <PaginationContent>
-                <PaginationItem>
-                  <PaginationPrevious href="#" />
-                </PaginationItem>
-                <PaginationItem>
-                  <PaginationLink href="#" isActive>1</PaginationLink>
-                </PaginationItem>
-                <PaginationItem>
-                  <PaginationLink href="#">2</PaginationLink>
-                </PaginationItem>
-                <PaginationItem>
-                  <PaginationLink href="#">3</PaginationLink>
-                </PaginationItem>
-                <PaginationItem>
-                  <PaginationNext href="#" />
-                </PaginationItem>
-              </PaginationContent>
-            </Pagination>
           </div>
         </div>
       </main>

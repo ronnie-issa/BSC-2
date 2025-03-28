@@ -41,8 +41,6 @@ const Navbar = () => {
           <NavLink to="/about">ABOUT</NavLink>
           <NavLink to="/collections">COLLECTIONS</NavLink>
           <NavLink to="/shop">SHOP</NavLink>
-          <NavLink to="/help">HELP</NavLink>
-          <NavLink to="/legal">LEGAL</NavLink>
         </nav>
 
         {/* Mobile Menu Button */}
@@ -65,8 +63,6 @@ const Navbar = () => {
             <MobileNavLink to="/about" onClick={toggleMenu}>ABOUT</MobileNavLink>
             <MobileNavLink to="/collections" onClick={toggleMenu}>COLLECTIONS</MobileNavLink>
             <MobileNavLink to="/shop" onClick={toggleMenu}>SHOP</MobileNavLink>
-            <MobileNavLink to="/help" onClick={toggleMenu}>HELP</MobileNavLink>
-            <MobileNavLink to="/legal" onClick={toggleMenu}>LEGAL</MobileNavLink>
           </nav>
         </div>
       </div>

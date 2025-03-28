@@ -2,6 +2,7 @@
 import { useEffect, useRef } from 'react';
 import { ArrowDown } from 'lucide-react';
 import { useGSAP } from '@/lib/gsap';
+import { Link } from 'react-router-dom';
 
 const HeroSection = () => {
   const { gsap } = useGSAP();
@@ -99,12 +100,12 @@ const HeroSection = () => {
           </p>
           
           <div className="mt-16 flex justify-center">
-            <a 
-              href="#collection" 
+            <Link 
+              to="/collections" 
               className="inline-block border border-omnis-white px-8 py-4 text-sm font-medium tracking-widest hover:bg-omnis-white hover:text-omnis-black transition-all duration-300"
             >
               EXPLORE COLLECTION
-            </a>
+            </Link>
           </div>
         </div>
       </div>

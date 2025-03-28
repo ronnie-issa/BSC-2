@@ -1,5 +1,6 @@
 
 import { ArrowUp } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const Footer = () => {
   const scrollToTop = () => {
@@ -23,29 +24,29 @@ const Footer = () => {
           <div className="md:col-span-1">
             <h4 className="text-sm font-medium uppercase tracking-wider mb-4">Navigation</h4>
             <ul className="space-y-2 text-omnis-lightgray">
-              <li><a href="#" className="text-sm hover:text-omnis-white transition-colors">Home</a></li>
-              <li><a href="#about" className="text-sm hover:text-omnis-white transition-colors">About</a></li>
-              <li><a href="#collection" className="text-sm hover:text-omnis-white transition-colors">Collection</a></li>
-              <li><a href="#shop" className="text-sm hover:text-omnis-white transition-colors">Shop</a></li>
+              <li><Link to="/" className="text-sm hover:text-omnis-white transition-colors">Home</Link></li>
+              <li><Link to="/about" className="text-sm hover:text-omnis-white transition-colors">About</Link></li>
+              <li><Link to="/collections" className="text-sm hover:text-omnis-white transition-colors">Collections</Link></li>
+              <li><Link to="/shop" className="text-sm hover:text-omnis-white transition-colors">Shop</Link></li>
             </ul>
           </div>
           
           <div className="md:col-span-1">
             <h4 className="text-sm font-medium uppercase tracking-wider mb-4">Help</h4>
             <ul className="space-y-2 text-omnis-lightgray">
-              <li><a href="#" className="text-sm hover:text-omnis-white transition-colors">Shipping</a></li>
-              <li><a href="#" className="text-sm hover:text-omnis-white transition-colors">Returns</a></li>
-              <li><a href="#" className="text-sm hover:text-omnis-white transition-colors">Sizing</a></li>
-              <li><a href="#" className="text-sm hover:text-omnis-white transition-colors">Contact</a></li>
+              <li><Link to="/shipping" className="text-sm hover:text-omnis-white transition-colors">Shipping</Link></li>
+              <li><Link to="/returns" className="text-sm hover:text-omnis-white transition-colors">Returns</Link></li>
+              <li><Link to="/sizing" className="text-sm hover:text-omnis-white transition-colors">Sizing</Link></li>
+              <li><Link to="/contact" className="text-sm hover:text-omnis-white transition-colors">Contact</Link></li>
             </ul>
           </div>
           
           <div className="md:col-span-1">
             <h4 className="text-sm font-medium uppercase tracking-wider mb-4">Legal</h4>
             <ul className="space-y-2 text-omnis-lightgray">
-              <li><a href="#" className="text-sm hover:text-omnis-white transition-colors">Terms & Conditions</a></li>
-              <li><a href="#" className="text-sm hover:text-omnis-white transition-colors">Privacy Policy</a></li>
-              <li><a href="#" className="text-sm hover:text-omnis-white transition-colors">Cookies</a></li>
+              <li><Link to="/legal" className="text-sm hover:text-omnis-white transition-colors">Terms & Conditions</Link></li>
+              <li><Link to="/legal" className="text-sm hover:text-omnis-white transition-colors">Privacy Policy</Link></li>
+              <li><Link to="/legal" className="text-sm hover:text-omnis-white transition-colors">Cookies</Link></li>
             </ul>
           </div>
         </div>
