@@ -12,7 +12,7 @@ const Index = () => {
     // Dynamically import GSAP and its plugins to avoid SSR issues
     const loadGSAP = async () => {
       try {
-        const { gsap } = await import('@/lib/gsap');
+        const gsapModule = await import('@/lib/gsap');
         // Any global initialization can go here if needed
         console.log('GSAP loaded successfully');
       } catch (error) {
