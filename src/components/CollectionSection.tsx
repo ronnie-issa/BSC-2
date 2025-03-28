@@ -1,33 +1,8 @@
+
 import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useGSAP } from '@/lib/gsap';
-
-const products = [
-  {
-    id: 1,
-    name: "ZENITH JACKET",
-    price: "$450",
-    image: "https://images.unsplash.com/photo-1591047139829-d91aecb6caea?q=80&w=1036&auto=format&fit=crop&ixlib=rb-4.0.3"
-  },
-  {
-    id: 2,
-    name: "VOID HOODIE",
-    price: "$280",
-    image: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?q=80&w=1480&auto=format&fit=crop&ixlib=rb-4.0.3"
-  },
-  {
-    id: 3,
-    name: "ECLIPSE PANTS",
-    price: "$320",
-    image: "https://images.unsplash.com/photo-1603252109303-2751441dd157?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.0.3"
-  },
-  {
-    id: 4,
-    name: "SHADOW TEE",
-    price: "$180",
-    image: "https://images.unsplash.com/photo-1576566588028-4147f3842f27?q=80&w=1064&auto=format&fit=crop&ixlib=rb-4.0.3"
-  }
-];
+import { products } from '@/data/products';
 
 const CollectionSection = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
@@ -128,7 +103,7 @@ interface ProductCardProps {
   product: {
     id: number;
     name: string;
-    price: string;
+    price: number;
     image: string;
   };
   isActive: boolean;
@@ -153,7 +128,8 @@ const ProductCard = ({ product, isActive, onMouseEnter }: ProductCardProps) => {
   }, [isActive, gsap]);
 
   return (
-    <div 
+    <Link 
+      to={`/product/${product.id}`}
       className="product-card group cursor-pointer"
       onMouseEnter={onMouseEnter}
     >
@@ -174,8 +150,8 @@ const ProductCard = ({ product, isActive, onMouseEnter }: ProductCardProps) => {
         </div>
       </div>
       <h3 className="text-lg font-medium mb-1">{product.name}</h3>
-      <p className="text-omnis-lightgray">{product.price}</p>
-    </div>
+      <p className="text-omnis-lightgray">${product.price}</p>
+    </Link>
   );
 };
 
