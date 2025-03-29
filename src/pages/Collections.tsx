@@ -29,7 +29,7 @@ type Product = {
 const collections: Collection[] = [
   {
     id: "fw23",
-    name: "FW23 COLLECTION",
+    name: "OMNIS COLLECTION",
     year: "2023",
     season: "Fall/Winter",
     description: "Unveiling our Fall/Winter 2023 lineup. A meticulous blend of architectural silhouettes and progressive designs, crafted for those who demand excellence in every detail.",

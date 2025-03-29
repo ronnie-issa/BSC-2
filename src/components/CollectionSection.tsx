@@ -67,7 +67,7 @@ const CollectionSection = () => {
     <section id="collection" className="section bg-omnis-darkgray" ref={sectionRef}>
       <div className="container mx-auto">
         <div ref={titleRef} className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 uppercase tracking-tight">FW23 COLLECTION</h2>
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 uppercase tracking-tight">OMNIS COLLECTION</h2>
           <div className="w-20 h-0.5 bg-omnis-white mx-auto mb-8"></div>
           <p className="text-omnis-lightgray max-w-2xl mx-auto">
             Unveiling our Fall/Winter 2023 lineup. A meticulous blend of architectural silhouettes and progressive designs,
