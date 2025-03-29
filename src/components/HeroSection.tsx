@@ -88,8 +88,7 @@ const HeroSection = () => {
             ref={headingRef}
             className="text-4xl md:text-6xl lg:text-7xl font-black mb-6 leading-tight tracking-tighter"
           >
-            <span className="animate-heading block">REDEFINE</span>
-            <span className="animate-heading block">YOUR LIMITS</span>
+            <span className="animate-heading block">TRUE IN FORM</span>
           </h1>
           
           <p 
