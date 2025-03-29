@@ -1,5 +1,6 @@
 
 import { useEffect, useRef, useState } from 'react';
+import { Link } from 'react-router-dom';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { useGSAP } from '@/lib/gsap';
@@ -242,8 +243,9 @@ const Collections = () => {
                   
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
                     {collection.products.map((product, index) => (
-                      <div 
+                      <Link 
                         key={product.id} 
+                        to={`/product/${product.id}`}
                         className="product-item group cursor-pointer"
                         onMouseEnter={() => setActiveProduct(index)}
                       >
@@ -265,7 +267,7 @@ const Collections = () => {
                         </div>
                         <h3 className="text-lg font-medium mb-1">{product.name}</h3>
                         <p className="text-omnis-lightgray">{product.price}</p>
-                      </div>
+                      </Link>
                     ))}
                   </div>
                 </div>

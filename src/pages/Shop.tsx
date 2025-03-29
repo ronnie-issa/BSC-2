@@ -1,5 +1,5 @@
-
 import { useState, useEffect, useRef } from 'react';
+import { Link } from 'react-router-dom';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { useGSAP } from '@/lib/gsap';
@@ -254,7 +254,6 @@ const Shop = () => {
             </p>
           </header>
           
-          {/* Mobile Filters Button */}
           <div className="md:hidden mb-6 flex justify-between items-center">
             <Button 
               variant="outline" 
@@ -285,7 +284,6 @@ const Shop = () => {
             </div>
           </div>
           
-          {/* Mobile Filters Drawer */}
           <div 
             className={cn(
               "fixed inset-0 bg-omnis-black z-50 md:hidden transition-transform duration-300",
@@ -304,9 +302,7 @@ const Shop = () => {
                 </Button>
               </div>
               
-              {/* Mobile Filters Content */}
               <div className="space-y-8">
-                {/* Search */}
                 <div>
                   <h3 className="text-lg font-medium mb-4">Search</h3>
                   <div className="relative">
@@ -321,7 +317,6 @@ const Shop = () => {
                   </div>
                 </div>
                 
-                {/* Categories */}
                 <div>
                   <h3 className="text-lg font-medium mb-4">Categories</h3>
                   <div className="space-y-2">
@@ -343,7 +338,6 @@ const Shop = () => {
                   </div>
                 </div>
                 
-                {/* Colors */}
                 <div>
                   <h3 className="text-lg font-medium mb-4">Colors</h3>
                   <div className="space-y-2">
@@ -366,7 +360,6 @@ const Shop = () => {
                   </div>
                 </div>
                 
-                {/* Sizes */}
                 <div>
                   <h3 className="text-lg font-medium mb-4">Sizes</h3>
                   <div className="flex flex-wrap gap-2">
@@ -387,7 +380,6 @@ const Shop = () => {
                   </div>
                 </div>
                 
-                {/* Price Range */}
                 <div>
                   <h3 className="text-lg font-medium mb-4">Price Range</h3>
                   <Slider
@@ -404,7 +396,6 @@ const Shop = () => {
                   </div>
                 </div>
                 
-                {/* Actions */}
                 <div className="pt-4 space-y-4">
                   <Button 
                     variant="outline" 
@@ -428,9 +419,7 @@ const Shop = () => {
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-            {/* Desktop Sidebar Filters */}
             <div className="hidden md:block space-y-8">
-              {/* Search */}
               <div>
                 <h3 className="text-lg font-medium mb-4">Search</h3>
                 <div className="relative">
@@ -445,7 +434,6 @@ const Shop = () => {
                 </div>
               </div>
               
-              {/* Sort By (Desktop) */}
               <div>
                 <h3 className="text-lg font-medium mb-4">Sort By</h3>
                 <select
@@ -467,7 +455,6 @@ const Shop = () => {
               
               <Separator className="bg-omnis-gray/20" />
               
-              {/* Categories */}
               <div>
                 <h3 className="text-lg font-medium mb-4">Categories</h3>
                 <div className="space-y-2">
@@ -491,7 +478,6 @@ const Shop = () => {
               
               <Separator className="bg-omnis-gray/20" />
               
-              {/* Colors */}
               <div>
                 <h3 className="text-lg font-medium mb-4">Colors</h3>
                 <div className="space-y-2">
@@ -516,7 +502,6 @@ const Shop = () => {
               
               <Separator className="bg-omnis-gray/20" />
               
-              {/* Sizes */}
               <div>
                 <h3 className="text-lg font-medium mb-4">Sizes</h3>
                 <div className="flex flex-wrap gap-2">
@@ -539,7 +524,6 @@ const Shop = () => {
               
               <Separator className="bg-omnis-gray/20" />
               
-              {/* Price Range */}
               <div>
                 <h3 className="text-lg font-medium mb-4">Price Range</h3>
                 <Slider
@@ -558,7 +542,6 @@ const Shop = () => {
               
               <Separator className="bg-omnis-gray/20" />
               
-              {/* Reset Filters */}
               <Button 
                 variant="outline" 
                 className="w-full border-omnis-white text-omnis-white hover:bg-omnis-white hover:text-omnis-black"
@@ -568,20 +551,21 @@ const Shop = () => {
               </Button>
             </div>
             
-            {/* Product Grid */}
             <div className="md:col-span-3">
-              {/* Products Count */}
               <div className="flex justify-between items-center mb-6">
                 <p className="text-omnis-lightgray">
                   {filteredProducts.length} products
                 </p>
               </div>
               
-              {/* Products */}
               {filteredProducts.length > 0 ? (
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
                   {filteredProducts.map((product) => (
-                    <div key={product.id} className="product-card group cursor-pointer">
+                    <Link 
+                      to={`/product/${product.id}`}
+                      key={product.id} 
+                      className="product-card group cursor-pointer"
+                    >
                       <div className="relative overflow-hidden aspect-[3/4] mb-4">
                         <img 
                           src={product.image} 
@@ -597,7 +581,7 @@ const Shop = () => {
                       </div>
                       <h3 className="text-lg font-medium mb-1">{product.name}</h3>
                       <p className="text-omnis-lightgray">${product.price}</p>
-                    </div>
+                    </Link>
                   ))}
                 </div>
               ) : (
