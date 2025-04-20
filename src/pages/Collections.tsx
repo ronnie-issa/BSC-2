@@ -5,6 +5,7 @@ import Footer from "@/components/Footer";
 import { motion, useInView } from "@/lib/framer";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { LazyImage } from "@/components/ui/lazy-image";
 
 // Define collection types
 type Collection = {
@@ -227,10 +228,11 @@ const Collections = () => {
               >
                 <div className="mb-16">
                   <div className="relative h-[50vh] overflow-hidden mb-8">
-                    <img
+                    <LazyImage
                       src={collection.coverImage}
                       alt={`${collection.name} - ${collection.season} ${collection.year} Collection`}
-                      className="w-full h-full object-cover object-center"
+                      imgClassName="w-full h-full object-cover object-center"
+                      wrapperClassName="w-full h-full"
                       style={{ filter: "grayscale(100%)" }}
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-omnis-black to-transparent"></div>
@@ -266,10 +268,11 @@ const Collections = () => {
                           onMouseEnter={() => setActiveProduct(index)}
                         >
                           <div className="relative overflow-hidden aspect-[3/4] mb-4">
-                            <img
+                            <LazyImage
                               src={product.image}
                               alt={`${product.name} from ${collection.season} ${collection.year} Collection`}
-                              className="w-full h-full object-cover transition-transform duration-700"
+                              imgClassName="w-full h-full object-cover transition-transform duration-700"
+                              wrapperClassName="w-full h-full"
                               style={{
                                 filter: "grayscale(100%)",
                                 transform:

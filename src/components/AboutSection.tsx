@@ -5,6 +5,7 @@ import {
   useImageRevealAnimation,
   useTextMaskRevealAnimation,
 } from "@/lib/framer";
+import { LazyImage } from "@/components/ui/lazy-image";
 
 const AboutSection = () => {
   const title = useRevealAnimation({ y: 50 });
@@ -69,12 +70,14 @@ const AboutSection = () => {
             initial="hidden"
             animate={image.controls}
           >
-            <motion.img
-              variants={image.variants}
-              src="/images/about/designer-at-work.jpg"
-              alt="OMNIS designer at work"
-              className="w-full h-auto object-cover"
-            />
+            <motion.div variants={image.variants} className="w-full h-auto">
+              <LazyImage
+                src="/images/about/designer-at-work.jpg"
+                alt="OMNIS designer at work"
+                imgClassName="w-full h-auto object-cover"
+                wrapperClassName="w-full h-auto"
+              />
+            </motion.div>
           </motion.div>
         </div>
       </div>

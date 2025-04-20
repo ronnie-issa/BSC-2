@@ -14,7 +14,10 @@ const Footer = () => {
       <div className="container mx-auto px-6">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-10">
           <div className="md:col-span-1">
-            <h3 className="text-2xl font-logo font-bold tracking-widest mb-6">
+            <h3
+              className="text-2xl font-logo font-medium mb-6"
+              style={{ letterSpacing: "-0.5px" }}
+            >
               OMNIS
             </h3>
             <p className="text-omnis-lightgray text-sm leading-relaxed">
@@ -139,7 +142,13 @@ const Footer = () => {
         <div className="border-t border-omnis-gray/20 mt-10 pt-8 flex flex-col md:flex-row justify-between items-center">
           <p className="text-omnis-lightgray text-sm mb-4 md:mb-0">
             &copy; {new Date().getFullYear()}{" "}
-            <span className="font-logo">OMNIS</span>. All rights reserved.
+            <span
+              className="font-logo font-medium"
+              style={{ letterSpacing: "-0.5px" }}
+            >
+              OMNIS
+            </span>
+            . All rights reserved.
           </p>
 
           <button

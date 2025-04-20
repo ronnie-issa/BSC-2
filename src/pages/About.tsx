@@ -2,6 +2,7 @@ import { useRef } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { motion, useInView } from "@/lib/framer";
+import { LazyImage } from "@/components/ui/lazy-image";
 
 const About = () => {
   const contentRef = useRef<HTMLDivElement>(null);
@@ -20,7 +21,13 @@ const About = () => {
             transition={{ duration: 1, ease: "easeOut" }}
           >
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 uppercase tracking-tight">
-              ABOUT OMNIS
+              ABOUT{" "}
+              <span
+                className="font-logo font-medium"
+                style={{ letterSpacing: "-0.5px" }}
+              >
+                OMNIS
+              </span>
             </h1>
             <div className="w-20 h-0.5 bg-omnis-white mx-auto mb-8"></div>
             <p className="text-omnis-lightgray max-w-2xl mx-auto">
@@ -40,7 +47,13 @@ const About = () => {
               </h2>
               <div className="space-y-4 text-omnis-lightgray">
                 <p>
-                  Founded in 2020, <span className="font-logo">OMNIS</span>{" "}
+                  Founded in 2020,{" "}
+                  <span
+                    className="font-logo font-medium"
+                    style={{ letterSpacing: "-0.5px" }}
+                  >
+                    OMNIS
+                  </span>{" "}
                   emerged from a vision to create garments that transcend
                   seasonal trends and embrace timeless design. Our founder,
                   drawn to the intersection of minimalism and utility, sought to
@@ -48,12 +61,18 @@ const About = () => {
                   thoughtful design over fleeting fashion statements.
                 </p>
                 <p>
-                  The name <span className="font-logo">OMNIS</span>, derived
-                  from the Latin word for "all" or "everything," embodies our
-                  philosophy that clothing should be versatile, adaptable, and
-                  inclusive. We design for the modern individual who moves
-                  fluidly between different contexts and demands clothing that
-                  can keep pace.
+                  The name{" "}
+                  <span
+                    className="font-logo font-medium"
+                    style={{ letterSpacing: "-0.5px" }}
+                  >
+                    OMNIS
+                  </span>
+                  , derived from the Latin word for "all" or "everything,"
+                  embodies our philosophy that clothing should be versatile,
+                  adaptable, and inclusive. We design for the modern individual
+                  who moves fluidly between different contexts and demands
+                  clothing that can keep pace.
                 </p>
               </div>
             </motion.div>
@@ -64,10 +83,11 @@ const About = () => {
               animate={isInView ? { y: 0, opacity: 1 } : { y: 100, opacity: 0 }}
               transition={{ duration: 1, delay: 0.4, ease: "easeOut" }}
             >
-              <img
+              <LazyImage
                 src="/images/about/studio.jpg"
                 alt="OMNIS Studio"
-                className="w-full h-full object-cover object-center"
+                imgClassName="w-full h-full object-cover object-center"
+                wrapperClassName="w-full h-full"
                 style={{ filter: "grayscale(100%)" }}
               />
             </motion.div>
@@ -101,10 +121,17 @@ const About = () => {
                 CRAFTSMANSHIP
               </h3>
               <p className="text-omnis-lightgray">
-                Each OMNIS piece is meticulously crafted using premium materials
-                and ethical production methods. We work with skilled artisans
-                who share our commitment to quality and detail, ensuring that
-                every garment meets our exacting standards.
+                Each{" "}
+                <span
+                  className="font-logo font-medium"
+                  style={{ letterSpacing: "-0.5px" }}
+                >
+                  OMNIS
+                </span>{" "}
+                piece is meticulously crafted using premium materials and
+                ethical production methods. We work with skilled artisans who
+                share our commitment to quality and detail, ensuring that every
+                garment meets our exacting standards.
               </p>
             </motion.div>
 
@@ -136,14 +163,19 @@ const About = () => {
               OUR VISION
             </h2>
             <p className="text-xl text-omnis-lightgray italic">
-              "At <span className="font-logo">OMNIS</span>, we envision a future
-              where clothing transcends mere fashion—where each piece represents
-              a commitment to quality, sustainability, and timeless design. We
-              create for those who seek substance in style."
+              "At{" "}
+              <span
+                className="font-logo font-medium"
+                style={{ letterSpacing: "-0.5px" }}
+              >
+                OMNIS
+              </span>
+              , we envision a future where clothing transcends mere
+              fashion—where each piece represents a commitment to quality,
+              sustainability, and timeless design. We create for those who seek
+              substance in style."
             </p>
-            <p className="mt-4 text-omnis-lightgray">
-              — Alexander Chen, Founder
-            </p>
+            <p className="mt-4 text-omnis-lightgray">— Ronnie Issa, Founder</p>
           </motion.div>
 
           <motion.div
@@ -153,10 +185,11 @@ const About = () => {
             transition={{ duration: 1, delay: 1.0, ease: "easeOut" }}
           >
             <div className="h-[500px] relative overflow-hidden">
-              <img
+              <LazyImage
                 src="/images/about/team.jpg"
                 alt="OMNIS Team"
-                className="w-full h-full object-cover object-center"
+                imgClassName="w-full h-full object-cover object-center"
+                wrapperClassName="w-full h-full"
                 style={{ filter: "grayscale(100%)" }}
               />
             </div>
@@ -167,8 +200,15 @@ const About = () => {
               </h2>
               <div className="space-y-4 text-omnis-lightgray">
                 <p>
-                  Behind OMNIS is a diverse team of designers, craftspeople, and
-                  creative thinkers united by a shared passion for redefining
+                  Behind{" "}
+                  <span
+                    className="font-logo font-medium"
+                    style={{ letterSpacing: "-0.5px" }}
+                  >
+                    OMNIS
+                  </span>{" "}
+                  is a diverse team of designers, craftspeople, and creative
+                  thinkers united by a shared passion for redefining
                   contemporary fashion. Our collective experience spans haute
                   couture, streetwear, textile innovation, and sustainable
                   design.
@@ -184,7 +224,14 @@ const About = () => {
                   Based in our studio in Berlin, with satellite offices in Tokyo
                   and New York, we draw inspiration from global design movements
                   while maintaining a distinctly unified aesthetic that defines
-                  the OMNIS brand.
+                  the{" "}
+                  <span
+                    className="font-logo font-medium"
+                    style={{ letterSpacing: "-0.5px" }}
+                  >
+                    OMNIS
+                  </span>{" "}
+                  brand.
                 </p>
               </div>
             </div>

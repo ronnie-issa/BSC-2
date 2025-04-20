@@ -2,6 +2,7 @@ import { useRef, useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { motion, useInView } from "@/lib/framer";
 import { products } from "@/data/products";
+import { LazyImage } from "@/components/ui/lazy-image";
 
 const CollectionSection = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
@@ -43,7 +44,13 @@ const CollectionSection = () => {
           transition={{ duration: 0.8, ease: "easeOut" }}
         >
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 uppercase tracking-tight">
-            <span className="font-logo">OMNIS</span> COLLECTION
+            <span
+              className="font-logo font-medium"
+              style={{ letterSpacing: "-0.5px" }}
+            >
+              OMNIS
+            </span>{" "}
+            COLLECTION
           </h2>
           <div className="w-20 h-0.5 bg-omnis-white mx-auto mb-8"></div>
           <p className="text-omnis-lightgray max-w-2xl mx-auto">
@@ -119,15 +126,20 @@ const ProductCard = ({ product, isActive, onMouseEnter }: ProductCardProps) => {
         ref={imageRef}
         className="relative overflow-hidden aspect-[3/4] mb-4"
       >
-        <motion.img
-          src={product.image}
-          alt={product.name}
-          className="w-full h-full object-cover"
-          style={{ filter: "grayscale(100%)" }}
+        <motion.div
+          className="w-full h-full"
           animate={isActive ? "hover" : "initial"}
           variants={imageVariants}
           transition={{ duration: 0.8, ease: "easeOut" }}
-        />
+        >
+          <LazyImage
+            src={product.image}
+            alt={product.name}
+            imgClassName="w-full h-full object-cover"
+            style={{ filter: "grayscale(100%)" }}
+            wrapperClassName="w-full h-full"
+          />
+        </motion.div>
         <div className="absolute inset-0 bg-omnis-black/30 flex items-center justify-center transition-all duration-300">
           <span className="text-omnis-white text-sm tracking-widest font-medium px-4 py-2 border border-white/50 backdrop-blur-sm bg-black/20 transform transition-transform duration-300 group-hover:scale-110">
             VIEW

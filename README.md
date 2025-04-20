@@ -42,6 +42,27 @@ Naming convention:
 - Images include color in the filename when applicable
 - All images have proper alt text for accessibility
 
+### Lazy Loading
+
+All images use lazy loading for improved performance:
+
+- A custom `LazyImage` component is used throughout the site
+- The component uses both native `loading="lazy"` and Intersection Observer API
+- Images only load when they enter the viewport (or approach it)
+- A placeholder is shown until the image loads
+- Smooth fade-in transition when images appear
+
+Usage example:
+
+```tsx
+<LazyImage
+  src="/images/products/zenith-jacket-black.jpg"
+  alt="ZENITH JACKET in Black"
+  imgClassName="w-full h-full object-cover"
+  wrapperClassName="w-full h-full"
+/>
+```
+
 ### Image Troubleshooting
 
 If images are not loading properly:
@@ -98,7 +119,8 @@ npm run dev
    - GSAP compatibility layer has been removed
 
 2. **Performance Optimization**
-   - Implement lazy loading for images
+   - Status: Partially Completed
+   - ✅ Implemented lazy loading for images
    - Add proper suspense boundaries
    - Optimize animation performance
 
