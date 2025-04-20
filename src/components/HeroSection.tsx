@@ -1,106 +1,108 @@
-
-import { useEffect, useRef } from 'react';
-import { ArrowDown } from 'lucide-react';
-import { useGSAP } from '@/lib/gsap';
-import { Link } from 'react-router-dom';
+import { useRef } from "react";
+import { ArrowDown } from "lucide-react";
+import { Link } from "react-router-dom";
+import { motion, useAnimation, useInView } from "@/lib/framer";
+import { useSplitTextAnimation, useParallaxScroll } from "@/lib/framer";
 
 const HeroSection = () => {
-  const { gsap } = useGSAP();
   const heroRef = useRef<HTMLDivElement>(null);
-  const headingRef = useRef<HTMLHeadingElement>(null);
+
+  // Heading animation with character staggering
+  const headingAnimation = useSplitTextAnimation({
+    stagger: 0.02,
+    duration: 0.8,
+  });
+
+  // Subheading animation
   const subHeadingRef = useRef<HTMLParagraphElement>(null);
-  const bgImageRef = useRef<HTMLDivElement>(null);
-  const arrowRef = useRef<HTMLDivElement>(null);
+  const subHeadingInView = useInView(subHeadingRef, { once: true });
+  const subHeadingControls = useAnimation();
 
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      // Split text animation for heading
-      if (headingRef.current) {
-        const spans = headingRef.current.querySelectorAll('.animate-heading');
-        gsap.from(spans, {
-          y: 100,
-          opacity: 0,
-          stagger: 0.02,
-          duration: 0.8,
-          ease: "power2.out",
-        });
-      }
+  // Background parallax effect
+  const bgParallax = useParallaxScroll({
+    yRange: [0, 100],
+  });
 
-      // Fade in subheading
-      if (subHeadingRef.current) {
-        gsap.from(subHeadingRef.current, {
-          y: 20,
-          opacity: 0,
-          duration: 0.8,
-          delay: 0.5,
-          ease: "power2.out",
-        });
-      }
+  // Arrow animation
+  const arrowVariants = {
+    animate: {
+      y: [0, 10, 0],
+      transition: {
+        duration: 1.5,
+        repeat: Infinity,
+        ease: "easeInOut",
+      },
+    },
+  };
 
-      // Parallax effect for background
-      if (bgImageRef.current) {
-        gsap.to(bgImageRef.current, {
-          y: 100,
-          scrollTrigger: {
-            trigger: heroRef.current,
-            start: "top top",
-            end: "bottom top",
-            scrub: 0.1,
-          }
-        });
-      }
-
-      // Arrow bounce animation
-      if (arrowRef.current) {
-        gsap.to(arrowRef.current, {
-          y: 10,
-          repeat: -1,
-          yoyo: true,
-          duration: 1.5,
-          ease: "power1.inOut",
-        });
-      }
-    }, heroRef);
-
-    return () => ctx.revert();
-  }, [gsap]);
+  // Trigger subheading animation when in view
+  if (subHeadingInView) {
+    subHeadingControls.start({
+      y: 0,
+      opacity: 1,
+      transition: {
+        duration: 0.8,
+        delay: 0.5,
+        ease: "easeOut",
+      },
+    });
+  }
 
   return (
-    <section className="relative min-h-screen overflow-hidden flex items-center" ref={heroRef}>
+    <section
+      className="relative min-h-screen overflow-hidden flex items-center"
+      ref={heroRef}
+    >
       {/* Background Image with Parallax */}
-      <div 
-        ref={bgImageRef}
+      <motion.div
+        ref={bgParallax.ref}
         className="absolute inset-0 z-0 opacity-60"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 0.6 }}
+        transition={{ duration: 1 }}
         style={{
-          backgroundImage: 'url("https://images.unsplash.com/photo-1611316185995-9624c94487d1?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3")',
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          filter: 'grayscale(100%) contrast(120%)',
+          ...bgParallax.style,
+          backgroundImage:
+            'url("https://images.unsplash.com/photo-1611316185995-9624c94487d1?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3")',
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          filter: "grayscale(100%) contrast(120%)",
         }}
       />
 
       {/* Gradient Overlay */}
       <div className="absolute inset-0 bg-gradient-to-b from-omnis-black via-omnis-black/70 to-omnis-black z-10" />
-      
+
       <div className="container mx-auto px-6 relative z-20 pt-20">
         <div className="max-w-4xl mx-auto text-center">
-          <h1 
-            ref={headingRef}
+          <motion.h1
+            ref={headingAnimation.containerRef}
+            initial="hidden"
+            animate="visible"
+            variants={headingAnimation.containerVariants}
             className="text-4xl md:text-6xl lg:text-7xl font-black mb-6 leading-tight tracking-tighter"
           >
-            <span className="animate-heading block">TRUE IN FORM</span>
-          </h1>
-          
-          <p 
-            ref={subHeadingRef} 
+            <motion.span
+              variants={headingAnimation.childVariants}
+              className="block"
+            >
+              TRUE IN FORM
+            </motion.span>
+          </motion.h1>
+
+          <motion.p
+            ref={subHeadingRef}
+            initial={{ y: 20, opacity: 0 }}
+            animate={subHeadingControls}
             className="text-omnis-lightgray text-lg md:text-xl max-w-2xl mx-auto mb-10 font-light"
           >
-            A high-end streetwear collection that blends minimalist design with uncompromising quality. For those who set their own standards.
-          </p>
-          
+            A high-end streetwear collection that blends minimalist design with
+            uncompromising quality. For those who set their own standards.
+          </motion.p>
+
           <div className="mt-16 flex justify-center">
-            <Link 
-              to="/collections" 
+            <Link
+              to="/collections"
               className="inline-block border border-omnis-white px-8 py-4 text-sm font-medium tracking-widest hover:bg-omnis-white hover:text-omnis-black transition-all duration-300"
             >
               EXPLORE COLLECTION
@@ -108,15 +110,16 @@ const HeroSection = () => {
           </div>
         </div>
       </div>
-      
+
       {/* Scroll Down Indicator */}
-      <div 
-        ref={arrowRef}
+      <motion.div
+        variants={arrowVariants}
+        animate="animate"
         className="absolute bottom-10 left-1/2 transform -translate-x-1/2 z-20 flex flex-col items-center"
       >
         <span className="text-xs font-light tracking-widest mb-2">SCROLL</span>
-        <ArrowDown size={20} className="text-omnis-white animate-bounce" />
-      </div>
+        <ArrowDown size={20} className="text-omnis-white" />
+      </motion.div>
     </section>
   );
 };
