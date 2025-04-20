@@ -43,7 +43,7 @@ const CollectionSection = () => {
           transition={{ duration: 0.8, ease: "easeOut" }}
         >
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 uppercase tracking-tight">
-            OMNIS COLLECTION
+            <span className="font-logo">OMNIS</span> COLLECTION
           </h2>
           <div className="w-20 h-0.5 bg-omnis-white mx-auto mb-8"></div>
           <p className="text-omnis-lightgray max-w-2xl mx-auto">

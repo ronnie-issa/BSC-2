@@ -1,5 +1,4 @@
-
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&family=Red+Hat+Display:wght@400;500;700;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&family=Noto+Serif:wght@400;500;600;700&family=Red+Hat+Display:wght@400;500;700;900&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -41,11 +40,11 @@
   * {
     @apply border-border;
   }
-  
+
   html {
     @apply scroll-smooth;
   }
-  
+
   body {
     @apply bg-omnis-black text-omnis-white font-sans antialiased;
     overflow-x: hidden;

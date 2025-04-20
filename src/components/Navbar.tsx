@@ -1,7 +1,6 @@
-
-import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { Menu, X } from 'lucide-react';
+import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import { Menu, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const Navbar = () => {
@@ -20,19 +19,24 @@ const Navbar = () => {
       }
     };
 
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   return (
-    <header 
+    <header
       className={cn(
         "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
-        scrolled ? "bg-omnis-black/95 backdrop-blur-md py-3" : "bg-transparent py-5"
+        scrolled
+          ? "bg-omnis-black/95 backdrop-blur-md py-3"
+          : "bg-transparent py-5"
       )}
     >
       <div className="container mx-auto px-6 flex justify-between items-center">
-        <Link to="/" className="text-2xl md:text-3xl font-heading font-black tracking-widest z-50">
+        <Link
+          to="/"
+          className="text-2xl md:text-3xl font-logo font-bold tracking-widest z-50"
+        >
           OMNIS
         </Link>
 
@@ -44,25 +48,31 @@ const Navbar = () => {
         </nav>
 
         {/* Mobile Menu Button */}
-        <button 
+        <button
           className="md:hidden text-omnis-white z-50"
           onClick={toggleMenu}
-          aria-label={isOpen ? 'Close menu' : 'Open menu'}
+          aria-label={isOpen ? "Close menu" : "Open menu"}
         >
           {isOpen ? <X size={24} /> : <Menu size={24} />}
         </button>
 
         {/* Mobile Navigation Overlay */}
-        <div 
+        <div
           className={cn(
             "fixed inset-0 bg-omnis-black flex flex-col items-center justify-center transition-all duration-500 ease-in-out md:hidden",
             isOpen ? "opacity-100 visible" : "opacity-0 invisible"
           )}
         >
           <nav className="flex flex-col items-center space-y-8 text-2xl">
-            <MobileNavLink to="/about" onClick={toggleMenu}>ABOUT</MobileNavLink>
-            <MobileNavLink to="/collections" onClick={toggleMenu}>COLLECTIONS</MobileNavLink>
-            <MobileNavLink to="/shop" onClick={toggleMenu}>SHOP</MobileNavLink>
+            <MobileNavLink to="/about" onClick={toggleMenu}>
+              ABOUT
+            </MobileNavLink>
+            <MobileNavLink to="/collections" onClick={toggleMenu}>
+              COLLECTIONS
+            </MobileNavLink>
+            <MobileNavLink to="/shop" onClick={toggleMenu}>
+              SHOP
+            </MobileNavLink>
           </nav>
         </div>
       </div>
@@ -70,10 +80,16 @@ const Navbar = () => {
   );
 };
 
-const NavLink = ({ to, children }: { to: string; children: React.ReactNode }) => {
+const NavLink = ({
+  to,
+  children,
+}: {
+  to: string;
+  children: React.ReactNode;
+}) => {
   return (
-    <Link 
-      to={to} 
+    <Link
+      to={to}
       className="text-omnis-white text-sm tracking-wider font-medium hover:text-gray-300 transition-colors relative after:absolute after:bottom-0 after:left-0 after:w-full after:h-[1px] after:bg-omnis-white after:origin-bottom-right after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-300 hover:after:origin-bottom-left"
     >
       {children}
@@ -81,10 +97,18 @@ const NavLink = ({ to, children }: { to: string; children: React.ReactNode }) =>
   );
 };
 
-const MobileNavLink = ({ to, onClick, children }: { to: string; onClick: () => void; children: React.ReactNode }) => {
+const MobileNavLink = ({
+  to,
+  onClick,
+  children,
+}: {
+  to: string;
+  onClick: () => void;
+  children: React.ReactNode;
+}) => {
   return (
-    <Link 
-      to={to} 
+    <Link
+      to={to}
       className="text-omnis-white tracking-widest font-medium"
       onClick={onClick}
     >

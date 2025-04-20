@@ -71,7 +71,7 @@ const AboutSection = () => {
           >
             <motion.img
               variants={image.variants}
-              src="https://images.unsplash.com/photo-1517502166878-35c93a0072f0?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.0.3"
+              src="/images/about/designer-at-work.jpg"
               alt="OMNIS designer at work"
               className="w-full h-auto object-cover"
             />

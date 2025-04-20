@@ -62,8 +62,7 @@ const HeroSection = () => {
         transition={{ duration: 1 }}
         style={{
           ...bgParallax.style,
-          backgroundImage:
-            'url("https://images.unsplash.com/photo-1611316185995-9624c94487d1?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3")',
+          backgroundImage: 'url("/images/hero/main-hero-bg.jpg")',
           backgroundSize: "cover",
           backgroundPosition: "center",
           filter: "grayscale(100%) contrast(120%)",

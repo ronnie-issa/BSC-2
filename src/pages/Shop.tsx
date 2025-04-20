@@ -2,8 +2,8 @@ import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { useGSAP } from "@/lib/gsap";
-import { Search, X, ChevronDown, SlidersHorizontal } from "lucide-react";
+import { motion, useInView } from "@/lib/framer";
+import { Search, X, SlidersHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -50,8 +50,7 @@ const products = [
     category: "Jackets",
     color: "black",
     size: ["S", "M", "L", "XL"],
-    image:
-      "https://images.unsplash.com/photo-1591047139829-d91aecb6caea?q=80&w=1036&auto=format&fit=crop&ixlib=rb-4.0.3",
+    image: "/images/products/zenith-jacket-black.jpg",
   },
   {
     id: 2,
@@ -60,8 +59,7 @@ const products = [
     category: "Hoodies",
     color: "gray",
     size: ["XS", "S", "M", "L", "XL"],
-    image:
-      "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?q=80&w=1480&auto=format&fit=crop&ixlib=rb-4.0.3",
+    image: "/images/products/void-hoodie-gray.jpg",
   },
   {
     id: 3,
@@ -70,8 +68,7 @@ const products = [
     category: "Pants",
     color: "navy",
     size: ["S", "M", "L", "XL"],
-    image:
-      "https://images.unsplash.com/photo-1603252109303-2751441dd157?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.0.3",
+    image: "/images/products/eclipse-pants-navy.jpg",
   },
   {
     id: 4,
@@ -80,8 +77,7 @@ const products = [
     category: "T-Shirts",
     color: "black",
     size: ["XS", "S", "M", "L", "XL", "XXL"],
-    image:
-      "https://images.unsplash.com/photo-1576566588028-4147f3842f27?q=80&w=1064&auto=format&fit=crop&ixlib=rb-4.0.3",
+    image: "/images/products/shadow-tee-black.jpg",
   },
   {
     id: 5,
@@ -90,8 +86,7 @@ const products = [
     category: "Hoodies",
     color: "gray",
     size: ["S", "M", "L"],
-    image:
-      "https://images.unsplash.com/photo-1578587018452-892bacefd3f2?q=80&w=1287&auto=format&fit=crop&ixlib=rb-4.0.3",
+    image: "/images/products/monolith-sweater-gray.jpg",
   },
   {
     id: 6,
@@ -100,8 +95,7 @@ const products = [
     category: "Accessories",
     color: "black",
     size: ["ONE SIZE"],
-    image:
-      "https://images.unsplash.com/photo-1622560480605-d83c853bc5c3?q=80&w=1964&auto=format&fit=crop&ixlib=rb-4.0.3",
+    image: "/images/products/origin-tote-black.jpg",
   },
   {
     id: 7,
@@ -110,8 +104,7 @@ const products = [
     category: "Jackets",
     color: "white",
     size: ["S", "M", "L", "XL"],
-    image:
-      "https://images.unsplash.com/photo-1591369822096-ffd140ec948f?q=80&w=1287&auto=format&fit=crop&ixlib=rb-4.0.3",
+    image: "/images/products/ghost-jacket-white.jpg",
   },
   {
     id: 8,
@@ -120,8 +113,7 @@ const products = [
     category: "T-Shirts",
     color: "white",
     size: ["XS", "S", "M", "L", "XL"],
-    image:
-      "https://images.unsplash.com/photo-1583744946564-b52ac1c389c8?q=80&w=1287&auto=format&fit=crop&ixlib=rb-4.0.3",
+    image: "/images/products/ether-tee-white.jpg",
   },
 ];
 
@@ -137,7 +129,7 @@ const Shop = () => {
 
   // Refs for animations
   const shopRef = useRef<HTMLDivElement>(null);
-  const { gsap } = useGSAP();
+  const isInView = useInView(shopRef, { once: true, amount: 0.2 });
 
   // State for filtered products
   const [filteredProducts, setFilteredProducts] = useState(products);
@@ -213,32 +205,7 @@ const Shop = () => {
     searchQuery,
   ]);
 
-  // Animation for products
-  useEffect(() => {
-    if (!shopRef.current) return;
-
-    const ctx = gsap.context(() => {
-      // Header animation
-      gsap.from(".shop-header", {
-        y: 30,
-        opacity: 0,
-        duration: 0.8,
-        ease: "power2.out",
-      });
-
-      // Products animation
-      gsap.from(".product-card", {
-        y: 50,
-        opacity: 0,
-        stagger: 0.1,
-        duration: 0.6,
-        ease: "power2.out",
-        delay: 0.3,
-      });
-    }, shopRef);
-
-    return () => ctx.revert();
-  }, [filteredProducts]);
+  // We'll use Framer Motion's built-in animation capabilities instead of this effect
 
   // Toggle color selection
   const toggleColor = (color: string) => {
@@ -273,7 +240,12 @@ const Shop = () => {
 
       <main className="pt-32 pb-20">
         <div className="container mx-auto px-6">
-          <header className="shop-header text-center mb-16">
+          <motion.header
+            className="text-center mb-16"
+            initial={{ y: 30, opacity: 0 }}
+            animate={isInView ? { y: 0, opacity: 1 } : { y: 30, opacity: 0 }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
+          >
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 uppercase tracking-tight">
               SHOP
             </h1>
@@ -283,7 +255,7 @@ const Shop = () => {
               is crafted with meticulous attention to detail, ensuring
               unparalleled quality and distinctive style.
             </p>
-          </header>
+          </motion.header>
 
           <div className="md:hidden mb-6 flex justify-between items-center">
             <Button
@@ -597,30 +569,42 @@ const Shop = () => {
 
               {filteredProducts.length > 0 ? (
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                  {filteredProducts.map((product) => (
-                    <Link
-                      to={`/product/${product.id}`}
+                  {filteredProducts.map((product, index) => (
+                    <motion.div
                       key={product.id}
-                      className="product-card group cursor-pointer"
+                      initial={{ y: 50, opacity: 0 }}
+                      animate={
+                        isInView ? { y: 0, opacity: 1 } : { y: 50, opacity: 0 }
+                      }
+                      transition={{
+                        duration: 0.6,
+                        ease: "easeOut",
+                        delay: 0.3 + index * 0.1, // Staggered animation
+                      }}
                     >
-                      <div className="relative overflow-hidden aspect-[3/4] mb-4">
-                        <img
-                          src={product.image}
-                          alt={product.name}
-                          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                          style={{ filter: "grayscale(100%)" }}
-                        />
-                        <div className="absolute inset-0 bg-omnis-black/30 flex items-center justify-center transition-all duration-300">
-                          <span className="text-omnis-white text-sm tracking-widest font-medium px-4 py-2 border border-white/50 backdrop-blur-sm bg-black/20 transform transition-transform duration-300 group-hover:scale-110">
-                            VIEW
-                          </span>
+                      <Link
+                        to={`/product/${product.id}`}
+                        className="group cursor-pointer block"
+                      >
+                        <div className="relative overflow-hidden aspect-[3/4] mb-4">
+                          <img
+                            src={product.image}
+                            alt={`${product.name} - ${product.category} in ${product.color}`}
+                            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                            style={{ filter: "grayscale(100%)" }}
+                          />
+                          <div className="absolute inset-0 bg-omnis-black/30 flex items-center justify-center transition-all duration-300">
+                            <span className="text-omnis-white text-sm tracking-widest font-medium px-4 py-2 border border-white/50 backdrop-blur-sm bg-black/20 transform transition-transform duration-300 group-hover:scale-110">
+                              VIEW
+                            </span>
+                          </div>
                         </div>
-                      </div>
-                      <h3 className="text-lg font-medium mb-1">
-                        {product.name}
-                      </h3>
-                      <p className="text-omnis-lightgray">${product.price}</p>
-                    </Link>
+                        <h3 className="text-lg font-medium mb-1">
+                          {product.name}
+                        </h3>
+                        <p className="text-omnis-lightgray">${product.price}</p>
+                      </Link>
+                    </motion.div>
                   ))}
                 </div>
               ) : (

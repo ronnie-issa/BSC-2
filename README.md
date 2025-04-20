@@ -6,7 +6,7 @@ OMNIS is a modern fashion e-commerce website built with React and TypeScript. Th
 
 ### Key Features
 
-- Animated page transitions and scroll effects (currently using GSAP)
+- Animated page transitions and scroll effects using Framer Motion
 - Responsive product galleries and collections
 - Newsletter subscription system
 - Size guide and product information
@@ -20,7 +20,42 @@ OMNIS is a modern fashion e-commerce website built with React and TypeScript. Th
 - React
 - shadcn-ui (UI components)
 - Tailwind CSS (styling)
-- GSAP (animations - to be replaced with Framer Motion)
+- Framer Motion (animations)
+
+## Image Organization
+
+Images are organized in a logical structure for better management and SEO:
+
+```
+public/images/
+├── hero/           # Hero section background images
+├── backgrounds/    # Background images for various sections
+├── products/       # Product images with descriptive names
+├── about/          # Images for the about section
+├── collections/    # Collection-specific images
+└── og/             # Open Graph images for social media sharing
+```
+
+Naming convention:
+
+- All images use descriptive, SEO-friendly names (e.g., `zenith-jacket-black.jpg` instead of `product1.jpg`)
+- Images include color in the filename when applicable
+- All images have proper alt text for accessibility
+
+### Image Troubleshooting
+
+If images are not loading properly:
+
+1. Check that the image file exists in the correct directory
+2. Verify the file size is not 0 bytes (which indicates a failed download)
+3. Make sure the path in the code matches the actual file path
+4. For collection images, ensure all product images and background images are properly downloaded
+
+To fix broken images, you can use the following command to copy an existing image as a placeholder:
+
+```bash
+cp public/images/products/existing-image.jpg public/images/products/missing-image.jpg
+```
 
 ## Project Structure
 
@@ -58,13 +93,9 @@ npm run dev
 
 1. **Animation Migration**
 
-   - Current: GSAP-based animations
-   - Target: Framer Motion for better React integration
-   - Affected components:
-     - HeroSection
-     - AboutSection
-     - CollectionSection
-     - All page transitions
+   - Status: ✅ Completed
+   - All components and pages have been migrated to Framer Motion
+   - GSAP compatibility layer has been removed
 
 2. **Performance Optimization**
    - Implement lazy loading for images
