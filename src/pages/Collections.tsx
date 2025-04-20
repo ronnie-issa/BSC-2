@@ -6,6 +6,7 @@ import { motion, useInView } from "@/lib/framer";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { LazyImage } from "@/components/ui/lazy-image";
+import { products as productData } from "@/data/products";
 
 // Define collection types
 type Collection = {
@@ -15,14 +16,7 @@ type Collection = {
   season: string;
   description: string;
   coverImage: string;
-  products: Product[];
-};
-
-type Product = {
-  id: number;
-  name: string;
-  price: string;
-  image: string;
+  products: number[];
 };
 
 // Sample collections data
@@ -35,44 +29,7 @@ const collections: Collection[] = [
     description:
       "Unveiling our Fall/Winter 2023 lineup. A meticulous blend of architectural silhouettes and progressive designs, crafted for those who demand excellence in every detail.",
     coverImage: "/images/hero/main-hero-bg.jpg",
-    products: [
-      {
-        id: 1,
-        name: "ZENITH JACKET",
-        price: "$450",
-        image: "/images/products/zenith-jacket-black.jpg",
-      },
-      {
-        id: 2,
-        name: "VOID HOODIE",
-        price: "$280",
-        image: "/images/products/void-hoodie-gray.jpg",
-      },
-      {
-        id: 3,
-        name: "ECLIPSE PANTS",
-        price: "$320",
-        image: "/images/products/eclipse-pants-navy.jpg",
-      },
-      {
-        id: 4,
-        name: "SHADOW TEE",
-        price: "$180",
-        image: "/images/products/shadow-tee-black.jpg",
-      },
-      {
-        id: 5,
-        name: "MONOLITH SWEATER",
-        price: "$320",
-        image: "/images/products/monolith-sweater-gray.jpg",
-      },
-      {
-        id: 6,
-        name: "ORIGIN TOTE",
-        price: "$160",
-        image: "/images/products/origin-tote-black.jpg",
-      },
-    ],
+    products: [1, 2, 3, 4],
   },
   {
     id: "ss23",
@@ -82,32 +39,7 @@ const collections: Collection[] = [
     description:
       "Our Spring/Summer 2023 collection explores the interplay between light and shadow. Ethereal yet substantive, these pieces form a versatile foundation for the modern wardrobe.",
     coverImage: "/images/backgrounds/collection-spring-bg.jpg",
-    products: [
-      {
-        id: 7,
-        name: "GHOST JACKET",
-        price: "$380",
-        image: "/images/products/ghost-jacket-white.jpg",
-      },
-      {
-        id: 8,
-        name: "ETHER TEE",
-        price: "$140",
-        image: "/images/products/ether-tee-white.jpg",
-      },
-      {
-        id: 9,
-        name: "DRIFT SHORTS",
-        price: "$180",
-        image: "/images/products/drift-shorts-light.jpg",
-      },
-      {
-        id: 10,
-        name: "PRISM CAP",
-        price: "$90",
-        image: "/images/products/prism-cap-black.jpg",
-      },
-    ],
+    products: [1, 2, 3, 4],
   },
   {
     id: "fw22",
@@ -117,26 +49,7 @@ const collections: Collection[] = [
     description:
       "The Fall/Winter 2022 collection draws inspiration from brutalist architecture, translating rigid structures into fluid forms. A study in contrasts, defined by stark minimalism.",
     coverImage: "/images/backgrounds/collection-winter-bg.jpg",
-    products: [
-      {
-        id: 11,
-        name: "APEX PARKA",
-        price: "$580",
-        image: "/images/products/apex-parka-black.jpg",
-      },
-      {
-        id: 12,
-        name: "CORE SWEATER",
-        price: "$240",
-        image: "/images/products/core-sweater-gray.jpg",
-      },
-      {
-        id: 13,
-        name: "STATIC PANTS",
-        price: "$290",
-        image: "/images/products/static-pants-dark.jpg",
-      },
-    ],
+    products: [1, 2, 3, 4],
   },
 ];
 
@@ -160,10 +73,15 @@ const Collections = () => {
     );
     if (!currentCollection) return;
 
+    // Get the actual products that exist in the data
+    const availableProducts = currentCollection.products.filter((id) =>
+      productData.some((p) => p.id === id)
+    );
+
+    if (availableProducts.length === 0) return;
+
     const interval = setInterval(() => {
-      setActiveProduct(
-        (prev) => (prev + 1) % currentCollection.products.length
-      );
+      setActiveProduct((prev) => (prev + 1) % availableProducts.length);
     }, 3000);
 
     return () => clearInterval(interval);
@@ -183,7 +101,7 @@ const Collections = () => {
       <Navbar />
 
       <main className="pt-32 pb-20">
-        <div className="container mx-auto px-6">
+        <div className="container mx-auto px-6 relative">
           <motion.header
             ref={headerRef}
             className="text-center mb-16"
@@ -247,55 +165,62 @@ const Collections = () => {
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                    {collection.products.map((product, index) => (
-                      <motion.div
-                        key={product.id}
-                        initial={{ y: 50, opacity: 0 }}
-                        animate={
-                          isCollectionInView
-                            ? { y: 0, opacity: 1 }
-                            : { y: 50, opacity: 0 }
-                        }
-                        transition={{
-                          duration: 0.6,
-                          ease: "easeOut",
-                          delay: 0.1 * index, // Staggered animation
-                        }}
-                      >
-                        <Link
-                          to={`/product/${product.id}`}
-                          className="group cursor-pointer block"
-                          onMouseEnter={() => setActiveProduct(index)}
+                    {collection.products.map((productId, index) => {
+                      const product = productData.find(
+                        (p) => p.id === productId
+                      );
+                      if (!product) return null;
+
+                      return (
+                        <motion.div
+                          key={product.id}
+                          initial={{ y: 50, opacity: 0 }}
+                          animate={
+                            isCollectionInView
+                              ? { y: 0, opacity: 1 }
+                              : { y: 50, opacity: 0 }
+                          }
+                          transition={{
+                            duration: 0.6,
+                            ease: "easeOut",
+                            delay: 0.1 * index, // Staggered animation
+                          }}
                         >
-                          <div className="relative overflow-hidden aspect-[3/4] mb-4">
-                            <LazyImage
-                              src={product.image}
-                              alt={`${product.name} from ${collection.season} ${collection.year} Collection`}
-                              imgClassName="w-full h-full object-cover transition-transform duration-700"
-                              wrapperClassName="w-full h-full"
-                              style={{
-                                filter: "grayscale(100%)",
-                                transform:
-                                  index === activeProduct
-                                    ? "scale(1.1)"
-                                    : "scale(1)",
-                              }}
-                            />
-                            <div className="absolute inset-0 bg-omnis-black/30 flex items-center justify-center transition-all duration-300">
-                              <span className="text-omnis-white text-sm tracking-widest font-medium px-4 py-2 border border-white/50 backdrop-blur-sm bg-black/20 transform transition-transform duration-300 group-hover:scale-110">
-                                VIEW
-                              </span>
+                          <Link
+                            to={`/product/${product.id}`}
+                            className="group cursor-pointer block"
+                            onMouseEnter={() => setActiveProduct(index)}
+                          >
+                            <div className="relative overflow-hidden aspect-[3/4] mb-4">
+                              <LazyImage
+                                src={product.image}
+                                alt={`${product.name} from ${collection.season} ${collection.year} Collection`}
+                                imgClassName="w-full h-full object-cover transition-transform duration-700"
+                                wrapperClassName="w-full h-full"
+                                style={{
+                                  filter: "grayscale(100%)",
+                                  transform:
+                                    index === activeProduct
+                                      ? "scale(1.1)"
+                                      : "scale(1)",
+                                }}
+                              />
+                              <div className="absolute inset-0 bg-omnis-black/30 flex items-center justify-center transition-all duration-300">
+                                <span className="text-omnis-white text-sm tracking-widest font-medium px-4 py-2 border border-white/50 backdrop-blur-sm bg-black/20 transform transition-transform duration-300 group-hover:scale-110">
+                                  VIEW
+                                </span>
+                              </div>
                             </div>
-                          </div>
-                          <h3 className="text-lg font-medium mb-1">
-                            {product.name}
-                          </h3>
-                          <p className="text-omnis-lightgray">
-                            {product.price}
-                          </p>
-                        </Link>
-                      </motion.div>
-                    ))}
+                            <h3 className="text-lg font-medium mb-1">
+                              {product.name}
+                            </h3>
+                            <p className="text-omnis-lightgray">
+                              ${product.price}
+                            </p>
+                          </Link>
+                        </motion.div>
+                      );
+                    })}
                   </div>
                 </div>
 

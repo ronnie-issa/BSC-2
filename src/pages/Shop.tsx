@@ -5,82 +5,7 @@ import Footer from "@/components/Footer";
 import { motion, useInView } from "@/lib/framer";
 import { Button } from "@/components/ui/button";
 import { LazyImage } from "@/components/ui/lazy-image";
-
-// Sample products data
-const products = [
-  {
-    id: 1,
-    name: "ZENITH JACKET",
-    price: 450,
-    category: "Jackets",
-    color: "black",
-    size: ["S", "M", "L", "XL"],
-    image: "/images/products/zenith-jacket-black.jpg",
-  },
-  {
-    id: 2,
-    name: "VOID HOODIE",
-    price: 280,
-    category: "Hoodies",
-    color: "gray",
-    size: ["XS", "S", "M", "L", "XL"],
-    image: "/images/products/void-hoodie-gray.jpg",
-  },
-  {
-    id: 3,
-    name: "ECLIPSE PANTS",
-    price: 320,
-    category: "Pants",
-    color: "navy",
-    size: ["S", "M", "L", "XL"],
-    image: "/images/products/eclipse-pants-navy.jpg",
-  },
-  {
-    id: 4,
-    name: "SHADOW TEE",
-    price: 180,
-    category: "T-Shirts",
-    color: "black",
-    size: ["XS", "S", "M", "L", "XL", "XXL"],
-    image: "/images/products/shadow-tee-black.jpg",
-  },
-  {
-    id: 5,
-    name: "MONOLITH SWEATER",
-    price: 320,
-    category: "Hoodies",
-    color: "gray",
-    size: ["S", "M", "L"],
-    image: "/images/products/monolith-sweater-gray.jpg",
-  },
-  {
-    id: 6,
-    name: "ORIGIN TOTE",
-    price: 160,
-    category: "Accessories",
-    color: "black",
-    size: ["ONE SIZE"],
-    image: "/images/products/origin-tote-black.jpg",
-  },
-  {
-    id: 7,
-    name: "GHOST JACKET",
-    price: 380,
-    category: "Jackets",
-    color: "white",
-    size: ["S", "M", "L", "XL"],
-    image: "/images/products/ghost-jacket-white.jpg",
-  },
-  {
-    id: 8,
-    name: "ETHER TEE",
-    price: 140,
-    category: "T-Shirts",
-    color: "white",
-    size: ["XS", "S", "M", "L", "XL"],
-    image: "/images/products/ether-tee-white.jpg",
-  },
-];
+import { products } from "@/data/products";
 
 const Shop = () => {
   // Refs for animations
@@ -95,7 +20,7 @@ const Shop = () => {
       <Navbar />
 
       <main className="pt-32 pb-20">
-        <div className="container mx-auto px-6">
+        <div className="container mx-auto px-6 relative">
           <motion.header
             className="text-center mb-16"
             initial={{ y: 30, opacity: 0 }}
@@ -148,7 +73,7 @@ const Shop = () => {
                       <div className="relative overflow-hidden aspect-[3/4] mb-4">
                         <LazyImage
                           src={product.image}
-                          alt={`${product.name} - ${product.category} in ${product.color}`}
+                          alt={`${product.name}`}
                           imgClassName="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                           wrapperClassName="w-full h-full"
                           style={{ filter: "grayscale(100%)" }}

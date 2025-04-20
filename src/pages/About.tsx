@@ -13,7 +13,7 @@ const About = () => {
       <Navbar />
 
       <main className="pt-32 pb-20" ref={contentRef}>
-        <div className="container mx-auto px-6">
+        <div className="container mx-auto px-6 relative">
           <motion.header
             className="text-center mb-16"
             initial={{ y: 100, opacity: 0 }}
