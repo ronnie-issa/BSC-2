@@ -44,7 +44,6 @@ const Navbar = () => {
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center space-x-8">
           <NavLink to="/about">ABOUT</NavLink>
-          <NavLink to="/collections">COLLECTIONS</NavLink>
           <NavLink to="/shop">SHOP</NavLink>
         </nav>
 
@@ -67,9 +66,6 @@ const Navbar = () => {
           <nav className="flex flex-col items-center space-y-8 text-2xl">
             <MobileNavLink to="/about" onClick={toggleMenu}>
               ABOUT
-            </MobileNavLink>
-            <MobileNavLink to="/collections" onClick={toggleMenu}>
-              COLLECTIONS
             </MobileNavLink>
             <MobileNavLink to="/shop" onClick={toggleMenu}>
               SHOP

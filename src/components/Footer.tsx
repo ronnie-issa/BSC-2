@@ -47,14 +47,7 @@ const Footer = () => {
                   About
                 </Link>
               </li>
-              <li>
-                <Link
-                  to="/collections"
-                  className="text-sm hover:text-omnis-white transition-colors"
-                >
-                  Collections
-                </Link>
-              </li>
+
               <li>
                 <Link
                   to="/shop"

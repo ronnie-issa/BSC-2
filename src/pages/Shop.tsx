@@ -46,11 +46,7 @@ const Shop = () => {
             {/* Desktop filter sidebar removed */}
 
             <div className="w-full">
-              <div className="flex justify-between items-center mb-6">
-                <p className="text-omnis-lightgray">
-                  {products.length} products
-                </p>
-              </div>
+              {/* Product counter removed */}
 
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
                 {products.map((product, index) => (

@@ -1,7 +1,7 @@
 import Navbar from "@/components/Navbar";
 import HeroSection from "@/components/HeroSection";
 import AboutSection from "@/components/AboutSection";
-import CollectionSection from "@/components/CollectionSection";
+import ShopPromoSection from "@/components/ShopPromoSection";
 import NewsletterSection from "@/components/NewsletterSection";
 import Footer from "@/components/Footer";
 import { motion } from "@/lib/framer";
@@ -17,7 +17,7 @@ const Index = () => {
       <Navbar />
       <HeroSection />
       <AboutSection />
-      <CollectionSection />
+      <ShopPromoSection />
       <NewsletterSection />
       <Footer />
     </motion.div>
