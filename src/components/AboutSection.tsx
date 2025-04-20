@@ -1,11 +1,14 @@
 import { useRef } from "react";
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
+import { ArrowRight } from "lucide-react";
 import {
   useRevealAnimation,
   useImageRevealAnimation,
   useTextMaskRevealAnimation,
 } from "@/lib/framer";
 import { LazyImage } from "@/components/ui/lazy-image";
+import { Button } from "@/components/ui/button";
 
 const AboutSection = () => {
   const title = useRevealAnimation({ y: 50 });
@@ -57,10 +60,26 @@ const AboutSection = () => {
             >
               <motion.p
                 variants={textMask.variants}
-                className="text-2xl font-heading font-light italic"
+                className="text-2xl font-heading font-light italic mb-10"
               >
                 "Simplicity is the ultimate sophistication."
               </motion.p>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.8, duration: 0.6 }}
+            >
+              <Link to="/about">
+                <Button
+                  variant="outline"
+                  className="mt-4 border-omnis-white text-omnis-white hover:bg-omnis-white hover:text-omnis-black transition-all duration-300 group"
+                >
+                  LEARN MORE ABOUT US
+                  <ArrowRight className="ml-2 h-4 w-4 transform transition-transform duration-300 group-hover:translate-x-1" />
+                </Button>
+              </Link>
             </motion.div>
           </div>
 

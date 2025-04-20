@@ -1,9 +1,9 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import ScrollToTop from "@/components/ScrollToTop";
 import Index from "./pages/Index";
 import Shop from "./pages/Shop";
 import About from "./pages/About";
@@ -16,8 +16,6 @@ import Help from "./pages/Help";
 import Legal from "./pages/Legal";
 import NotFound from "./pages/NotFound";
 import ProductPage from "./pages/ProductPage";
-import CheckoutPage from "./pages/CheckoutPage";
-import OrderConfirmationPage from "./pages/OrderConfirmationPage";
 
 const queryClient = new QueryClient();
 
@@ -27,6 +25,7 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
+        <ScrollToTop />
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/shop" element={<Shop />} />
@@ -39,8 +38,6 @@ const App = () => (
           <Route path="/help" element={<Help />} />
           <Route path="/legal" element={<Legal />} />
           <Route path="/product/:id" element={<ProductPage />} />
-          <Route path="/checkout" element={<CheckoutPage />} />
-          <Route path="/order-confirmation" element={<OrderConfirmationPage />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

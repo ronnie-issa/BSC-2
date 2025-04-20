@@ -85,7 +85,7 @@ const CollectionSection = () => {
 
         <div className="text-center mt-16">
           <Link
-            to="/collections"
+            to="/shop"
             className="inline-block border border-omnis-white px-8 py-4 text-sm font-medium tracking-widest hover:bg-omnis-white hover:text-omnis-black transition-all duration-300"
           >
             VIEW ALL

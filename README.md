@@ -124,7 +124,9 @@ npm run dev
    - Add proper suspense boundaries
    - Optimize animation performance
 
-## TODO
+## TODO (purpose)
 
-- Migrate to Astro
+- Migrate to Astro (SEO)
   - Create Schema
+- Email subscription (Marketing)
+- Cart page (buy mulitple products)

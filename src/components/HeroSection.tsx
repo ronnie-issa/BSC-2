@@ -101,7 +101,7 @@ const HeroSection = () => {
 
           <div className="mt-16 flex justify-center">
             <Link
-              to="/collections"
+              to="/shop"
               className="inline-block border border-omnis-white px-8 py-4 text-sm font-medium tracking-widest hover:bg-omnis-white hover:text-omnis-black transition-all duration-300"
             >
               EXPLORE COLLECTION

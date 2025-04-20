@@ -1,9 +1,8 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { ArrowLeft, ShoppingBag, Minus, Plus } from "lucide-react";
+import { ArrowLeft, Minus, Plus, MessageSquare } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { products } from "@/data/products";
-import { useProductContext } from "@/contexts/ProductContext";
 import { toast } from "@/hooks/use-toast";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -11,7 +10,7 @@ import Footer from "@/components/Footer";
 const ProductPage = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { addToCart } = useProductContext();
+
   const [quantity, setQuantity] = useState(1);
   const [selectedColor, setSelectedColor] = useState("");
 
@@ -21,9 +20,7 @@ const ProductPage = () => {
     if (product && product.colors.length > 0) {
       setSelectedColor(product.colors[0].value);
     }
-
-    // Scroll to top when component mounts
-    window.scrollTo(0, 0);
+    // No need to scroll to top here as ScrollToTop component handles it
   }, [product]);
 
   if (!product) {
@@ -46,7 +43,7 @@ const ProductPage = () => {
     }
   };
 
-  const handleAddToCart = () => {
+  const handleBuyViaWhatsApp = () => {
     if (!selectedColor) {
       toast({
         title: "Please select a color",
@@ -55,25 +52,70 @@ const ProductPage = () => {
       return;
     }
 
-    addToCart(product, quantity, selectedColor);
+    // Get the color name from the selected color value
+    const colorName =
+      product.colors.find((c) => c.value === selectedColor)?.name || "Default";
 
-    toast({
-      title: "Added to cart",
-      description: `${quantity} x ${product.name} has been added to your cart`,
-    });
-  };
+    // Create the WhatsApp message with product details
+    // Using standard line breaks instead of escaped \n for better compatibility
+    const message =
+      "Hello, I'm interested in purchasing:\n\n" +
+      "Product: " +
+      product.name +
+      "\n" +
+      "Quantity: " +
+      quantity +
+      "\n" +
+      "Color: " +
+      colorName +
+      "\n" +
+      "Price: $" +
+      product.price.toFixed(2) +
+      "\n\n" +
+      "Total: $" +
+      (product.price * quantity).toFixed(2) +
+      "\n\n" +
+      "Please let me know how to proceed with my order.";
 
-  const handleBuyNow = () => {
-    if (!selectedColor) {
+    // Create the WhatsApp URL with the encoded message
+    // Using the provided business WhatsApp number with country code
+    // For WhatsApp API: Remove any leading zeros and include country code without the '+' sign
+    const phoneNumber = "96181386697"; // Lebanon WhatsApp business number (961 is country code)
+    const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(
+      message
+    )}`;
+
+    // Try to open WhatsApp in a new tab
+    const newWindow = window.open(whatsappUrl, "_blank");
+
+    // Check if the window was successfully opened
+    if (newWindow) {
       toast({
-        title: "Please select a color",
+        title: "Opening WhatsApp",
+        description: "Redirecting you to WhatsApp to complete your purchase.",
+      });
+    } else {
+      // If the window didn't open (possibly blocked or URL issues), provide alternative
+      toast({
+        title: "WhatsApp Link Issue",
+        description: `Please contact us directly on WhatsApp at +961 81 386 697 and mention ${product.name}.`,
         variant: "destructive",
       });
-      return;
-    }
 
-    addToCart(product, quantity, selectedColor);
-    navigate("/checkout");
+      // Copy product details to clipboard as a fallback
+      navigator.clipboard
+        .writeText(message)
+        .then(() => {
+          toast({
+            title: "Product details copied",
+            description:
+              "Product details copied to clipboard for easy sharing.",
+          });
+        })
+        .catch(() => {
+          // If clipboard copy fails, do nothing
+        });
+    }
   };
 
   return (
@@ -158,23 +200,15 @@ const ProductPage = () => {
               </div>
             </div>
 
-            {/* Action buttons */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-auto">
-              <Button
-                variant="outline"
-                size="lg"
-                onClick={handleAddToCart}
-                className="border-omnis-black text-white hover:bg-omnis-black hover:text-white transition-all duration-300 flex items-center justify-center"
-              >
-                <ShoppingBag className="mr-2 h-4 w-4" />
-                <span className="inline-block">Add to Cart</span>
-              </Button>
+            {/* Action button */}
+            <div className="mt-auto">
               <Button
                 size="lg"
-                onClick={handleBuyNow}
-                className="bg-omnis-black text-white hover:bg-omnis-gray transition-all duration-300 font-medium tracking-wide shadow-lg transform hover:scale-105"
+                onClick={handleBuyViaWhatsApp}
+                className="w-full bg-omnis-black text-white hover:bg-omnis-gray transition-all duration-300 font-medium tracking-wide shadow-lg transform hover:scale-105 flex items-center justify-center"
               >
-                Buy Now
+                <MessageSquare className="mr-2 h-4 w-4" />
+                <span className="inline-block">Buy via WhatsApp</span>
               </Button>
             </div>
           </div>
