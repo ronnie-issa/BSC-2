@@ -1,7 +1,8 @@
-const { Octokit } = require("@octokit/rest");
-const crypto = require("crypto");
-
+// Use dynamic imports for ES modules
 exports.handler = async (event) => {
+  // Dynamically import modules
+  const { Octokit } = await import('@octokit/rest');
+  const crypto = await import('crypto');
   // Only allow POST requests
   if (event.httpMethod !== "POST") {
     return { statusCode: 405, body: "Method Not Allowed" };
@@ -60,7 +61,7 @@ exports.handler = async (event) => {
 
     // Add the new subscriber with timestamp
     subscribers.push({
-      id: crypto.randomUUID(),
+      id: crypto.randomUUID ? crypto.randomUUID() : crypto.default.randomUUID(),
       email,
       subscribedAt: new Date().toISOString(),
     });
