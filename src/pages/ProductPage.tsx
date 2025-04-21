@@ -1,15 +1,25 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { ArrowLeft, Minus, Plus, MessageSquare } from "lucide-react";
+import {
+  ArrowLeft,
+  Minus,
+  Plus,
+  MessageSquare,
+  ShoppingBag,
+  Check,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { products } from "@/data/products";
+import { useProductContext } from "@/contexts/ProductContext";
 import { toast } from "@/hooks/use-toast";
+import { ToastAction } from "@/components/ui/toast";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
 const ProductPage = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const { addToCart } = useProductContext();
 
   const [quantity, setQuantity] = useState(1);
   const [selectedColor, setSelectedColor] = useState("");
@@ -41,6 +51,34 @@ const ProductPage = () => {
     if (newQuantity >= 1) {
       setQuantity(newQuantity);
     }
+  };
+
+  const handleAddToCart = () => {
+    if (!selectedColor) {
+      toast({
+        title: "Please select a color",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    addToCart(product, quantity, selectedColor);
+
+    // Show success toast without redirecting
+    toast({
+      title: "Added to cart",
+      description: `${quantity} x ${product.name} has been added to your cart`,
+      action: (
+        <ToastAction altText="View Cart" onClick={() => navigate("/cart")}>
+          View Cart
+        </ToastAction>
+      ),
+      duration: 3000, // Show toast for 3 seconds
+      variant: "success",
+      icon: <Check className="h-4 w-4 text-green-600" />,
+    });
+
+    // Don't navigate away from the product page
   };
 
   const handleBuyViaWhatsApp = () => {
@@ -200,12 +238,21 @@ const ProductPage = () => {
               </div>
             </div>
 
-            {/* Action button */}
-            <div className="mt-auto">
+            {/* Action buttons */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-auto">
+              <Button
+                variant="outline"
+                size="lg"
+                onClick={handleAddToCart}
+                className="border-omnis-black text-white hover:bg-omnis-black hover:text-white transition-all duration-300 flex items-center justify-center"
+              >
+                <ShoppingBag className="mr-2 h-4 w-4" />
+                <span className="inline-block">Add to Cart</span>
+              </Button>
               <Button
                 size="lg"
                 onClick={handleBuyViaWhatsApp}
-                className="w-full bg-omnis-black text-white hover:bg-omnis-gray transition-all duration-300 font-medium tracking-wide shadow-lg transform hover:scale-105 flex items-center justify-center"
+                className="bg-omnis-black text-white hover:bg-omnis-gray transition-all duration-300 font-medium tracking-wide shadow-lg transform hover:scale-105 flex items-center justify-center"
               >
                 <MessageSquare className="mr-2 h-4 w-4" />
                 <span className="inline-block">Buy via WhatsApp</span>

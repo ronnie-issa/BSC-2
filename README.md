@@ -129,4 +129,3 @@ npm run dev
 - Migrate to Astro (SEO)
   - Create Schema
 - Email subscription (Marketing)
-- Cart page (buy mulitple products)

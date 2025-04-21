@@ -1,5 +1,4 @@
-
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useState, ReactNode } from "react";
 
 export interface Product {
   id: number;
@@ -21,22 +20,38 @@ export interface CartItem {
 
 interface ProductContextType {
   cart: CartItem[];
-  addToCart: (product: Product, quantity: number, selectedColor: string) => void;
-  removeFromCart: (productId: number) => void;
+  addToCart: (
+    product: Product,
+    quantity: number,
+    selectedColor: string
+  ) => void;
+  removeFromCart: (productId: number, selectedColor?: string) => void;
+  updateCartItemQuantity: (
+    productId: number,
+    selectedColor: string,
+    newQuantity: number
+  ) => void;
   clearCart: () => void;
   getCartTotal: () => number;
 }
 
 const ProductContext = createContext<ProductContextType | undefined>(undefined);
 
-export const ProductProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+export const ProductProvider: React.FC<{ children: ReactNode }> = ({
+  children,
+}) => {
   const [cart, setCart] = useState<CartItem[]>([]);
 
-  const addToCart = (product: Product, quantity: number, selectedColor: string) => {
-    setCart(prevCart => {
+  const addToCart = (
+    product: Product,
+    quantity: number,
+    selectedColor: string
+  ) => {
+    setCart((prevCart) => {
       // Check if item already exists in cart
       const existingItemIndex = prevCart.findIndex(
-        item => item.product.id === product.id && item.selectedColor === selectedColor
+        (item) =>
+          item.product.id === product.id && item.selectedColor === selectedColor
       );
 
       if (existingItemIndex >= 0) {
@@ -51,8 +66,42 @@ export const ProductProvider: React.FC<{ children: ReactNode }> = ({ children })
     });
   };
 
-  const removeFromCart = (productId: number) => {
-    setCart(prevCart => prevCart.filter(item => item.product.id !== productId));
+  const removeFromCart = (productId: number, selectedColor?: string) => {
+    if (selectedColor) {
+      // Remove specific item with matching product ID and color
+      setCart((prevCart) =>
+        prevCart.filter(
+          (item) =>
+            !(
+              item.product.id === productId &&
+              item.selectedColor === selectedColor
+            )
+        )
+      );
+    } else {
+      // Remove all items with matching product ID
+      setCart((prevCart) =>
+        prevCart.filter((item) => item.product.id !== productId)
+      );
+    }
+  };
+
+  const updateCartItemQuantity = (
+    productId: number,
+    selectedColor: string,
+    newQuantity: number
+  ) => {
+    setCart((prevCart) => {
+      return prevCart.map((item) => {
+        if (
+          item.product.id === productId &&
+          item.selectedColor === selectedColor
+        ) {
+          return { ...item, quantity: newQuantity };
+        }
+        return item;
+      });
+    });
   };
 
   const clearCart = () => {
@@ -60,11 +109,23 @@ export const ProductProvider: React.FC<{ children: ReactNode }> = ({ children })
   };
 
   const getCartTotal = () => {
-    return cart.reduce((total, item) => total + (item.product.price * item.quantity), 0);
+    return cart.reduce(
+      (total, item) => total + item.product.price * item.quantity,
+      0
+    );
   };
 
   return (
-    <ProductContext.Provider value={{ cart, addToCart, removeFromCart, clearCart, getCartTotal }}>
+    <ProductContext.Provider
+      value={{
+        cart,
+        addToCart,
+        removeFromCart,
+        updateCartItemQuantity,
+        clearCart,
+        getCartTotal,
+      }}
+    >
       {children}
     </ProductContext.Provider>
   );
@@ -73,7 +134,7 @@ export const ProductProvider: React.FC<{ children: ReactNode }> = ({ children })
 export const useProductContext = () => {
   const context = useContext(ProductContext);
   if (context === undefined) {
-    throw new Error('useProductContext must be used within a ProductProvider');
+    throw new Error("useProductContext must be used within a ProductProvider");
   }
   return context;
 };
