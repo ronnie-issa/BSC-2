@@ -1,11 +1,10 @@
-import { useState, useRef } from "react";
-import { Link } from "react-router-dom";
+import { useRef } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { motion, useInView } from "@/lib/framer";
-import { Button } from "@/components/ui/button";
-import { LazyImage } from "@/components/ui/lazy-image";
+
 import { products } from "@/data/products";
+import ProductCard from "@/components/ProductCard";
 
 const Shop = () => {
   // Refs for animations
@@ -62,29 +61,7 @@ const Shop = () => {
                       delay: 0.3 + index * 0.1, // Staggered animation
                     }}
                   >
-                    <Link
-                      to={`/product/${product.id}`}
-                      className="group cursor-pointer block"
-                    >
-                      <div className="relative overflow-hidden aspect-[3/4] mb-4">
-                        <LazyImage
-                          src={product.image}
-                          alt={`${product.name}`}
-                          imgClassName="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                          wrapperClassName="w-full h-full"
-                          style={{ filter: "grayscale(100%)" }}
-                        />
-                        <div className="absolute inset-0 bg-omnis-black/30 flex items-center justify-center transition-all duration-300">
-                          <span className="text-omnis-white text-sm tracking-widest font-medium px-4 py-2 border border-white/50 backdrop-blur-sm bg-black/20 transform transition-transform duration-300 group-hover:scale-110">
-                            VIEW
-                          </span>
-                        </div>
-                      </div>
-                      <h3 className="text-lg font-medium mb-1">
-                        {product.name}
-                      </h3>
-                      <p className="text-omnis-lightgray">${product.price}</p>
-                    </Link>
+                    <ProductCard product={product} index={index} />
                   </motion.div>
                 ))}
               </div>

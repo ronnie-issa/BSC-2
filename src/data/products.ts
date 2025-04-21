@@ -11,19 +11,9 @@ export const products = [
       { name: "White", value: "#FFFFFF" }
     ]
   },
+
   {
     id: 2,
-    name: "VOID HOODIE",
-    price: 280,
-    image: "/images/products/void-hoodie-gray.jpg",
-    description: "The Void Hoodie redefines everyday comfort with its oversized fit and dropped shoulders. Made from heavyweight cotton and featuring minimal branding, this piece represents our philosophy of understated luxury and attention to detail.",
-    colors: [
-      { name: "Black", value: "#000000" },
-      { name: "White", value: "#FFFFFF" }
-    ]
-  },
-  {
-    id: 3,
     name: "ECLIPSE PANTS",
     price: 320,
     image: "/images/products/eclipse-pants-navy.jpg",
@@ -34,7 +24,7 @@ export const products = [
     ]
   },
   {
-    id: 4,
+    id: 3,
     name: "SHADOW TEE",
     price: 180,
     image: "/images/products/ether-tee-white.jpg",

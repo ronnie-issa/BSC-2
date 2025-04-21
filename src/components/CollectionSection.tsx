@@ -130,7 +130,7 @@ const ProductCard = ({ product, isActive, onMouseEnter }: ProductCardProps) => {
           className="w-full h-full"
           animate={isActive ? "hover" : "initial"}
           variants={imageVariants}
-          transition={{ duration: 0.8, ease: "easeOut" }}
+          transition={{ duration: 1.2, ease: "easeOut" }}
         >
           <LazyImage
             src={product.image}

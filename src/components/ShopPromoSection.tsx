@@ -1,31 +1,52 @@
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import { Link } from "react-router-dom";
 import { motion, useInView } from "@/lib/framer";
 import { ArrowRight } from "lucide-react";
-import { LazyImage } from "@/components/ui/lazy-image";
 import { Button } from "@/components/ui/button";
+import ProductCard from "@/components/ProductCard";
 
 const ShopPromoSection = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(sectionRef, { once: true, amount: 0.2 });
-  const [hoveredImage, setHoveredImage] = useState<number | null>(null);
+  // No need for hoveredImage state anymore as it's handled in the ProductCard component
 
   // Featured products to showcase
   const featuredProducts = [
     {
       id: 1,
       name: "ZENITH JACKET",
+      price: 450,
       image: "/images/products/zenith-jacket-black.jpg",
+      description:
+        "The Zenith Jacket embodies the essence of modern minimalism. Crafted from premium technical fabric with a water-resistant finish.",
+      colors: [
+        { name: "Black", value: "#000000" },
+        { name: "White", value: "#FFFFFF" },
+      ],
+    },
+    {
+      id: 2,
+      name: "ECLIPSE PANTS",
+      price: 320,
+      image: "/images/products/eclipse-pants-navy.jpg",
+      description:
+        "Eclipse Pants blend formal sensibilities with modern construction. Featuring a relaxed fit with tapered legs.",
+      colors: [
+        { name: "Black", value: "#000000" },
+        { name: "White", value: "#FFFFFF" },
+      ],
     },
     {
       id: 3,
-      name: "ECLIPSE PANTS",
-      image: "/images/products/eclipse-pants-navy.jpg",
-    },
-    {
-      id: 4,
       name: "SHADOW TEE",
+      price: 180,
       image: "/images/products/ether-tee-white.jpg",
+      description:
+        "The Shadow Tee exemplifies our commitment to quality basics. Cut from heavyweight cotton jersey with a boxy silhouette.",
+      colors: [
+        { name: "Black", value: "#000000" },
+        { name: "White", value: "#FFFFFF" },
+      ],
     },
   ];
 
@@ -64,33 +85,9 @@ const ShopPromoSection = () => {
                 ease: "easeOut",
                 delay: 0.2 + index * 0.15,
               }}
-              onMouseEnter={() => setHoveredImage(index)}
-              onMouseLeave={() => setHoveredImage(null)}
+              // No mouse events needed here as they're handled in the ProductCard
             >
-              <Link to={`/product/${product.id}`} className="block group">
-                <div className="relative overflow-hidden aspect-[3/4] mb-4">
-                  <motion.div
-                    animate={{
-                      scale: hoveredImage === index ? 1.1 : 1,
-                    }}
-                    transition={{ duration: 0.6, ease: "easeOut" }}
-                  >
-                    <LazyImage
-                      src={product.image}
-                      alt={product.name}
-                      imgClassName="w-full h-full object-cover"
-                      wrapperClassName="w-full h-full"
-                      style={{ filter: "grayscale(100%)" }}
-                    />
-                  </motion.div>
-                  <div className="absolute inset-0 bg-omnis-black/30 flex items-center justify-center transition-all duration-300">
-                    <span className="text-omnis-white text-sm tracking-widest font-medium px-4 py-2 border border-white/50 backdrop-blur-sm bg-black/20 transform transition-transform duration-300 group-hover:scale-110">
-                      VIEW
-                    </span>
-                  </div>
-                </div>
-                <h3 className="text-lg font-medium mb-1">{product.name}</h3>
-              </Link>
+              <ProductCard product={product} index={index} />
             </motion.div>
           ))}
         </div>

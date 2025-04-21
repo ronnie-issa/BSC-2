@@ -195,7 +195,7 @@ const Collections = () => {
                               <LazyImage
                                 src={product.image}
                                 alt={`${product.name} from ${collection.season} ${collection.year} Collection`}
-                                imgClassName="w-full h-full object-cover transition-transform duration-700"
+                                imgClassName="w-full h-full object-cover transition-transform duration-1200"
                                 wrapperClassName="w-full h-full"
                                 style={{
                                   filter: "grayscale(100%)",

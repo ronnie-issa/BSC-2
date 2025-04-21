@@ -1,0 +1,51 @@
+import { useState } from "react";
+import { Link } from "react-router-dom";
+import { motion } from "@/lib/framer";
+import { LazyImage } from "@/components/ui/lazy-image";
+import { Product } from "@/contexts/ProductContext";
+
+interface ProductCardProps {
+  product: Product;
+  index: number; // Kept for consistency with other components that might use it
+}
+
+const ProductCard = ({ product }: ProductCardProps) => {
+  const [isHovered, setIsHovered] = useState(false);
+
+  return (
+    <Link
+      to={`/product/${product.id}`}
+      className="block group"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      <div className="relative overflow-hidden aspect-[3/4] mb-4">
+        <motion.div
+          animate={{
+            scale: isHovered ? 1.1 : 1,
+          }}
+          transition={{ duration: 1.2, ease: "easeOut" }}
+        >
+          <LazyImage
+            src={product.image}
+            alt={product.name}
+            imgClassName="w-full h-full object-cover"
+            wrapperClassName="w-full h-full"
+            style={{ filter: "grayscale(100%)" }}
+          />
+        </motion.div>
+        <div className="absolute inset-0 bg-omnis-black/30 flex items-center justify-center transition-all duration-300">
+          <span className="text-omnis-white text-sm tracking-widest font-medium px-4 py-2 border border-white/50 backdrop-blur-sm bg-black/20 transform transition-transform duration-300 group-hover:scale-110">
+            VIEW
+          </span>
+        </div>
+      </div>
+      <h3 className="text-lg font-medium mb-1">{product.name}</h3>
+      {product.price && (
+        <p className="text-omnis-lightgray">${product.price}</p>
+      )}
+    </Link>
+  );
+};
+
+export default ProductCard;

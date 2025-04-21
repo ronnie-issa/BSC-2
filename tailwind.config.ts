@@ -19,6 +19,9 @@ export default {
 			}
 		},
 		extend: {
+			transitionDuration: {
+				'1200': '1200ms',
+			},
 			fontFamily: {
 				sans: ['Montserrat', 'sans-serif'],
 				heading: ['Red Hat Display', 'sans-serif'],
