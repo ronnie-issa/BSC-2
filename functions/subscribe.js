@@ -1,7 +1,15 @@
-const { Octokit } = require("@octokit/rest");
-const crypto = require("crypto");
+// Use dynamic import for ES modules compatibility
+let Octokit;
+let crypto;
 
-exports.handler = async (event) => {
+// This function will be called by Netlify
+export const handler = async (event) => {
+  // Dynamically import modules
+  if (!Octokit) {
+    const octokit = await import('@octokit/rest');
+    Octokit = octokit.Octokit;
+    crypto = await import('crypto');
+  }
   // Only allow POST requests
   if (event.httpMethod !== "POST") {
     return { statusCode: 405, body: "Method Not Allowed" };
@@ -60,7 +68,7 @@ exports.handler = async (event) => {
 
     // Add the new subscriber with timestamp
     subscribers.push({
-      id: crypto.randomUUID(),
+      id: crypto.randomUUID ? crypto.randomUUID() : crypto.default.randomUUID(),
       email,
       subscribedAt: new Date().toISOString(),
     });
