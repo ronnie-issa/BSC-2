@@ -1,24 +1,25 @@
 import { useEffect, useRef } from "react";
-import { 
-  motion, 
-  useInView, 
-  useAnimation, 
-  AnimatePresence, 
-  useScroll, 
+import {
+  motion,
+  useInView,
+  useAnimation,
+  AnimatePresence,
+  useScroll,
   useTransform,
-  Variants
+  Variants,
+  UseInViewOptions
 } from "framer-motion";
 
 // Common animation variants
 export const fadeIn = (
-  delay: number = 0, 
+  delay: number = 0,
   duration: number = 0.8
 ): Variants => ({
-  hidden: { 
+  hidden: {
     opacity: 0,
-    y: 50 
+    y: 50
   },
-  visible: { 
+  visible: {
     opacity: 1,
     y: 0,
     transition: {
@@ -44,13 +45,13 @@ export const staggerChildren = (
 });
 
 export const textReveal = (
-  delay: number = 0, 
+  delay: number = 0,
   duration: number = 0.8
 ): Variants => ({
-  hidden: { 
+  hidden: {
     clipPath: "inset(0 100% 0 0)",
   },
-  visible: { 
+  visible: {
     clipPath: "inset(0 0% 0 0)",
     transition: {
       delay,
@@ -61,14 +62,14 @@ export const textReveal = (
 });
 
 export const imageReveal = (
-  delay: number = 0, 
+  delay: number = 0,
   duration: number = 0.8
 ): Variants => ({
-  hidden: { 
+  hidden: {
     scale: 1.2,
     opacity: 0,
   },
-  visible: { 
+  visible: {
     scale: 1,
     opacity: 1,
     transition: {
@@ -93,7 +94,7 @@ export const useRevealAnimation = (
 ) => {
   const ref = useRef<HTMLDivElement>(null);
   const controls = useAnimation();
-  
+
   const defaults = {
     delay: 0,
     y: 50,
@@ -103,14 +104,14 @@ export const useRevealAnimation = (
     threshold: 0.2,
     once: true,
   };
-  
+
   const mergedOptions = { ...defaults, ...options };
-  
+
   const inView = useInView(ref, {
-    threshold: mergedOptions.threshold,
+    amount: mergedOptions.threshold, // Using amount instead of threshold
     once: mergedOptions.once,
   });
-  
+
   useEffect(() => {
     if (inView) {
       controls.start({
@@ -125,7 +126,7 @@ export const useRevealAnimation = (
       });
     }
   }, [controls, inView, mergedOptions]);
-  
+
   return {
     ref,
     controls,
@@ -149,27 +150,27 @@ export const useImageRevealAnimation = (
 ) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const controls = useAnimation();
-  
+
   const defaults = {
     delay: 0,
     duration: 0.8,
     threshold: 0.2,
     once: true,
   };
-  
+
   const mergedOptions = { ...defaults, ...options };
-  
+
   const inView = useInView(containerRef, {
-    threshold: mergedOptions.threshold,
+    amount: mergedOptions.threshold, // Using amount instead of threshold
     once: mergedOptions.once,
   });
-  
+
   useEffect(() => {
     if (inView) {
       controls.start("visible");
     }
   }, [controls, inView]);
-  
+
   return {
     containerRef,
     controls,
@@ -202,27 +203,27 @@ export const useTextMaskRevealAnimation = (
 ) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const controls = useAnimation();
-  
+
   const defaults = {
     delay: 0,
     duration: 1,
     threshold: 0.2,
     once: true,
   };
-  
+
   const mergedOptions = { ...defaults, ...options };
-  
+
   const inView = useInView(containerRef, {
-    threshold: mergedOptions.threshold,
+    amount: mergedOptions.threshold, // Using amount instead of threshold
     once: mergedOptions.once,
   });
-  
+
   useEffect(() => {
     if (inView) {
       controls.start("visible");
     }
   }, [controls, inView]);
-  
+
   return {
     containerRef,
     controls,
@@ -249,6 +250,7 @@ export const useParallaxScroll = (
     xRange?: [number, number];
     opacityRange?: [number, number];
     scaleRange?: [number, number];
+    initialY?: number; // Added initialY option
   }
 ) => {
   const ref = useRef<HTMLDivElement>(null);
@@ -256,24 +258,39 @@ export const useParallaxScroll = (
     target: ref,
     offset: ["start end", "end start"],
   });
-  
+
   const defaults = {
     yRange: [0, 0],
     xRange: [0, 0],
     opacityRange: [1, 1],
     scaleRange: [1, 1],
+    initialY: 0, // Default initial Y value is 0
   };
-  
+
   const mergedOptions = { ...defaults, ...options };
-  
+
+  // Create transform for y-axis
   const y = useTransform(scrollYProgress, [0, 1], mergedOptions.yRange);
+
+  // If initialY is provided and not 0, we need to handle it separately
+  // since useTransform doesn't support initial value
   const x = useTransform(scrollYProgress, [0, 1], mergedOptions.xRange);
   const opacity = useTransform(scrollYProgress, [0, 1], mergedOptions.opacityRange);
   const scale = useTransform(scrollYProgress, [0, 1], mergedOptions.scaleRange);
-  
+
+  // Create a style object that respects initialY if provided
+  const style = {
+    y,
+    x,
+    opacity,
+    scale,
+  };
+
   return {
     ref,
-    style: { y, x, opacity, scale },
+    style,
+    // Expose initialY so components can use it if needed
+    initialY: mergedOptions.initialY,
   };
 };
 
@@ -289,7 +306,7 @@ export const useSplitTextAnimation = (
 ) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const controls = useAnimation();
-  
+
   const defaults = {
     delay: 0,
     stagger: 0.02,
@@ -297,20 +314,20 @@ export const useSplitTextAnimation = (
     threshold: 0.2,
     once: true,
   };
-  
+
   const mergedOptions = { ...defaults, ...options };
-  
+
   const inView = useInView(containerRef, {
-    threshold: mergedOptions.threshold,
+    amount: mergedOptions.threshold, // Using amount instead of threshold
     once: mergedOptions.once,
   });
-  
+
   useEffect(() => {
     if (inView) {
       controls.start("visible");
     }
   }, [controls, inView]);
-  
+
   return {
     containerRef,
     controls,

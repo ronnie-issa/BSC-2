@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  // Explicitly set scrolled to false initially to ensure transparent background on load
   const [scrolled, setScrolled] = useState(false);
   const [animateBadge, setAnimateBadge] = useState(false);
   const { cart: bag } = useProductContext();
@@ -31,12 +32,16 @@ const Navbar = () => {
   useEffect(() => {
     const handleScroll = () => {
       const scrollPosition = window.scrollY;
-      if (scrollPosition > 10) {
+      if (scrollPosition > 50) {
+        // Increased threshold from 10px to 50px
         setScrolled(true);
       } else {
         setScrolled(false);
       }
     };
+
+    // Force transparent background on initial load (no initial check)
+    setScrolled(false);
 
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
@@ -45,9 +50,9 @@ const Navbar = () => {
   return (
     <header
       className={cn(
-        "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
+        "fixed top-0 left-0 right-0 z-50 transition-all duration-500",
         scrolled
-          ? "bg-omnis-black/95 backdrop-blur-md py-3"
+          ? "bg-omnis-black/90 backdrop-blur-sm py-3 shadow-md"
           : "bg-transparent py-5"
       )}
     >

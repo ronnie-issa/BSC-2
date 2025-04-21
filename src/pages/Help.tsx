@@ -144,6 +144,8 @@ const Help = () => {
                     </label>
                     <Input
                       id="name"
+                      name="name"
+                      autoComplete="name"
                       className="bg-omnis-black border-omnis-gray focus:border-omnis-white"
                     />
                   </div>
@@ -157,7 +159,9 @@ const Help = () => {
                     </label>
                     <Input
                       id="email"
+                      name="email"
                       type="email"
+                      autoComplete="email"
                       className="bg-omnis-black border-omnis-gray focus:border-omnis-white"
                     />
                   </div>
@@ -171,6 +175,8 @@ const Help = () => {
                     </label>
                     <Input
                       id="subject"
+                      name="subject"
+                      autoComplete="off"
                       className="bg-omnis-black border-omnis-gray focus:border-omnis-white"
                     />
                   </div>

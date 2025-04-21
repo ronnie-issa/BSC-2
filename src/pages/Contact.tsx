@@ -183,6 +183,7 @@ const Contact = () => {
                         value={formData.name}
                         onChange={handleChange}
                         required
+                        autoComplete="name"
                         className="w-full px-4 py-3 bg-omnis-darkgray border border-omnis-gray/20 rounded-none focus:outline-none focus:ring-2 focus:ring-omnis-white/50 text-omnis-white"
                       />
                     </div>
@@ -197,6 +198,7 @@ const Contact = () => {
                         type="email"
                         id="email"
                         name="email"
+                        autoComplete="email"
                         value={formData.email}
                         onChange={handleChange}
                         required
@@ -246,6 +248,7 @@ const Contact = () => {
                       value={formData.message}
                       onChange={handleChange}
                       required
+                      autoComplete="off"
                       rows={6}
                       className="w-full px-4 py-3 bg-omnis-darkgray border border-omnis-gray/20 rounded-none focus:outline-none focus:ring-2 focus:ring-omnis-white/50 text-omnis-white resize-none"
                     ></textarea>

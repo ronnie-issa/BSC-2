@@ -88,28 +88,6 @@ src/
 └── styles/            # Global styles and Tailwind config
 ```
 
-## Development
-
-### Prerequisites
-
-- Node.js & npm - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-### Local Setup
-
-```sh
-# Clone the repository
-git clone <YOUR_GIT_URL>
-
-# Navigate to project directory
-cd <YOUR_PROJECT_NAME>
-
-# Install dependencies
-npm i
-
-# Start development server
-npm run dev
-```
-
 ## Upcoming Changes
 
 1. **Animation Migration**

@@ -1,8 +1,8 @@
-import { useRef } from "react";
+import { useRef, useState, useEffect } from "react";
 import { ArrowDown } from "lucide-react";
 import { Link } from "react-router-dom";
 import { motion, useAnimation, useInView } from "@/lib/framer";
-import { useSplitTextAnimation, useParallaxScroll } from "@/lib/framer";
+import { useSplitTextAnimation } from "@/lib/framer";
 
 const HeroSection = () => {
   const heroRef = useRef<HTMLDivElement>(null);
@@ -18,10 +18,21 @@ const HeroSection = () => {
   const subHeadingInView = useInView(subHeadingRef, { once: true });
   const subHeadingControls = useAnimation();
 
-  // Background parallax effect
-  const bgParallax = useParallaxScroll({
-    yRange: [0, 100],
-  });
+  // Simple state for scroll position
+  const [scrollY, setScrollY] = useState(0);
+
+  // Update scroll position
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrollY(window.scrollY);
+    };
+
+    // Set initial scroll position
+    handleScroll();
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   // Arrow animation
   const arrowVariants = {
@@ -55,13 +66,12 @@ const HeroSection = () => {
     >
       {/* Background Image with Parallax */}
       <motion.div
-        ref={bgParallax.ref}
         className="absolute inset-0 z-0 opacity-60"
         initial={{ opacity: 0 }}
         animate={{ opacity: 0.6 }}
         transition={{ duration: 1 }}
         style={{
-          ...bgParallax.style,
+          transform: `translateY(${Math.min(scrollY * 0.2, 100)}px)`, // Simple parallax with max 100px
           backgroundImage: 'url("/images/hero/main-hero-bg.jpg")',
           backgroundSize: "cover",
           backgroundPosition: "center",

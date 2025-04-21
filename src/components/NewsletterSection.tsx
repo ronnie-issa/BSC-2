@@ -67,6 +67,7 @@ const NewsletterSection = () => {
               name="email"
               placeholder="Your email address"
               required
+              autoComplete="email"
               className="flex-grow px-4 py-3 bg-transparent border border-omnis-gray/30 focus:border-omnis-white focus:outline-none transition-colors text-omnis-white"
             />
             <button

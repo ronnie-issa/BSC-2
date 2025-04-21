@@ -187,6 +187,7 @@ const CheckoutPage = () => {
                         <FormControl>
                           <Input
                             placeholder="Enter your full name"
+                            autoComplete="name"
                             {...field}
                           />
                         </FormControl>
@@ -206,6 +207,7 @@ const CheckoutPage = () => {
                             <Input
                               type="email"
                               placeholder="your@email.com"
+                              autoComplete="email"
                               {...field}
                             />
                           </FormControl>
@@ -221,7 +223,11 @@ const CheckoutPage = () => {
                         <FormItem>
                           <FormLabel>Phone</FormLabel>
                           <FormControl>
-                            <Input placeholder="Your phone number" {...field} />
+                            <Input
+                              placeholder="Your phone number"
+                              autoComplete="tel"
+                              {...field}
+                            />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -236,7 +242,11 @@ const CheckoutPage = () => {
                       <FormItem>
                         <FormLabel>Address</FormLabel>
                         <FormControl>
-                          <Input placeholder="Street address" {...field} />
+                          <Input
+                            placeholder="Street address"
+                            autoComplete="street-address"
+                            {...field}
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -251,7 +261,11 @@ const CheckoutPage = () => {
                         <FormItem>
                           <FormLabel>City</FormLabel>
                           <FormControl>
-                            <Input placeholder="City" {...field} />
+                            <Input
+                              placeholder="City"
+                              autoComplete="address-level2"
+                              {...field}
+                            />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -265,7 +279,11 @@ const CheckoutPage = () => {
                         <FormItem>
                           <FormLabel>State/Province</FormLabel>
                           <FormControl>
-                            <Input placeholder="State" {...field} />
+                            <Input
+                              placeholder="State"
+                              autoComplete="address-level1"
+                              {...field}
+                            />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -279,7 +297,11 @@ const CheckoutPage = () => {
                         <FormItem className="md:col-span-1">
                           <FormLabel>Postal Code</FormLabel>
                           <FormControl>
-                            <Input placeholder="Zip/Postal code" {...field} />
+                            <Input
+                              placeholder="Zip/Postal code"
+                              autoComplete="postal-code"
+                              {...field}
+                            />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
