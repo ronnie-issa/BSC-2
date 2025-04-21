@@ -6,8 +6,8 @@ exports.handler = async (event) => {
   }
 
   try {
-    // Dynamically import SendGrid
-    const sgMail = await import('@sendgrid/mail');
+    // Dynamically import Mailjet
+    const Mailjet = await import('node-mailjet');
 
     // Parse the JSON body
     const { email } = JSON.parse(event.body);
@@ -20,16 +20,14 @@ exports.handler = async (event) => {
       };
     }
 
-    // Set SendGrid API key
-    sgMail.default.setApiKey(process.env.SENDGRID_API_KEY);
+    // Initialize Mailjet client
+    const mailjet = Mailjet.default.apiConnect(
+      process.env.MAILJET_API_KEY,
+      process.env.MAILJET_SECRET_KEY
+    );
 
-    // Create email message with HTML content
-    const msg = {
-      to: email,
-      from: process.env.FROM_EMAIL || 'newsletter@omnisclothing.net', // Use environment variable or default
-      subject: 'Welcome to OMNIS Newsletter',
-      text: 'Thank you for subscribing to the OMNIS newsletter!',
-      html: `
+    // HTML content for the email
+    const htmlContent = `
         <!DOCTYPE html>
         <html>
         <head>
@@ -109,22 +107,39 @@ exports.handler = async (event) => {
               <p>© 2025 OMNIS. All rights reserved.</p>
               <p>You're receiving this email because you subscribed to our newsletter.</p>
               <p>
-                <a href="https://omnis-lb.netlify.app/legal">Privacy Policy</a> | 
+                <a href="https://omnis-lb.netlify.app/legal">Privacy Policy</a> |
                 <a href="[unsubscribe_url]">Unsubscribe</a>
               </p>
               <div class="social-links">
-                <a href="#">Instagram</a> | 
+                <a href="#">Instagram</a> |
                 <a href="#">Facebook</a>
               </div>
             </div>
           </div>
         </body>
         </html>
-      `,
-    };
+      `;
 
-    // Send email
-    await sgMail.default.send(msg);
+    // Send email using Mailjet
+    const request = await mailjet.post('send', { version: 'v3.1' }).request({
+      Messages: [
+        {
+          From: {
+            Email: process.env.FROM_EMAIL || 'newsletter@omnisclothing.net',
+            Name: 'OMNIS',
+          },
+          To: [
+            {
+              Email: email,
+              Name: email.split('@')[0], // Use part before @ as name
+            },
+          ],
+          Subject: 'Welcome to OMNIS Newsletter',
+          TextPart: 'Thank you for subscribing to the OMNIS newsletter!',
+          HTMLPart: htmlContent,
+        },
+      ],
+    });
 
     return {
       statusCode: 200,
