@@ -78,10 +78,32 @@ exports.handler = async (event) => {
       sha: sha,
     });
 
-    return {
-      statusCode: 200,
-      body: JSON.stringify({ message: "Successfully subscribed!" }),
-    };
+    // Send welcome email by calling the welcome-email function
+    try {
+      // Make a POST request to the welcome-email function
+      const fetch = (await import('node-fetch')).default;
+      const domain = process.env.URL || 'https://omnis-lb.netlify.app';
+
+      await fetch(`${domain}/.netlify/functions/welcome-email`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      });
+
+      return {
+        statusCode: 200,
+        body: JSON.stringify({
+          message: "Successfully subscribed! Check your email for a welcome message."
+        }),
+      };
+    } catch (emailError) {
+      console.error("Error sending welcome email:", emailError);
+      // Still return success for subscription even if email fails
+      return {
+        statusCode: 200,
+        body: JSON.stringify({ message: "Successfully subscribed!" }),
+      };
+    }
   } catch (error) {
     console.error("Error:", error);
     return {

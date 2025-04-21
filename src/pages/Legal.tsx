@@ -258,7 +258,29 @@ const Legal = () => {
 
                 <section>
                   <h2 className="text-xl font-bold text-omnis-white mb-4">
-                    7. Changes to Privacy Policy
+                    7. Newsletter Subscriptions
+                  </h2>
+                  <p>
+                    When you subscribe to our newsletter, we collect and store
+                    your email address to send you marketing communications,
+                    product updates, and promotional offers. Your email is
+                    stored securely in our database and is not shared with third
+                    parties except as necessary to deliver the newsletter
+                    service.
+                  </p>
+                  <p className="mt-2">
+                    You can unsubscribe from our newsletter at any time by
+                    clicking the "unsubscribe" link at the bottom of any
+                    newsletter email or by contacting us directly. Upon
+                    unsubscribing, your email will be removed from our active
+                    marketing list, though it may remain in our records for
+                    analytical and legal purposes.
+                  </p>
+                </section>
+
+                <section>
+                  <h2 className="text-xl font-bold text-omnis-white mb-4">
+                    8. Changes to Privacy Policy
                   </h2>
                   <p>
                     We may update our Privacy Policy from time to time. We will
@@ -269,7 +291,7 @@ const Legal = () => {
 
                 <section>
                   <h2 className="text-xl font-bold text-omnis-white mb-4">
-                    8. Contact Us
+                    9. Contact Us
                   </h2>
                   <p>
                     If you have any questions about our Privacy Policy, please
@@ -278,7 +300,7 @@ const Legal = () => {
                 </section>
 
                 <p className="text-sm italic mt-8">
-                  Last updated: March 28, 2025
+                  Last updated: April 21, 2025
                 </p>
               </TabsContent>
 

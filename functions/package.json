@@ -4,6 +4,8 @@
   "description": "Netlify functions for Omnis",
   "main": "index.js",
   "dependencies": {
-    "@octokit/rest": "^21.1.1"
+    "@octokit/rest": "^21.1.1",
+    "@sendgrid/mail": "^8.1.5",
+    "node-fetch": "^3.3.2"
   }
 }
