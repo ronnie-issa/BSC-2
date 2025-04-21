@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { motion, useInView } from "@/lib/framer";
 import { useToast } from "@/components/ui/use-toast";
 
@@ -6,6 +6,7 @@ const NewsletterSection = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
   const { toast } = useToast();
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Use Framer Motion's useInView hook for scroll-based animations
   const isInView = useInView(sectionRef, {
@@ -13,22 +14,41 @@ const NewsletterSection = () => {
     amount: 0.2,
   });
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setIsSubmitting(true);
 
     const form = e.currentTarget;
     const email = new FormData(form).get("email") as string;
 
-    // Simulate API call
-    setTimeout(() => {
+    try {
+      const response = await fetch("/.netlify/functions/subscribe", {
+        method: "POST",
+        body: JSON.stringify({ email }),
+        headers: { "Content-Type": "application/json" },
+      });
+
+      const data = await response.json();
+
+      // Show success message to user
       toast({
-        title: "Subscribed!",
-        description: `You've been added to our newsletter with ${email}`,
+        title: "Thank you!",
+        description: data.message,
+        variant: "success",
       });
 
       // Reset form
       form.reset();
-    }, 1000);
+    } catch (error) {
+      console.error("Error:", error);
+      toast({
+        title: "Error",
+        description: "Something went wrong. Please try again later.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -72,9 +92,10 @@ const NewsletterSection = () => {
             />
             <button
               type="submit"
-              className="px-6 py-3 bg-omnis-white text-omnis-black font-medium hover:bg-omnis-lightgray transition-colors"
+              disabled={isSubmitting}
+              className="px-6 py-3 bg-omnis-white text-omnis-black font-medium hover:bg-omnis-lightgray transition-colors disabled:opacity-70 disabled:cursor-not-allowed"
             >
-              SUBSCRIBE
+              {isSubmitting ? "SUBMITTING..." : "SUBSCRIBE"}
             </button>
           </motion.form>
 
