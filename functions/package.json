@@ -1,0 +1,9 @@
+{
+  "name": "netlify-functions",
+  "version": "1.0.0",
+  "description": "Netlify functions for Omnis",
+  "main": "index.js",
+  "dependencies": {
+    "@octokit/rest": "^21.1.1"
+  }
+}
