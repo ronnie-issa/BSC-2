@@ -54,7 +54,7 @@ const Navbar = () => {
       <div className="container mx-auto px-6 flex justify-between items-center">
         <Link
           to="/"
-          className="text-2xl md:text-3xl font-logo font-medium z-50"
+          className="text-2xl md:text-3xl font-logo font-medium z-50 transition-all duration-300 hover:text-white hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.7)]"
           style={{ letterSpacing: "-0.5px" }}
         >
           OMNIS

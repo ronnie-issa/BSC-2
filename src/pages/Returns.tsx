@@ -115,7 +115,7 @@ const Returns = () => {
               </p>
               <p className="text-omnis-lightgray">
                 For any questions regarding returns or exchanges, please contact
-                our customer service team at returns@omnis.com.
+                our customer service team at returns@oomnisclothing.net.
               </p>
             </motion.section>
           </div>

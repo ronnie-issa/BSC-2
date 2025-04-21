@@ -37,7 +37,7 @@ export const products = [
     id: 4,
     name: "SHADOW TEE",
     price: 180,
-    image: "/images/products/shadow-tee-black.jpg",
+    image: "/images/products/ether-tee-white.jpg",
     description: "The Shadow Tee exemplifies our commitment to quality basics. Cut from heavyweight cotton jersey with a boxy silhouette, this tee features reinforced seams and a precision-cut neckline for the perfect everyday essential.",
     colors: [
       { name: "Black", value: "#000000" },

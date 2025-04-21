@@ -89,9 +89,21 @@ const Contact = () => {
                       <Mail className="mt-1 text-omnis-lightgray" size={20} />
                       <div>
                         <h3 className="font-medium">Email</h3>
-                        <p className="text-omnis-lightgray">info@omnis.com</p>
                         <p className="text-omnis-lightgray">
-                          support@omnis.com
+                          <a
+                            href="mailto:info@omnisclothing.net"
+                            className="hover:text-white transition-colors duration-300 underline underline-offset-2"
+                          >
+                            info@omnisclothing.net
+                          </a>
+                        </p>
+                        <p className="text-omnis-lightgray">
+                          <a
+                            href="mailto:support@omnisclothing.net"
+                            className="hover:text-white transition-colors duration-300 underline underline-offset-2"
+                          >
+                            support@omnisclothing.net
+                          </a>
                         </p>
                       </div>
                     </li>
@@ -100,7 +112,12 @@ const Contact = () => {
                       <div>
                         <h3 className="font-medium">Phone</h3>
                         <p className="text-omnis-lightgray">
-                          +1 (800) 555-0123
+                          <a
+                            href="tel:+96181386697"
+                            className="hover:text-white transition-colors duration-300 underline underline-offset-2"
+                          >
+                            +961 81 386 697
+                          </a>
                         </p>
                         <p className="text-sm text-omnis-lightgray/70">
                           Mon-Fri, 9am-6pm EST
@@ -111,12 +128,8 @@ const Contact = () => {
                       <MapPin className="mt-1 text-omnis-lightgray" size={20} />
                       <div>
                         <h3 className="font-medium">Location</h3>
-                        <p className="text-omnis-lightgray">
-                          123 Fashion Avenue
-                        </p>
-                        <p className="text-omnis-lightgray">
-                          New York, NY 10010
-                        </p>
+                        <p className="text-omnis-lightgray">Beirut</p>
+                        <p className="text-omnis-lightgray">Lebanon</p>
                       </div>
                     </li>
                   </ul>
@@ -241,7 +254,7 @@ const Contact = () => {
                   <Button
                     type="submit"
                     disabled={isSubmitting}
-                    className="w-full md:w-auto px-8 py-6 border border-omnis-white bg-transparent hover:bg-omnis-white hover:text-omnis-black text-sm uppercase tracking-widest transition-all duration-300"
+                    className="w-full md:w-auto px-8 py-6 text-white border border-omnis-white bg-transparent hover:bg-omnis-white hover:text-omnis-black text-sm uppercase tracking-widest transition-all duration-300"
                   >
                     {isSubmitting ? "Sending..." : "Send Message"}
                   </Button>

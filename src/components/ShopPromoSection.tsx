@@ -25,7 +25,7 @@ const ShopPromoSection = () => {
     {
       id: 4,
       name: "SHADOW TEE",
-      image: "/images/products/shadow-tee-black.jpg",
+      image: "/images/products/ether-tee-white.jpg",
     },
   ];
 

@@ -105,7 +105,7 @@ const Shipping = () => {
               </p>
               <p className="text-omnis-lightgray">
                 For any questions regarding your shipment, please contact our
-                customer service team at support@omnis.com.
+                customer service team at support@omnisclothing.net.
               </p>
             </motion.section>
           </div>

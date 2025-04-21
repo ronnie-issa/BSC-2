@@ -273,7 +273,7 @@ const Legal = () => {
                   </h2>
                   <p>
                     If you have any questions about our Privacy Policy, please
-                    contact us at privacy@omnis.com.
+                    contact us at privacy@omnisclothing.net.
                   </p>
                 </section>
 
@@ -418,8 +418,8 @@ const Legal = () => {
                     We welcome your feedback on the accessibility of our
                     website. If you encounter accessibility barriers or have
                     suggestions for improvement, please contact us at
-                    accessibility@omnis.com. We are committed to addressing
-                    accessibility concerns promptly.
+                    accessibility@omnisclothing.net. We are committed to
+                    addressing accessibility concerns promptly.
                   </p>
                 </section>
 
