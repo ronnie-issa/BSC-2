@@ -9,23 +9,23 @@ const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [animateBadge, setAnimateBadge] = useState(false);
-  const { cart } = useProductContext();
-  const prevCartCountRef = useRef(0);
+  const { cart: bag } = useProductContext();
+  const prevBagCountRef = useRef(0);
 
   const toggleMenu = () => setIsOpen(!isOpen);
 
-  // Calculate total items in cart
-  const cartItemCount = cart.reduce((total, item) => total + item.quantity, 0);
+  // Calculate total items in bag
+  const bagItemCount = bag.reduce((total, item) => total + item.quantity, 0);
 
-  // Animate badge when cart count changes
+  // Animate badge when bag count changes
   useEffect(() => {
-    if (cartItemCount > prevCartCountRef.current) {
+    if (bagItemCount > prevBagCountRef.current) {
       setAnimateBadge(true);
       const timer = setTimeout(() => setAnimateBadge(false), 300);
       return () => clearTimeout(timer);
     }
-    prevCartCountRef.current = cartItemCount;
-  }, [cartItemCount]);
+    prevBagCountRef.current = bagItemCount;
+  }, [bagItemCount]);
 
   // Handle scroll for navbar background
   useEffect(() => {
@@ -64,21 +64,21 @@ const Navbar = () => {
         <nav className="hidden md:flex items-center space-x-8">
           <NavLink to="/about">ABOUT</NavLink>
           <NavLink to="/shop">SHOP</NavLink>
-          <Link to="/cart" className="relative group">
+          <Link to="/bag" className="relative group">
             <ShoppingBag
               size={20}
               className={`${
-                cartItemCount > 0 ? "text-omnis-white" : "text-omnis-lightgray"
+                bagItemCount > 0 ? "text-omnis-white" : "text-omnis-lightgray"
               } group-hover:text-omnis-white transition-colors duration-300`}
             />
-            {cartItemCount > 0 && (
+            {bagItemCount > 0 && (
               <Badge
                 variant="default"
-                className={`absolute -top-2 -right-2 h-5 w-5 flex items-center justify-center p-0 bg-red-600 text-white text-xs font-medium transform transition-transform duration-300 group-hover:scale-110 ${
+                className={`absolute -top-2 -right-2 h-5 w-5 flex items-center justify-center p-0 bg-red-600 text-white text-xs font-medium ${
                   animateBadge ? "animate-pulse scale-125" : ""
                 }`}
               >
-                {cartItemCount}
+                {bagItemCount}
               </Badge>
             )}
           </Link>
@@ -107,11 +107,11 @@ const Navbar = () => {
             <MobileNavLink to="/shop" onClick={toggleMenu}>
               SHOP
             </MobileNavLink>
-            <MobileNavLink to="/cart" onClick={toggleMenu}>
-              CART{" "}
-              {cartItemCount > 0 && (
+            <MobileNavLink to="/bag" onClick={toggleMenu}>
+              BAG{" "}
+              {bagItemCount > 0 && (
                 <span className="inline-flex items-center justify-center ml-2 bg-red-600 text-white rounded-full h-5 w-5 text-xs">
-                  {cartItemCount}
+                  {bagItemCount}
                 </span>
               )}
             </MobileNavLink>

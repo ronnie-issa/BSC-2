@@ -7,19 +7,19 @@ import { toast } from "@/hooks/use-toast";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
-const CartPage = () => {
+const BagPage = () => {
   const navigate = useNavigate();
-  const { cart, removeFromCart, updateCartItemQuantity, getCartTotal } =
+  const { cart: bag, removeFromCart: removeFromBag, updateCartItemQuantity: updateBagItemQuantity, getCartTotal: getBagTotal } =
     useProductContext();
   const [isProcessing, setIsProcessing] = useState(false);
 
-  // Format cart items for WhatsApp message
-  const formatCartForWhatsApp = () => {
+  // Format bag items for WhatsApp message
+  const formatBagForWhatsApp = () => {
     let message =
       "Hello, I'd like to place an order for the following items:\n\n";
 
-    // Add each cart item to the message
-    cart.forEach((item, index) => {
+    // Add each bag item to the message
+    bag.forEach((item, index) => {
       const colorName =
         item.product.colors.find((c) => c.value === item.selectedColor)?.name ||
         "Default";
@@ -34,11 +34,11 @@ const CartPage = () => {
     });
 
     // Add order total
-    message += `Total Items: ${cart.reduce(
+    message += `Total Items: ${bag.reduce(
       (total, item) => total + item.quantity,
       0
     )}\n`;
-    message += `Order Total: $${getCartTotal().toFixed(2)}\n\n`;
+    message += `Order Total: $${getBagTotal().toFixed(2)}\n\n`;
     message +=
       "Please let me know how to proceed with payment and delivery. Thank you!";
 
@@ -47,18 +47,19 @@ const CartPage = () => {
 
   // Handle checkout via WhatsApp
   const handleCheckoutViaWhatsApp = () => {
-    if (cart.length === 0) {
+    if (bag.length === 0) {
       toast({
-        title: "Your cart is empty",
-        description: "Add some products to your cart before checking out.",
+        title: "Your bag is empty",
+        description: "Add some products to your bag before checking out.",
         variant: "destructive",
+        duration: 7000, // 7 seconds
       });
       return;
     }
 
     setIsProcessing(true);
 
-    const message = formatCartForWhatsApp();
+    const message = formatBagForWhatsApp();
     const phoneNumber = "96181386697"; // Lebanon WhatsApp business number
     const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(
       message
@@ -72,6 +73,7 @@ const CartPage = () => {
       toast({
         title: "Opening WhatsApp",
         description: "Redirecting you to WhatsApp to complete your purchase.",
+        duration: 7000, // 7 seconds
       });
     } else {
       // If the window didn't open (possibly blocked or URL issues), provide alternative
@@ -80,6 +82,7 @@ const CartPage = () => {
         description:
           "Please contact us directly on WhatsApp at +961 81 386 697 with your order details.",
         variant: "destructive",
+        duration: 7000, // 7 seconds
       });
 
       // Copy order details to clipboard as a fallback
@@ -89,6 +92,7 @@ const CartPage = () => {
           toast({
             title: "Order details copied",
             description: "Order details copied to clipboard for easy sharing.",
+            duration: 7000, // 7 seconds
           });
         })
         .catch(() => {
@@ -104,7 +108,7 @@ const CartPage = () => {
     selectedColor: string,
     amount: number
   ) => {
-    const item = cart.find(
+    const item = bag.find(
       (item) =>
         item.product.id === productId && item.selectedColor === selectedColor
     );
@@ -115,39 +119,41 @@ const CartPage = () => {
 
     if (newQuantity <= 0) {
       // Remove item if quantity becomes 0
-      removeFromCart(productId, selectedColor);
+      removeFromBag(productId, selectedColor);
       toast({
         title: "Item removed",
-        description: `${item.product.name} has been removed from your cart`,
+        description: `${item.product.name} has been removed from your bag`,
+        duration: 7000, // 7 seconds
       });
     } else {
-      // Update quantity using the new updateCartItemQuantity function
-      updateCartItemQuantity(productId, selectedColor, newQuantity);
+      // Update quantity using the new updateBagItemQuantity function
+      updateBagItemQuantity(productId, selectedColor, newQuantity);
     }
   };
 
   const handleRemoveItem = (productId: number, selectedColor: string) => {
-    const item = cart.find(
+    const item = bag.find(
       (item) =>
         item.product.id === productId && item.selectedColor === selectedColor
     );
     if (!item) return;
 
-    removeFromCart(productId, selectedColor);
+    removeFromBag(productId, selectedColor);
     toast({
       title: "Item removed",
-      description: `${item.product.name} has been removed from your cart`,
+      description: `${item.product.name} has been removed from your bag`,
+      duration: 7000, // 7 seconds
     });
   };
 
-  if (cart.length === 0) {
+  if (bag.length === 0) {
     return (
       <>
         <Navbar />
         <div className="container mx-auto px-4 py-20 min-h-[60vh] flex flex-col items-center justify-center">
-          <h1 className="text-2xl font-bold mb-4">Your cart is empty</h1>
+          <h1 className="text-2xl font-bold mb-4">Your bag is empty</h1>
           <p className="mb-8 text-center max-w-md">
-            Add some items to your cart before proceeding to checkout.
+            Add some items to your bag before proceeding to checkout.
           </p>
           <Button onClick={() => navigate("/shop")}>Continue Shopping</Button>
         </div>
@@ -170,13 +176,13 @@ const CartPage = () => {
           Back
         </Button>
 
-        <h1 className="text-3xl font-bold mb-8">Your Cart</h1>
+        <h1 className="text-3xl font-bold mb-8">Your Bag</h1>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
-          {/* Cart items */}
+          {/* Bag items */}
           <div className="lg:col-span-2">
             <div className="space-y-6">
-              {cart.map((item, index) => {
+              {bag.map((item, index) => {
                 const colorName =
                   item.product.colors.find(
                     (c) => c.value === item.selectedColor
@@ -279,7 +285,7 @@ const CartPage = () => {
               <div className="space-y-4 mb-6">
                 <div className="flex justify-between">
                   <span>Subtotal</span>
-                  <span>${getCartTotal().toFixed(2)}</span>
+                  <span>${getBagTotal().toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between">
                   <span>Shipping</span>
@@ -290,7 +296,7 @@ const CartPage = () => {
               <div className="border-t border-omnis-gray/30 pt-4 mb-6">
                 <div className="flex justify-between font-bold text-lg">
                   <span>Total</span>
-                  <span>${getCartTotal().toFixed(2)}</span>
+                  <span>${getBagTotal().toFixed(2)}</span>
                 </div>
               </div>
 
@@ -320,4 +326,4 @@ const CartPage = () => {
   );
 };
 
-export default CartPage;
+export default BagPage;

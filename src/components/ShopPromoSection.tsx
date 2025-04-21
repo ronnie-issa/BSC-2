@@ -18,9 +18,9 @@ const ShopPromoSection = () => {
       image: "/images/products/zenith-jacket-black.jpg",
     },
     {
-      id: 2,
-      name: "VOID HOODIE",
-      image: "/images/products/void-hoodie-gray.jpg",
+      id: 3,
+      name: "ECLIPSE PANTS",
+      image: "/images/products/eclipse-pants-navy.jpg",
     },
     {
       id: 4,

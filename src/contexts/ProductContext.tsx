@@ -12,14 +12,14 @@ export interface Product {
   }[];
 }
 
-export interface CartItem {
+export interface BagItem {
   product: Product;
   quantity: number;
   selectedColor: string;
 }
 
 interface ProductContextType {
-  cart: CartItem[];
+  cart: BagItem[];
   addToCart: (
     product: Product,
     quantity: number,
@@ -40,7 +40,7 @@ const ProductContext = createContext<ProductContextType | undefined>(undefined);
 export const ProductProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
-  const [cart, setCart] = useState<CartItem[]>([]);
+  const [cart, setCart] = useState<BagItem[]>([]);
 
   const addToCart = (
     product: Product,
@@ -48,7 +48,7 @@ export const ProductProvider: React.FC<{ children: ReactNode }> = ({
     selectedColor: string
   ) => {
     setCart((prevCart) => {
-      // Check if item already exists in cart
+      // Check if item already exists in bag
       const existingItemIndex = prevCart.findIndex(
         (item) =>
           item.product.id === product.id && item.selectedColor === selectedColor
@@ -60,7 +60,7 @@ export const ProductProvider: React.FC<{ children: ReactNode }> = ({
         newCart[existingItemIndex].quantity += quantity;
         return newCart;
       } else {
-        // Add new item to cart
+        // Add new item to bag
         return [...prevCart, { product, quantity, selectedColor }];
       }
     });

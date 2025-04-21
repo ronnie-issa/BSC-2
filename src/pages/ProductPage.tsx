@@ -53,11 +53,12 @@ const ProductPage = () => {
     }
   };
 
-  const handleAddToCart = () => {
+  const handleAddToBag = () => {
     if (!selectedColor) {
       toast({
         title: "Please select a color",
         variant: "destructive",
+        duration: 7000, // 7 seconds
       });
       return;
     }
@@ -66,14 +67,14 @@ const ProductPage = () => {
 
     // Show success toast without redirecting
     toast({
-      title: "Added to cart",
-      description: `${quantity} x ${product.name} has been added to your cart`,
+      title: "Added to bag",
+      description: `${quantity} x ${product.name} has been added to your bag`,
       action: (
-        <ToastAction altText="View Cart" onClick={() => navigate("/cart")}>
-          View Cart
+        <ToastAction altText="View Bag" onClick={() => navigate("/bag")}>
+          View Bag
         </ToastAction>
       ),
-      duration: 3000, // Show toast for 3 seconds
+      duration: 7000, // Show toast for 7 seconds
       variant: "success",
       icon: <Check className="h-4 w-4 text-green-600" />,
     });
@@ -86,6 +87,7 @@ const ProductPage = () => {
       toast({
         title: "Please select a color",
         variant: "destructive",
+        duration: 7000, // 7 seconds
       });
       return;
     }
@@ -131,6 +133,7 @@ const ProductPage = () => {
       toast({
         title: "Opening WhatsApp",
         description: "Redirecting you to WhatsApp to complete your purchase.",
+        duration: 7000, // 7 seconds
       });
     } else {
       // If the window didn't open (possibly blocked or URL issues), provide alternative
@@ -138,6 +141,7 @@ const ProductPage = () => {
         title: "WhatsApp Link Issue",
         description: `Please contact us directly on WhatsApp at +961 81 386 697 and mention ${product.name}.`,
         variant: "destructive",
+        duration: 7000, // 7 seconds
       });
 
       // Copy product details to clipboard as a fallback
@@ -148,6 +152,7 @@ const ProductPage = () => {
             title: "Product details copied",
             description:
               "Product details copied to clipboard for easy sharing.",
+            duration: 7000, // 7 seconds
           });
         })
         .catch(() => {
@@ -243,11 +248,11 @@ const ProductPage = () => {
               <Button
                 variant="outline"
                 size="lg"
-                onClick={handleAddToCart}
+                onClick={handleAddToBag}
                 className="border-omnis-black text-white hover:bg-omnis-black hover:text-white transition-all duration-300 flex items-center justify-center"
               >
                 <ShoppingBag className="mr-2 h-4 w-4" />
-                <span className="inline-block">Add to Cart</span>
+                <span className="inline-block">Add to Bag</span>
               </Button>
               <Button
                 size="lg"

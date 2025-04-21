@@ -41,7 +41,11 @@ const formSchema = z.object({
 
 const CheckoutPage = () => {
   const navigate = useNavigate();
-  const { cart, getCartTotal, clearCart } = useProductContext();
+  const {
+    cart: bag,
+    getCartTotal: getBagTotal,
+    clearCart: clearBag,
+  } = useProductContext();
   const [paymentMethod, setPaymentMethod] = useState("cod");
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -58,14 +62,14 @@ const CheckoutPage = () => {
     },
   });
 
-  if (cart.length === 0) {
+  if (bag.length === 0) {
     return (
       <>
         <Navbar />
         <div className="container mx-auto px-4 py-20 min-h-[60vh] flex flex-col items-center justify-center">
-          <h1 className="text-2xl font-bold mb-4">Your cart is empty</h1>
+          <h1 className="text-2xl font-bold mb-4">Your bag is empty</h1>
           <p className="mb-8 text-center max-w-md">
-            Add some items to your cart before proceeding to checkout.
+            Add some items to your bag before proceeding to checkout.
           </p>
           <Button onClick={() => navigate("/shop")}>Continue Shopping</Button>
         </div>
@@ -87,7 +91,7 @@ const CheckoutPage = () => {
     // Process the order
     // In a real app, we would send this data to a backend API
     setTimeout(() => {
-      clearCart();
+      clearBag();
       navigate("/order-confirmation");
     }, 1000);
   };
@@ -99,10 +103,10 @@ const CheckoutPage = () => {
         <Button
           variant="ghost"
           className="mb-8 group"
-          onClick={() => navigate("/cart")}
+          onClick={() => navigate("/bag")}
         >
           <ArrowLeft className="mr-2 h-4 w-4 group-hover:-translate-x-1 transition-transform" />
-          Back to Cart
+          Back to Bag
         </Button>
 
         <h1 className="text-3xl font-bold mb-8">Checkout</h1>
@@ -114,7 +118,7 @@ const CheckoutPage = () => {
               <h2 className="text-xl font-bold mb-4">Order Summary</h2>
 
               <div className="space-y-4 mb-6">
-                {cart.map((item, index) => (
+                {bag.map((item, index) => (
                   <div
                     key={`${item.product.id}-${index}`}
                     className="flex gap-4"
@@ -148,7 +152,7 @@ const CheckoutPage = () => {
               <div className="border-t border-omnis-gray pt-4">
                 <div className="flex justify-between mb-2">
                   <span>Subtotal</span>
-                  <span>${getCartTotal().toFixed(2)}</span>
+                  <span>${getBagTotal().toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between mb-2">
                   <span>Shipping</span>
@@ -156,7 +160,7 @@ const CheckoutPage = () => {
                 </div>
                 <div className="flex justify-between font-bold text-lg mt-4 pt-4 border-t border-omnis-gray">
                   <span>Total</span>
-                  <span>${getCartTotal().toFixed(2)}</span>
+                  <span>${getBagTotal().toFixed(2)}</span>
                 </div>
               </div>
             </div>
