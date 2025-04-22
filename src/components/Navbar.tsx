@@ -72,21 +72,31 @@ const Navbar = ({ scrollY = 0 }: NavbarProps) => {
   // Track if we're fully scrolled for logo height calculations
   const [isFullyScrolled, setIsFullyScrolled] = useState(false);
 
+  // Calculate responsive maxScroll value based on screen size
+  const maxScroll = windowWidth < 768 ? 200 : 300; // Shorter scroll distance on mobile
+
   // Update isFullyScrolled state when scroll position changes
   useEffect(() => {
-    setIsFullyScrolled(scrollY >= 300);
-  }, [scrollY]);
+    setIsFullyScrolled(scrollY >= maxScroll);
+  }, [scrollY, maxScroll]);
 
   // Calculate logo transform values based on scroll position
-  const maxScroll = 300; // The scroll amount at which the transition completes
   const progress = Math.min(1, scrollY / maxScroll);
 
-  // Calculate scale - from 8 (large) to appropriate navbar size
-  const logoScale = 8 - progress * (8 - 1.5);
+  // Calculate responsive scale based on screen width
+  // On mobile, use a smaller initial scale (4x instead of 8x)
+  const initialScale = windowWidth < 768 ? 4 : 8;
+  const finalScale = 1.5;
 
-  // Calculate Y position - from 100px to 0 (navbar position)
+  // Calculate scale - from initialScale (large) to finalScale (navbar size)
+  const logoScale = initialScale - progress * (initialScale - finalScale);
+
+  // Calculate Y position - responsive based on screen width
+  // Use a smaller initial Y offset on mobile
+  const initialY = windowWidth < 768 ? 60 : 100;
+
   // When fully scrolled (progress = 1), we want the logo to be vertically centered
-  const logoY = 100 * (1 - progress);
+  const logoY = initialY * (1 - progress);
 
   // Calculate X position - always centered
   // No horizontal movement needed as we want it centered both initially and in navbar
@@ -115,7 +125,7 @@ const Navbar = ({ scrollY = 0 }: NavbarProps) => {
             >
               <Link
                 to="/"
-                className="text-2xl md:text-3xl font-logo font-medium hover:text-white hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.7)]"
+                className="text-xl sm:text-2xl md:text-3xl font-logo font-medium hover:text-white hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.7)]"
                 style={{
                   letterSpacing: "-0.5px",
                   whiteSpace: "nowrap",
