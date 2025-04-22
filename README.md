@@ -104,6 +104,8 @@ src/
 
 ## TODO (purpose)
 
-- Migrate to Astro (SEO)
+- Migrate to NextJS, or a simpler/faster solution (SEO)
   - Create Schema
-- Email subscription (Marketing)
+- Test Mailjet newsletter subscription welcome email (Marketing)
+  - unsubscribe functionality
+- Add Hotjar or Clarity and adjust privacy policy (Analytics)

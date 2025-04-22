@@ -4,8 +4,13 @@ import { Menu, X, ShoppingBag } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useProductContext } from "@/contexts/ProductContext";
 import { Badge } from "@/components/ui/badge";
+import { motion } from "@/lib/framer";
 
-const Navbar = () => {
+interface NavbarProps {
+  scrollY?: number;
+}
+
+const Navbar = ({ scrollY = 0 }: NavbarProps) => {
   const [isOpen, setIsOpen] = useState(false);
   // Explicitly set scrolled to false initially to ensure transparent background on load
   const [scrolled, setScrolled] = useState(false);
@@ -47,6 +52,10 @@ const Navbar = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  // Calculate logo opacity based on scroll position
+  // Logo should start appearing as user scrolls down
+  const logoOpacity = Math.min(1, scrollY / 200);
+
   return (
     <header
       className={cn(
@@ -57,13 +66,15 @@ const Navbar = () => {
       )}
     >
       <div className="container mx-auto px-6 flex justify-between items-center">
-        <Link
-          to="/"
-          className="text-2xl md:text-3xl font-logo font-medium z-50 transition-all duration-300 hover:text-white hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.7)]"
-          style={{ letterSpacing: "-0.5px" }}
-        >
-          OMNIS
-        </Link>
+        <motion.div style={{ opacity: logoOpacity }} className="z-50">
+          <Link
+            to="/"
+            className="text-2xl md:text-3xl font-logo font-medium transition-all duration-300 hover:text-white hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.7)]"
+            style={{ letterSpacing: "-0.5px" }}
+          >
+            OMNIS
+          </Link>
+        </motion.div>
 
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center space-x-8">
