@@ -55,7 +55,7 @@ const Contact = () => {
       <Navbar />
 
       <main className="pt-32 pb-20">
-        <div className="container mx-auto px-6" ref={contentRef}>
+        <div className="container mx-auto" ref={contentRef}>
           <motion.header
             className="text-center mb-16"
             initial={{ y: 30, opacity: 0 }}

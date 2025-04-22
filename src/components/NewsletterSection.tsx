@@ -59,7 +59,7 @@ const NewsletterSection = () => {
       animate={isInView ? { y: 0, opacity: 1 } : { y: 50, opacity: 0 }}
       transition={{ duration: 0.8, ease: "easeOut" }}
     >
-      <div className="container mx-auto px-6 relative">
+      <div className="container mx-auto relative">
         <motion.div
           className="max-w-3xl mx-auto text-center"
           initial={{ opacity: 0 }}

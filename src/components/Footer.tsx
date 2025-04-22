@@ -12,7 +12,7 @@ const Footer = () => {
 
   return (
     <footer className="bg-omnis-black py-12 border-t border-omnis-gray/20">
-      <div className="container mx-auto px-6">
+      <div className="container mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-10">
           <div className="md:col-span-1">
             <Link to="/">

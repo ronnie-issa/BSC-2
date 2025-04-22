@@ -16,7 +16,7 @@ const Legal = () => {
       <Navbar />
 
       <main className="pt-32 pb-20" ref={contentRef}>
-        <div className="container mx-auto px-6">
+        <div className="container mx-auto">
           <motion.header
             ref={headerRef}
             className="text-center mb-16"

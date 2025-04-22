@@ -119,7 +119,7 @@ const Navbar = ({ scrollY = 0, showLogoEffect = false }: NavbarProps) => {
           : "bg-transparent py-7"
       )}
     >
-      <div className="container mx-auto px-6 md:px-8 relative">
+      <div className="container mx-auto relative">
         {/* Absolute positioned logo in the center - only shown when effect is enabled */}
         {showLogoEffect && (
           <div className="absolute left-0 right-0 flex justify-center z-50 w-full pointer-events-none">

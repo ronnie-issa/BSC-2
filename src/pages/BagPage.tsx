@@ -9,8 +9,12 @@ import Footer from "@/components/Footer";
 
 const BagPage = () => {
   const navigate = useNavigate();
-  const { cart: bag, removeFromCart: removeFromBag, updateCartItemQuantity: updateBagItemQuantity, getCartTotal: getBagTotal } =
-    useProductContext();
+  const {
+    cart: bag,
+    removeFromCart: removeFromBag,
+    updateCartItemQuantity: updateBagItemQuantity,
+    getCartTotal: getBagTotal,
+  } = useProductContext();
   const [isProcessing, setIsProcessing] = useState(false);
 
   // Format bag items for WhatsApp message
@@ -150,7 +154,7 @@ const BagPage = () => {
     return (
       <>
         <Navbar />
-        <div className="container mx-auto px-4 py-20 min-h-[60vh] flex flex-col items-center justify-center">
+        <div className="container mx-auto py-20 min-h-[60vh] flex flex-col items-center justify-center">
           <h1 className="text-2xl font-bold mb-4">Your bag is empty</h1>
           <p className="mb-8 text-center max-w-md">
             Add some items to your bag before proceeding to checkout.
@@ -165,11 +169,11 @@ const BagPage = () => {
   return (
     <>
       <Navbar />
-      <div className="container mx-auto px-6 py-12 md:py-20">
+      <div className="container mx-auto py-12 md:py-20">
         {/* Back button */}
         <Button
           variant="ghost"
-          className="mb-8 group"
+          className="my-8 group"
           onClick={() => navigate(-1)}
         >
           <ArrowLeft className="mr-2 h-4 w-4 group-hover:-translate-x-1 transition-transform" />

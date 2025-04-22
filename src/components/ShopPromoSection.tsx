@@ -55,7 +55,7 @@ const ShopPromoSection = () => {
       ref={sectionRef}
       className="py-20 md:py-32 bg-omnis-black overflow-hidden"
     >
-      <div className="container mx-auto px-6 relative">
+      <div className="container mx-auto relative">
         {/* Section Header */}
         <motion.div
           className="text-center mb-16"
