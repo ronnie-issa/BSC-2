@@ -61,7 +61,7 @@ const HeroSection = () => {
 
   return (
     <section
-      className="relative min-h-screen overflow-hidden flex items-center pt-20"
+      className="relative min-h-screen overflow-hidden flex items-center pt-40"
       ref={heroRef}
     >
       {/* Background Image with Parallax */}

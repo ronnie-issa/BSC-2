@@ -5,7 +5,6 @@ import AboutSection from "@/components/AboutSection";
 import ShopPromoSection from "@/components/ShopPromoSection";
 import NewsletterSection from "@/components/NewsletterSection";
 import Footer from "@/components/Footer";
-import CenteredLogo from "@/components/CenteredLogo";
 import { motion } from "@/lib/framer";
 
 const Index = () => {
@@ -32,10 +31,7 @@ const Index = () => {
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
     >
-      {/* Centered logo that fades out on scroll */}
-      <CenteredLogo scrollY={scrollY} />
-
-      {/* Navbar with logo that fades in on scroll */}
+      {/* Navbar with transforming logo */}
       <Navbar scrollY={scrollY} />
 
       <HeroSection />
