@@ -10,12 +10,17 @@ export interface Product {
     name: string;
     value: string;
   }[];
+  sizes: {
+    name: string;
+    value: string;
+  }[];
 }
 
 export interface BagItem {
   product: Product;
   quantity: number;
   selectedColor: string;
+  selectedSize: string;
 }
 
 interface ProductContextType {
@@ -23,16 +28,24 @@ interface ProductContextType {
   addToCart: (
     product: Product,
     quantity: number,
-    selectedColor: string
+    selectedColor: string,
+    selectedSize: string
   ) => void;
-  removeFromCart: (productId: number, selectedColor?: string) => void;
+  removeFromCart: (
+    productId: number,
+    selectedColor?: string,
+    selectedSize?: string
+  ) => void;
   updateCartItemQuantity: (
     productId: number,
     selectedColor: string,
+    selectedSize: string,
     newQuantity: number
   ) => void;
   clearCart: () => void;
   getCartTotal: () => number;
+  addToCartEvent: boolean;
+  resetAddToCartEvent: () => void;
 }
 
 const ProductContext = createContext<ProductContextType | undefined>(undefined);
@@ -41,17 +54,28 @@ export const ProductProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
   const [cart, setCart] = useState<BagItem[]>([]);
+  const [addToCartEvent, setAddToCartEvent] = useState(false);
+
+  const resetAddToCartEvent = () => {
+    setAddToCartEvent(false);
+  };
 
   const addToCart = (
     product: Product,
     quantity: number,
-    selectedColor: string
+    selectedColor: string,
+    selectedSize: string
   ) => {
+    // Trigger the add to cart event
+    setAddToCartEvent(true);
+
     setCart((prevCart) => {
       // Check if item already exists in bag
       const existingItemIndex = prevCart.findIndex(
         (item) =>
-          item.product.id === product.id && item.selectedColor === selectedColor
+          item.product.id === product.id &&
+          item.selectedColor === selectedColor &&
+          item.selectedSize === selectedSize
       );
 
       if (existingItemIndex >= 0) {
@@ -61,13 +85,32 @@ export const ProductProvider: React.FC<{ children: ReactNode }> = ({
         return newCart;
       } else {
         // Add new item to bag
-        return [...prevCart, { product, quantity, selectedColor }];
+        return [
+          ...prevCart,
+          { product, quantity, selectedColor, selectedSize },
+        ];
       }
     });
   };
 
-  const removeFromCart = (productId: number, selectedColor?: string) => {
-    if (selectedColor) {
+  const removeFromCart = (
+    productId: number,
+    selectedColor?: string,
+    selectedSize?: string
+  ) => {
+    if (selectedColor && selectedSize) {
+      // Remove specific item with matching product ID, color and size
+      setCart((prevCart) =>
+        prevCart.filter(
+          (item) =>
+            !(
+              item.product.id === productId &&
+              item.selectedColor === selectedColor &&
+              item.selectedSize === selectedSize
+            )
+        )
+      );
+    } else if (selectedColor) {
       // Remove specific item with matching product ID and color
       setCart((prevCart) =>
         prevCart.filter(
@@ -89,13 +132,15 @@ export const ProductProvider: React.FC<{ children: ReactNode }> = ({
   const updateCartItemQuantity = (
     productId: number,
     selectedColor: string,
+    selectedSize: string,
     newQuantity: number
   ) => {
     setCart((prevCart) => {
       return prevCart.map((item) => {
         if (
           item.product.id === productId &&
-          item.selectedColor === selectedColor
+          item.selectedColor === selectedColor &&
+          item.selectedSize === selectedSize
         ) {
           return { ...item, quantity: newQuantity };
         }
@@ -124,6 +169,8 @@ export const ProductProvider: React.FC<{ children: ReactNode }> = ({
         updateCartItemQuantity,
         clearCart,
         getCartTotal,
+        addToCartEvent,
+        resetAddToCartEvent,
       }}
     >
       {children}

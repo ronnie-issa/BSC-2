@@ -9,6 +9,13 @@ export const products = [
     colors: [
       { name: "Black", value: "#000000" },
       { name: "White", value: "#FFFFFF" }
+    ],
+    sizes: [
+      { name: "XS", value: "xs" },
+      { name: "S", value: "s" },
+      { name: "M", value: "m" },
+      { name: "L", value: "l" },
+      { name: "XL", value: "xl" }
     ]
   },
 
@@ -21,6 +28,13 @@ export const products = [
     colors: [
       { name: "Black", value: "#000000" },
       { name: "White", value: "#FFFFFF" }
+    ],
+    sizes: [
+      { name: "XS", value: "xs" },
+      { name: "S", value: "s" },
+      { name: "M", value: "m" },
+      { name: "L", value: "l" },
+      { name: "XL", value: "xl" }
     ]
   },
   {
@@ -32,6 +46,13 @@ export const products = [
     colors: [
       { name: "Black", value: "#000000" },
       { name: "White", value: "#FFFFFF" }
+    ],
+    sizes: [
+      { name: "XS", value: "xs" },
+      { name: "S", value: "s" },
+      { name: "M", value: "m" },
+      { name: "L", value: "l" },
+      { name: "XL", value: "xl" }
     ]
   }
 ];

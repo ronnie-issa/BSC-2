@@ -1,11 +1,32 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Trash2, Minus, Plus, MessageSquare } from "lucide-react";
+import {
+  ArrowLeft,
+  Printer,
+  ChevronUp,
+  ChevronDown,
+  CreditCard,
+  Truck,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useProductContext } from "@/contexts/ProductContext";
 import { toast } from "@/hooks/use-toast";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import QuantitySelector from "@/components/ui/quantity-selector";
+import { Separator } from "@/components/ui/separator";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 const BagPage = () => {
   const navigate = useNavigate();
@@ -14,135 +35,61 @@ const BagPage = () => {
     removeFromCart: removeFromBag,
     updateCartItemQuantity: updateBagItemQuantity,
     getCartTotal: getBagTotal,
+    addToCart,
   } = useProductContext();
-  const [isProcessing, setIsProcessing] = useState(false);
 
-  // Format bag items for WhatsApp message
-  const formatBagForWhatsApp = () => {
-    let message =
-      "Hello, I'd like to place an order for the following items:\n\n";
-
-    // Add each bag item to the message
-    bag.forEach((item, index) => {
-      const colorName =
-        item.product.colors.find((c) => c.value === item.selectedColor)?.name ||
-        "Default";
-
-      message += `${index + 1}. ${item.product.name}\n`;
-      message += `   Quantity: ${item.quantity}\n`;
-      message += `   Color: ${colorName}\n`;
-      message += `   Price: $${item.product.price.toFixed(2)}\n`;
-      message += `   Subtotal: $${(item.product.price * item.quantity).toFixed(
-        2
-      )}\n\n`;
-    });
-
-    // Add order total
-    message += `Total Items: ${bag.reduce(
-      (total, item) => total + item.quantity,
-      0
-    )}\n`;
-    message += `Order Total: $${getBagTotal().toFixed(2)}\n\n`;
-    message +=
-      "Please let me know how to proceed with payment and delivery. Thank you!";
-
-    return message;
-  };
-
-  // Handle checkout via WhatsApp
-  const handleCheckoutViaWhatsApp = () => {
-    if (bag.length === 0) {
-      toast({
-        title: "Your bag is empty",
-        description: "Add some products to your bag before checking out.",
-        variant: "destructive",
-        duration: 7000, // 7 seconds
-      });
-      return;
-    }
-
-    setIsProcessing(true);
-
-    const message = formatBagForWhatsApp();
-    const phoneNumber = "96181386697"; // Lebanon WhatsApp business number
-    const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(
-      message
-    )}`;
-
-    // Try to open WhatsApp in a new tab
-    const newWindow = window.open(whatsappUrl, "_blank");
-
-    // Check if the window was successfully opened
-    if (newWindow) {
-      toast({
-        title: "Opening WhatsApp",
-        description: "Redirecting you to WhatsApp to complete your purchase.",
-        duration: 7000, // 7 seconds
-      });
-    } else {
-      // If the window didn't open (possibly blocked or URL issues), provide alternative
-      toast({
-        title: "WhatsApp Link Issue",
-        description:
-          "Please contact us directly on WhatsApp at +961 81 386 697 with your order details.",
-        variant: "destructive",
-        duration: 7000, // 7 seconds
-      });
-
-      // Copy order details to clipboard as a fallback
-      navigator.clipboard
-        .writeText(message)
-        .then(() => {
-          toast({
-            title: "Order details copied",
-            description: "Order details copied to clipboard for easy sharing.",
-            duration: 7000, // 7 seconds
-          });
-        })
-        .catch(() => {
-          // If clipboard copy fails, do nothing
-        });
-    }
-
-    setIsProcessing(false);
-  };
+  const [helpOpen, setHelpOpen] = useState(true);
+  const [paymentOpen, setPaymentOpen] = useState(false);
+  const [shippingOpen, setShippingOpen] = useState(false);
 
   const handleQuantityChange = (
     productId: number,
     selectedColor: string,
-    amount: number
+    selectedSize: string,
+    newQuantity: number
   ) => {
-    const item = bag.find(
-      (item) =>
-        item.product.id === productId && item.selectedColor === selectedColor
-    );
-
-    if (!item) return;
-
-    const newQuantity = item.quantity + amount;
-
-    if (newQuantity <= 0) {
+    if (newQuantity === 0) {
       // Remove item if quantity becomes 0
-      removeFromBag(productId, selectedColor);
+      const item = bag.find(
+        (item) =>
+          item.product.id === productId &&
+          item.selectedColor === selectedColor &&
+          item.selectedSize === selectedSize
+      );
+
+      if (!item) return;
+
+      removeFromBag(productId, selectedColor, selectedSize);
       toast({
         title: "Item removed",
         description: `${item.product.name} has been removed from your bag`,
         duration: 7000, // 7 seconds
       });
     } else {
-      // Update quantity using the new updateBagItemQuantity function
-      updateBagItemQuantity(productId, selectedColor, newQuantity);
+      // Update quantity directly to the selected value
+      updateBagItemQuantity(
+        productId,
+        selectedColor,
+        selectedSize,
+        newQuantity
+      );
     }
   };
 
-  const handleRemoveItem = (productId: number, selectedColor: string) => {
+  const handleRemoveItem = (
+    productId: number,
+    selectedColor: string,
+    selectedSize: string
+  ) => {
     const item = bag.find(
       (item) =>
-        item.product.id === productId && item.selectedColor === selectedColor
+        item.product.id === productId &&
+        item.selectedColor === selectedColor &&
+        item.selectedSize === selectedSize
     );
     if (!item) return;
 
-    removeFromBag(productId, selectedColor);
+    removeFromBag(productId, selectedColor, selectedSize);
     toast({
       title: "Item removed",
       description: `${item.product.name} has been removed from your bag`,
@@ -180,12 +127,18 @@ const BagPage = () => {
           Back
         </Button>
 
-        <h1 className="text-3xl font-bold mb-8">Your Bag</h1>
+        <div className="flex justify-between items-center mb-8">
+          <h1 className="text-3xl font-bold">YOUR SELECTIONS</h1>
+          <Button variant="ghost" className="flex items-center gap-2">
+            <Printer size={18} />
+            Print
+          </Button>
+        </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
           {/* Bag items */}
           <div className="lg:col-span-2">
-            <div className="space-y-6">
+            <div className="space-y-8">
               {bag.map((item, index) => {
                 const colorName =
                   item.product.colors.find(
@@ -193,88 +146,179 @@ const BagPage = () => {
                   )?.name || "Default";
 
                 return (
-                  <div
-                    key={`${item.product.id}-${index}`}
-                    className="flex flex-col sm:flex-row gap-6 p-6 border border-omnis-gray/30"
-                  >
-                    {/* Product image */}
-                    <div className="w-full sm:w-32 h-32 bg-omnis-darkgray flex-shrink-0">
-                      <img
-                        src={item.product.image}
-                        alt={item.product.name}
-                        className="w-full h-full object-cover"
-                        style={{ filter: "grayscale(80%)" }}
-                      />
-                    </div>
-
-                    {/* Product details */}
-                    <div className="flex-grow flex flex-col">
-                      <div className="flex justify-between">
-                        <h3 className="font-medium text-lg">
-                          {item.product.name}
-                        </h3>
-                        <span className="font-medium">
-                          ${(item.product.price * item.quantity).toFixed(2)}
-                        </span>
+                  <div key={`${item.product.id}-${index}`}>
+                    <div className="flex gap-6">
+                      {/* Product image */}
+                      <div className="w-32 h-32 bg-omnis-darkgray flex-shrink-0">
+                        <img
+                          src={item.product.image}
+                          alt={item.product.name}
+                          className="w-full h-full object-cover"
+                          style={{ filter: "grayscale(80%)" }}
+                        />
                       </div>
 
-                      <p className="text-sm text-omnis-lightgray mb-4">
-                        Color: {colorName}
-                      </p>
+                      {/* Product details */}
+                      <div className="flex-grow">
+                        <div className="flex justify-between">
+                          <div>
+                            <h3 className="font-medium text-lg">
+                              {item.product.name}
+                            </h3>
 
-                      <div className="mt-auto flex justify-between items-center">
-                        {/* Quantity controls */}
-                        <div className="flex items-center">
-                          <Button
-                            variant="outline"
-                            size="icon"
-                            className="h-8 w-8 rounded-none border-omnis-gray/30"
-                            onClick={() =>
-                              handleQuantityChange(
-                                item.product.id,
-                                item.selectedColor,
-                                -1
-                              )
-                            }
-                          >
-                            <Minus className="h-3 w-3" />
-                          </Button>
-                          <span className="w-10 text-center">
-                            {item.quantity}
-                          </span>
-                          <Button
-                            variant="outline"
-                            size="icon"
-                            className="h-8 w-8 rounded-none border-omnis-gray/30"
-                            onClick={() =>
-                              handleQuantityChange(
-                                item.product.id,
-                                item.selectedColor,
-                                1
-                              )
-                            }
-                          >
-                            <Plus className="h-3 w-3" />
-                          </Button>
+                            <div className="text-sm text-omnis-lightgray mt-1 flex items-center gap-2">
+                              <span>Variation:</span>
+                              <Select
+                                value={item.selectedColor}
+                                onValueChange={(newColor) => {
+                                  if (newColor !== item.selectedColor) {
+                                    // Remove the old item
+                                    removeFromBag(
+                                      item.product.id,
+                                      item.selectedColor
+                                    );
+                                    // Add a new item with the new color
+                                    addToCart(
+                                      item.product,
+                                      item.quantity,
+                                      newColor,
+                                      item.selectedSize
+                                    );
+                                    toast({
+                                      title: "Color Updated",
+                                      description: `${item.product.name} color has been updated`,
+                                      duration: 3000,
+                                    });
+                                  }
+                                }}
+                              >
+                                <SelectTrigger className="w-[140px] h-8 text-xs border-omnis-gray/30 focus:ring-0 focus:ring-offset-0 bg-transparent text-omnis-white">
+                                  <SelectValue placeholder="Select color">
+                                    {colorName}
+                                  </SelectValue>
+                                </SelectTrigger>
+                                <SelectContent>
+                                  {item.product.colors.map((color) => (
+                                    <SelectItem
+                                      key={color.value}
+                                      value={color.value}
+                                    >
+                                      {color.name}
+                                    </SelectItem>
+                                  ))}
+                                </SelectContent>
+                              </Select>
+                            </div>
+                            <div className="text-sm text-omnis-lightgray mt-1 flex items-center gap-2">
+                              <span>Size:</span>
+                              <Select
+                                value={item.selectedSize || ""}
+                                onValueChange={(newSize) => {
+                                  if (newSize !== item.selectedSize) {
+                                    // Remove the old item
+                                    removeFromBag(
+                                      item.product.id,
+                                      item.selectedColor,
+                                      item.selectedSize
+                                    );
+                                    // Add a new item with the new size
+                                    addToCart(
+                                      item.product,
+                                      item.quantity,
+                                      item.selectedColor,
+                                      newSize
+                                    );
+                                    toast({
+                                      title: "Size Updated",
+                                      description: `${item.product.name} size has been updated`,
+                                      duration: 3000,
+                                    });
+                                  }
+                                }}
+                              >
+                                <SelectTrigger className="w-[140px] h-8 text-xs border-omnis-gray/30 focus:ring-0 focus:ring-offset-0 bg-transparent text-omnis-white">
+                                  <SelectValue placeholder="Select size">
+                                    {item.selectedSize
+                                      ? item.selectedSize.toUpperCase()
+                                      : ""}
+                                  </SelectValue>
+                                </SelectTrigger>
+                                <SelectContent>
+                                  {item.product.sizes.map((size) => (
+                                    <SelectItem
+                                      key={size.value}
+                                      value={size.value}
+                                    >
+                                      {size.name}
+                                    </SelectItem>
+                                  ))}
+                                </SelectContent>
+                              </Select>
+                            </div>
+                          </div>
+                          <div className="text-right">
+                            <span className="font-medium text-lg">
+                              $ {item.product.price.toFixed(2)}
+                            </span>
+                          </div>
                         </div>
 
-                        {/* Remove button */}
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="text-omnis-lightgray hover:text-omnis-white"
-                          onClick={() =>
-                            handleRemoveItem(
-                              item.product.id,
-                              item.selectedColor
-                            )
-                          }
-                        >
-                          <Trash2 className="h-4 w-4 mr-1" />
-                          Remove
-                        </Button>
+                        <div className="mt-4 flex items-center gap-4">
+                          {/* Quantity selector */}
+                          <div className="flex items-center">
+                            <QuantitySelector
+                              quantity={item.quantity}
+                              onChange={(newQuantity) =>
+                                handleQuantityChange(
+                                  item.product.id,
+                                  item.selectedColor,
+                                  item.selectedSize,
+                                  newQuantity
+                                )
+                              }
+                            />
+                          </div>
+
+                          <div className="flex items-center gap-4 ml-4">
+                            <Button
+                              variant="link"
+                              className="text-omnis-lightgray hover:text-omnis-white p-0 h-auto"
+                              onClick={() =>
+                                handleRemoveItem(
+                                  item.product.id,
+                                  item.selectedColor,
+                                  item.selectedSize
+                                )
+                              }
+                            >
+                              REMOVE
+                            </Button>
+                            <Separator orientation="vertical" className="h-4" />
+                            <Button
+                              variant="link"
+                              className="text-omnis-lightgray hover:text-omnis-white p-0 h-auto flex items-center gap-1"
+                              onClick={() =>
+                                navigate(`/product/${item.product.id}`)
+                              }
+                            >
+                              VIEW DETAILS
+                            </Button>
+                          </div>
+                        </div>
+
+                        <div className="mt-4">
+                          <p className="text-sm text-omnis-lightgray">
+                            AVAILABLE
+                          </p>
+                          <p className="text-sm text-omnis-lightgray">
+                            Enjoy complimentary delivery or Collect In Store.
+                          </p>
+                        </div>
                       </div>
                     </div>
+                    {index < bag.length - 1 && (
+                      <Separator className="mt-8 bg-omnis-gray/20" />
+                    )}
                   </div>
                 );
               })}
@@ -283,44 +327,156 @@ const BagPage = () => {
 
           {/* Order summary */}
           <div className="lg:col-span-1">
-            <div className="bg-omnis-darkgray p-6 sticky top-24">
-              <h2 className="text-xl font-bold mb-6">Order Summary</h2>
+            <div className="border border-omnis-gray/20 p-6 sticky top-24">
+              <h2 className="text-xl font-bold mb-6">ORDER SUMMARY</h2>
+              <p className="text-sm text-omnis-lightgray mb-4">
+                USCART{Math.floor(Math.random() * 10000000)}
+              </p>
 
               <div className="space-y-4 mb-6">
                 <div className="flex justify-between">
                   <span>Subtotal</span>
-                  <span>${getBagTotal().toFixed(2)}</span>
+                  <span>$ {getBagTotal().toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between">
                   <span>Shipping</span>
-                  <span>Free</span>
+                  <span className="text-omnis-lightgray">
+                    Free (Premium Express)
+                  </span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Estimated Tax</span>
+                  <Button
+                    variant="link"
+                    className="p-0 h-auto text-omnis-lightgray hover:text-omnis-white"
+                  >
+                    Calculate
+                  </Button>
                 </div>
               </div>
 
               <div className="border-t border-omnis-gray/30 pt-4 mb-6">
                 <div className="flex justify-between font-bold text-lg">
-                  <span>Total</span>
-                  <span>${getBagTotal().toFixed(2)}</span>
+                  <span>Estimated Total</span>
+                  <span>$ {getBagTotal().toFixed(2)}</span>
                 </div>
               </div>
 
               <Button
-                className="w-full bg-omnis-white text-omnis-black hover:bg-omnis-lightgray"
+                className="w-full bg-white text-black hover:bg-gray-100 hover:text-black border border-black font-bold"
                 size="lg"
-                onClick={handleCheckoutViaWhatsApp}
-                disabled={isProcessing}
+                onClick={() => navigate("/checkout")}
+                disabled={bag.length === 0}
               >
-                <MessageSquare className="mr-2 h-4 w-4" />
-                Checkout via WhatsApp
+                CHECKOUT
               </Button>
 
-              <Button
-                variant="outline"
-                className="w-full mt-4 border-omnis-white text-omnis-white hover:bg-transparent"
-                onClick={() => navigate("/shop")}
+              {/* Add extra spacing */}
+              <div className="h-8"></div>
+
+              <Collapsible
+                open={helpOpen}
+                onOpenChange={setHelpOpen}
+                className="mt-8"
               >
-                Continue Shopping
-              </Button>
+                <CollapsibleTrigger asChild>
+                  <div className="flex justify-between items-center mb-4 cursor-pointer p-2 -mx-2 group">
+                    <h3 className="font-medium relative after:absolute after:bottom-0 after:left-0 after:w-full after:h-[1px] after:bg-omnis-white after:origin-bottom-right after:scale-x-0 group-hover:after:scale-x-100 after:transition-transform after:duration-300 group-hover:after:origin-bottom-left">
+                      MAY WE HELP?
+                    </h3>
+                    <div>
+                      {helpOpen ? (
+                        <ChevronUp size={16} />
+                      ) : (
+                        <ChevronDown size={16} />
+                      )}
+                    </div>
+                  </div>
+                </CollapsibleTrigger>
+                <CollapsibleContent className="space-y-2 text-sm">
+                  <p className="flex items-center gap-2">
+                    <span>📞</span>
+                    <a href="tel:+96181386697" className="hover:underline">
+                      +961 81 386 697
+                    </a>
+                  </p>
+                  <p className="flex items-center gap-2">
+                    <span>📧</span>
+                    <a
+                      href="mailto:contact@omnisclothing.net"
+                      className="hover:underline"
+                    >
+                      contact@omnisclothing.net
+                    </a>
+                  </p>
+                </CollapsibleContent>
+              </Collapsible>
+
+              <Collapsible
+                open={paymentOpen}
+                onOpenChange={setPaymentOpen}
+                className="mt-6"
+              >
+                <CollapsibleTrigger asChild>
+                  <div className="flex justify-between items-center mb-4 cursor-pointer p-2 -mx-2 group">
+                    <h3 className="font-medium relative after:absolute after:bottom-0 after:left-0 after:w-full after:h-[1px] after:bg-omnis-white after:origin-bottom-right after:scale-x-0 group-hover:after:scale-x-100 after:transition-transform after:duration-300 group-hover:after:origin-bottom-left">
+                      PAYMENT OPTIONS
+                    </h3>
+                    <div>
+                      {paymentOpen ? (
+                        <ChevronUp size={16} />
+                      ) : (
+                        <ChevronDown size={16} />
+                      )}
+                    </div>
+                  </div>
+                </CollapsibleTrigger>
+                <CollapsibleContent className="space-y-4 text-sm">
+                  <div className="flex items-center gap-2">
+                    <CreditCard size={16} />
+                    <span>Credit/Debit Cards</span>
+                  </div>
+                  <div>
+                    <p>We accept Visa, Mastercard, and American Express.</p>
+                    <p className="mt-2">
+                      All transactions are secure and encrypted.
+                    </p>
+                  </div>
+                </CollapsibleContent>
+              </Collapsible>
+
+              <Collapsible
+                open={shippingOpen}
+                onOpenChange={setShippingOpen}
+                className="mt-6"
+              >
+                <CollapsibleTrigger asChild>
+                  <div className="flex justify-between items-center mb-4 cursor-pointer p-2 -mx-2 group">
+                    <h3 className="font-medium relative after:absolute after:bottom-0 after:left-0 after:w-full after:h-[1px] after:bg-omnis-white after:origin-bottom-right after:scale-x-0 group-hover:after:scale-x-100 after:transition-transform after:duration-300 group-hover:after:origin-bottom-left">
+                      SHIPPING OPTIONS
+                    </h3>
+                    <div>
+                      {shippingOpen ? (
+                        <ChevronUp size={16} />
+                      ) : (
+                        <ChevronDown size={16} />
+                      )}
+                    </div>
+                  </div>
+                </CollapsibleTrigger>
+                <CollapsibleContent className="space-y-4 text-sm">
+                  <div className="flex items-center gap-2">
+                    <Truck size={16} />
+                    <span>Premium Express</span>
+                  </div>
+                  <div>
+                    <p>Free shipping on all orders.</p>
+                    <p className="mt-2">
+                      Estimated delivery: 2-4 business days.
+                    </p>
+                  </div>
+                </CollapsibleContent>
+              </Collapsible>
             </div>
           </div>
         </div>

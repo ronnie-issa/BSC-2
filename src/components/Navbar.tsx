@@ -1,10 +1,16 @@
 import { useState, useEffect, useRef } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { Menu, X, ShoppingBag } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useProductContext } from "@/contexts/ProductContext";
 import { Badge } from "@/components/ui/badge";
 import { motion } from "@/lib/framer";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import BagDropdown from "./BagDropdown";
 
 interface NavbarProps {
   scrollY?: number;
@@ -16,23 +22,64 @@ const Navbar = ({ scrollY = 0, showLogoEffect = false }: NavbarProps) => {
   // Explicitly set scrolled to false initially to ensure transparent background on load
   const [scrolled, setScrolled] = useState(false);
   const [animateBadge, setAnimateBadge] = useState(false);
-  const { cart: bag } = useProductContext();
+  const [bagDropdownOpen, setBagDropdownOpen] = useState(false);
+  // Track if the dropdown should be opened by an add-to-bag action
+  const [shouldOpenFromAddToBag, setShouldOpenFromAddToBag] = useState(false);
+  const {
+    cart: bag,
+    addToCartEvent,
+    resetAddToCartEvent,
+  } = useProductContext();
   const prevBagCountRef = useRef(0);
-
-  const toggleMenu = () => setIsOpen(!isOpen);
+  const location = useLocation();
 
   // Calculate total items in bag
   const bagItemCount = bag.reduce((total, item) => total + item.quantity, 0);
 
-  // Animate badge when bag count changes
+  // Close dropdown when location changes
   useEffect(() => {
-    if (bagItemCount > prevBagCountRef.current) {
+    // Always close the dropdown when changing pages
+    setBagDropdownOpen(false);
+    // Reset the add-to-bag flag when changing pages
+    setShouldOpenFromAddToBag(false);
+  }, [location]);
+
+  const toggleMenu = () => setIsOpen(!isOpen);
+
+  // Listen for the addToCart event
+  useEffect(() => {
+    if (addToCartEvent) {
+      // When an item is added to the cart, set the flag to open the dropdown
+      setShouldOpenFromAddToBag(true);
+      // Reset the event in the context
+      resetAddToCartEvent();
+    }
+  }, [addToCartEvent, resetAddToCartEvent]);
+
+  // Animate badge when bag count changes and conditionally open dropdown
+  useEffect(() => {
+    // Store the current value for comparison
+    const prevCount = prevBagCountRef.current;
+
+    // Check if items were actually added (not on page navigation/remount)
+    if (bagItemCount > prevCount) {
+      // Animate the badge
       setAnimateBadge(true);
+
+      // Only open the dropdown if the add-to-bag action triggered it
+      if (shouldOpenFromAddToBag) {
+        setBagDropdownOpen(true);
+        // Reset the flag after opening
+        setShouldOpenFromAddToBag(false);
+      }
+
       const timer = setTimeout(() => setAnimateBadge(false), 300);
       return () => clearTimeout(timer);
     }
+
+    // Always update the ref to the current count after the check
     prevBagCountRef.current = bagItemCount;
-  }, [bagItemCount]);
+  }, [bagItemCount, shouldOpenFromAddToBag]);
 
   // Track window width for responsive adjustments
   const [windowWidth, setWindowWidth] = useState(
@@ -190,24 +237,37 @@ const Navbar = ({ scrollY = 0, showLogoEffect = false }: NavbarProps) => {
           {/* Right side navigation */}
           <nav className="hidden md:flex items-center space-x-10 ml-auto">
             <NavLink to="/shop">SHOP</NavLink>
-            <Link to="/bag" className="relative group">
-              <ShoppingBag
-                size={20}
-                className={`${
-                  bagItemCount > 0 ? "text-omnis-white" : "text-omnis-lightgray"
-                } group-hover:text-omnis-white transition-colors duration-300`}
-              />
-              {bagItemCount > 0 && (
-                <Badge
-                  variant="default"
-                  className={`absolute -top-2 -right-2 h-5 w-5 flex items-center justify-center p-0 bg-red-600 text-white text-xs font-medium ${
-                    animateBadge ? "animate-pulse scale-125" : ""
-                  }`}
-                >
-                  {bagItemCount}
-                </Badge>
-              )}
-            </Link>
+            <Popover open={bagDropdownOpen} onOpenChange={setBagDropdownOpen}>
+              <PopoverTrigger asChild>
+                <button className="relative group">
+                  <ShoppingBag
+                    size={20}
+                    className={`${
+                      bagItemCount > 0
+                        ? "text-omnis-white"
+                        : "text-omnis-lightgray"
+                    } group-hover:text-omnis-white transition-colors duration-300`}
+                  />
+                  {bagItemCount > 0 && (
+                    <Badge
+                      variant="default"
+                      className={`absolute -top-2 -right-2 h-5 w-5 flex items-center justify-center p-0 bg-red-600 text-white text-xs font-medium ${
+                        animateBadge ? "animate-pulse scale-125" : ""
+                      }`}
+                    >
+                      {bagItemCount}
+                    </Badge>
+                  )}
+                </button>
+              </PopoverTrigger>
+              <PopoverContent
+                className="p-0 w-[350px] md:w-[450px] border-0 shadow-xl"
+                align="end"
+                sideOffset={16}
+              >
+                <BagDropdown onClose={() => setBagDropdownOpen(false)} />
+              </PopoverContent>
+            </Popover>
           </nav>
 
           {/* Mobile Menu Button */}

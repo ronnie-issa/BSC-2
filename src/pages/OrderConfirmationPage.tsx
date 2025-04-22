@@ -14,7 +14,7 @@ const OrderConfirmationPage = () => {
   return (
     <>
       <Navbar />
-      <div className="container mx-auto px-6 py-16 md:py-24">
+      <div className="container mx-auto px-6 py-16 md:py-24 mt-8">
         <div className="max-w-2xl mx-auto text-center">
           <div className="flex justify-center mb-6">
             <div className="rounded-full bg-green-100 p-3">
@@ -70,16 +70,10 @@ const OrderConfirmationPage = () => {
           <div className="flex flex-col md:flex-row justify-center gap-4">
             <Button
               variant="outline"
-              className="border-omnis-black text-omnis-black hover:bg-omnis-black hover:text-white"
+              className="border-omnis-black text-omnis-black bg-white hover:bg-gray-100 hover:text-black"
               onClick={() => navigate("/shop")}
             >
               Continue Shopping
-            </Button>
-            <Button
-              className="bg-omnis-black text-white hover:bg-omnis-gray"
-              onClick={() => navigate("/")}
-            >
-              Return to Home
             </Button>
           </div>
         </div>

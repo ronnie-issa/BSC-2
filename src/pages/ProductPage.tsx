@@ -1,20 +1,13 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import {
-  ArrowLeft,
-  Minus,
-  Plus,
-  MessageSquare,
-  ShoppingBag,
-  Check,
-} from "lucide-react";
+import { ArrowLeft, MessageSquare, ShoppingBag } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { products } from "@/data/products";
 import { useProductContext } from "@/contexts/ProductContext";
 import { toast } from "@/hooks/use-toast";
-import { ToastAction } from "@/components/ui/toast";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import QuantitySelector from "@/components/ui/quantity-selector";
 
 const ProductPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -23,12 +16,19 @@ const ProductPage = () => {
 
   const [quantity, setQuantity] = useState(1);
   const [selectedColor, setSelectedColor] = useState("");
+  const [selectedSize, setSelectedSize] = useState("");
 
   const product = products.find((p) => p.id === Number(id));
 
+  // Set default color and size when product loads
   useEffect(() => {
-    if (product && product.colors.length > 0) {
-      setSelectedColor(product.colors[0].value);
+    if (product) {
+      if (product.colors.length > 0) {
+        setSelectedColor(product.colors[0].value);
+      }
+      if (product.sizes.length > 0) {
+        setSelectedSize(product.sizes[0].value);
+      }
     }
     // No need to scroll to top here as ScrollToTop component handles it
   }, [product]);
@@ -46,8 +46,7 @@ const ProductPage = () => {
     );
   }
 
-  const handleQuantityChange = (amount: number) => {
-    const newQuantity = quantity + amount;
+  const handleQuantityChange = (newQuantity: number) => {
     if (newQuantity >= 1) {
       setQuantity(newQuantity);
     }
@@ -63,23 +62,23 @@ const ProductPage = () => {
       return;
     }
 
-    addToCart(product, quantity, selectedColor);
+    if (!selectedSize) {
+      toast({
+        title: "Please select a size",
+        variant: "destructive",
+        duration: 7000, // 7 seconds
+      });
+      return;
+    }
 
-    // Show success toast without redirecting
+    // Add to cart - the dropdown will automatically open due to the useEffect in Navbar
+    addToCart(product, quantity, selectedColor, selectedSize);
+
     toast({
-      title: "Added to bag",
-      description: `${quantity} x ${product.name} has been added to your bag`,
-      action: (
-        <ToastAction altText="View Bag" onClick={() => navigate("/bag")}>
-          View Bag
-        </ToastAction>
-      ),
-      duration: 7000, // Show toast for 7 seconds
-      variant: "success",
-      icon: <Check className="h-4 w-4 text-green-600" />,
+      title: "Added to Bag",
+      description: `${product.name} has been added to your bag`,
+      duration: 3000,
     });
-
-    // Don't navigate away from the product page
   };
 
   const handleBuyViaWhatsApp = () => {
@@ -194,10 +193,10 @@ const ProductPage = () => {
             <div className="border-t border-omnis-gray pt-6 mb-6">
               <p className="text-omnis-lightgray mb-8">{product.description}</p>
 
-              {/* Color selection */}
+              {/* Variation selection */}
               <div className="mb-8">
                 <h3 className="text-sm uppercase tracking-wider mb-3">
-                  Color:{" "}
+                  Variation:{" "}
                   {product.colors.find((c) => c.value === selectedColor)?.name}
                 </h3>
                 <div className="flex gap-3">
@@ -211,8 +210,28 @@ const ProductPage = () => {
                       }`}
                       style={{ backgroundColor: color.value }}
                       onClick={() => setSelectedColor(color.value)}
-                      aria-label={`Select ${color.name} color`}
+                      aria-label={`Select ${color.name} variation`}
                     ></button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Size selector */}
+              <div className="mb-8">
+                <h3 className="text-sm uppercase tracking-wider mb-3">Size</h3>
+                <div className="flex flex-wrap gap-2">
+                  {product.sizes.map((size) => (
+                    <button
+                      key={size.value}
+                      className={`px-4 py-2 border ${
+                        selectedSize === size.value
+                          ? "bg-omnis-black text-white border-white"
+                          : "border-omnis-gray hover:border-omnis-black"
+                      }`}
+                      onClick={() => setSelectedSize(size.value)}
+                    >
+                      {size.name}
+                    </button>
                   ))}
                 </div>
               </div>
@@ -222,24 +241,10 @@ const ProductPage = () => {
                 <h3 className="text-sm uppercase tracking-wider mb-3">
                   Quantity
                 </h3>
-                <div className="flex border border-omnis-gray w-fit">
-                  <button
-                    className="px-3 py-2"
-                    onClick={() => handleQuantityChange(-1)}
-                    disabled={quantity <= 1}
-                  >
-                    <Minus className="h-4 w-4" />
-                  </button>
-                  <div className="flex items-center justify-center px-6 py-2 border-x border-omnis-gray min-w-[3rem]">
-                    {quantity}
-                  </div>
-                  <button
-                    className="px-3 py-2"
-                    onClick={() => handleQuantityChange(1)}
-                  >
-                    <Plus className="h-4 w-4" />
-                  </button>
-                </div>
+                <QuantitySelector
+                  quantity={quantity}
+                  onChange={handleQuantityChange}
+                />
               </div>
             </div>
 
