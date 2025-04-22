@@ -100,8 +100,8 @@ const Navbar = ({ scrollY = 0, showLogoEffect = false }: NavbarProps) => {
     : finalScale;
 
   // Calculate Y position - responsive based on screen width
-  // Use a smaller initial Y offset on mobile
-  const initialY = windowWidth < 768 ? 60 : 100;
+  // Use a smaller initial Y offset on mobile, add 50px to push the big logo down
+  const initialY = windowWidth < 768 ? 110 : 150;
 
   // When fully scrolled (progress = 1), we want the logo to be vertically centered
   // If logo effect is disabled, always use 0 for Y position
