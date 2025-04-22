@@ -8,9 +8,10 @@ import { motion } from "@/lib/framer";
 
 interface NavbarProps {
   scrollY?: number;
+  showLogoEffect?: boolean;
 }
 
-const Navbar = ({ scrollY = 0 }: NavbarProps) => {
+const Navbar = ({ scrollY = 0, showLogoEffect = false }: NavbarProps) => {
   const [isOpen, setIsOpen] = useState(false);
   // Explicitly set scrolled to false initially to ensure transparent background on load
   const [scrolled, setScrolled] = useState(false);
@@ -76,12 +77,16 @@ const Navbar = ({ scrollY = 0 }: NavbarProps) => {
   const maxScroll = windowWidth < 768 ? 200 : 300; // Shorter scroll distance on mobile
 
   // Update isFullyScrolled state when scroll position changes
+  // If logo effect is disabled, always consider it fully scrolled
   useEffect(() => {
-    setIsFullyScrolled(scrollY >= maxScroll);
-  }, [scrollY, maxScroll]);
+    setIsFullyScrolled(showLogoEffect ? scrollY >= maxScroll : true);
+  }, [scrollY, maxScroll, showLogoEffect]);
 
   // Calculate logo transform values based on scroll position
   const progress = Math.min(1, scrollY / maxScroll);
+
+  // Only calculate transition values if the logo effect is enabled
+  // Otherwise, use fixed values for the navbar logo
 
   // Calculate responsive scale based on screen width
   // On mobile, use a smaller initial scale (4x instead of 8x)
@@ -89,56 +94,82 @@ const Navbar = ({ scrollY = 0 }: NavbarProps) => {
   const finalScale = 1.5;
 
   // Calculate scale - from initialScale (large) to finalScale (navbar size)
-  const logoScale = initialScale - progress * (initialScale - finalScale);
+  // If logo effect is disabled, always use the final scale
+  const logoScale = showLogoEffect
+    ? initialScale - progress * (initialScale - finalScale)
+    : finalScale;
 
   // Calculate Y position - responsive based on screen width
   // Use a smaller initial Y offset on mobile
   const initialY = windowWidth < 768 ? 60 : 100;
 
   // When fully scrolled (progress = 1), we want the logo to be vertically centered
-  const logoY = initialY * (1 - progress);
+  // If logo effect is disabled, always use 0 for Y position
+  const logoY = showLogoEffect ? initialY * (1 - progress) : 0;
 
-  // Calculate X position - always centered
-  // No horizontal movement needed as we want it centered both initially and in navbar
-  const logoX = 0; // We'll handle centering with CSS instead of transforms
+  // We don't need logoX anymore as we're using CSS centering
+  // const logoX = 0;
 
   return (
     <header
       className={cn(
         "fixed top-0 left-0 right-0 z-50 transition-all duration-500",
-        scrolled
+        !showLogoEffect || scrolled
           ? "bg-omnis-black/90 backdrop-blur-sm py-4 shadow-md"
           : "bg-transparent py-6"
       )}
     >
       <div className="container mx-auto px-6 md:px-8 relative">
-        {/* Absolute positioned logo in the center */}
-        <div className="absolute left-0 right-0 top-16 flex justify-center z-50 w-full pointer-events-none">
-          <div className="pointer-events-auto">
-            <motion.div
-              style={{
-                transform: `translateY(${logoY}px) scale(${logoScale})`,
-                transformOrigin: "center center",
-                transition: "transform 0.2s cubic-bezier(0.25, 0.1, 0.25, 1)",
-              }}
-              className="relative"
-            >
+        {/* Absolute positioned logo in the center - only shown when effect is enabled */}
+        {showLogoEffect && (
+          <div className="absolute left-0 right-0 flex justify-center z-50 w-full pointer-events-none">
+            <div className="pointer-events-auto">
+              <motion.div
+                style={{
+                  transform: `translateY(${logoY}px) scale(${logoScale})`,
+                  transformOrigin: "center center",
+                  transition: "transform 0.2s cubic-bezier(0.25, 0.1, 0.25, 1)",
+                }}
+                className="relative"
+              >
+                <Link
+                  to="/"
+                  className="text-xl sm:text-2xl md:text-3xl font-logo font-medium hover:text-white hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.7)]"
+                  style={{
+                    letterSpacing: "-0.5px",
+                    whiteSpace: "nowrap",
+                    maxHeight: isFullyScrolled ? "40px" : "none",
+                    display: "block",
+                    lineHeight: isFullyScrolled ? "40px" : "normal",
+                  }}
+                >
+                  OMNIS
+                </Link>
+              </motion.div>
+            </div>
+          </div>
+        )}
+
+        {/* Regular centered navbar logo - only shown when effect is disabled */}
+        {!showLogoEffect && (
+          <div className="absolute left-0 right-0 flex justify-center z-50 w-full pointer-events-none">
+            <div className="pointer-events-auto">
               <Link
                 to="/"
                 className="text-xl sm:text-2xl md:text-3xl font-logo font-medium hover:text-white hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.7)]"
                 style={{
                   letterSpacing: "-0.5px",
                   whiteSpace: "nowrap",
-                  maxHeight: isFullyScrolled ? "40px" : "none",
+                  maxHeight: "40px",
                   display: "block",
-                  lineHeight: isFullyScrolled ? "40px" : "normal",
+                  lineHeight: "40px",
                 }}
               >
                 OMNIS
               </Link>
-            </motion.div>
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Flex container for navigation items */}
         <div className="flex justify-between items-center py-6">

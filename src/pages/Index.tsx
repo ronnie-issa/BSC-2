@@ -31,8 +31,8 @@ const Index = () => {
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
     >
-      {/* Navbar with transforming logo */}
-      <Navbar scrollY={scrollY} />
+      {/* Navbar with transforming logo effect enabled */}
+      <Navbar scrollY={scrollY} showLogoEffect={true} />
 
       <HeroSection />
       <AboutSection />
