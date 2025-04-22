@@ -113,7 +113,7 @@ const Navbar = ({ scrollY = 0 }: NavbarProps) => {
     >
       <div className="container mx-auto px-6 md:px-8 relative">
         {/* Absolute positioned logo in the center */}
-        <div className="absolute left-0 right-0 flex justify-center z-50 w-full pointer-events-none">
+        <div className="absolute left-0 right-0 top-16 flex justify-center z-50 w-full pointer-events-none">
           <div className="pointer-events-auto">
             <motion.div
               style={{
