@@ -79,10 +79,9 @@ const Navbar = ({ scrollY = 0 }: NavbarProps) => {
   // Calculate Y position - from 100px to 0 (navbar position)
   const logoY = 100 * (1 - progress);
 
-  // Calculate X position - for horizontal centering adjustments
-  // For desktop, we center it initially and then move to the left
-  // This is a simplified calculation and might need adjustment
-  const logoX = windowWidth > 768 ? (windowWidth / 4) * (1 - progress) : 0;
+  // Calculate X position - always centered
+  // No horizontal movement needed as we want it centered both initially and in navbar
+  const logoX = 0; // We'll handle centering with CSS instead of transforms
 
   return (
     <header
@@ -93,86 +92,92 @@ const Navbar = ({ scrollY = 0 }: NavbarProps) => {
           : "bg-transparent py-5"
       )}
     >
-      <div className="container mx-auto px-6 flex justify-between items-center">
-        <div className="z-50 relative">
-          <motion.div
-            style={{
-              transform: `translate(${logoX}px, ${logoY}px) scale(${logoScale})`,
-              transformOrigin: "left center",
-              transition: "transform 0.2s cubic-bezier(0.25, 0.1, 0.25, 1)",
-            }}
-            className="absolute"
-          >
-            <Link
-              to="/"
-              className="text-2xl md:text-3xl font-logo font-medium hover:text-white hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.7)]"
-              style={{ letterSpacing: "-0.5px", whiteSpace: "nowrap" }}
+      <div className="container mx-auto px-6 relative">
+        {/* Absolute positioned logo in the center */}
+        <div className="absolute left-0 right-0 flex justify-center z-50 w-full pointer-events-none">
+          <div className="pointer-events-auto">
+            <motion.div
+              style={{
+                transform: `translateY(${logoY}px) scale(${logoScale})`,
+                transformOrigin: "center center",
+                transition: "transform 0.2s cubic-bezier(0.25, 0.1, 0.25, 1)",
+              }}
+              className="relative"
             >
-              OMNIS
-            </Link>
-          </motion.div>
-          {/* Invisible placeholder to maintain layout */}
-          <div className="text-2xl md:text-3xl font-logo font-medium opacity-0">
-            OMNIS
+              <Link
+                to="/"
+                className="text-2xl md:text-3xl font-logo font-medium hover:text-white hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.7)]"
+                style={{ letterSpacing: "-0.5px", whiteSpace: "nowrap" }}
+              >
+                OMNIS
+              </Link>
+            </motion.div>
           </div>
         </div>
 
-        {/* Desktop Navigation */}
-        <nav className="hidden md:flex items-center space-x-8">
-          <NavLink to="/about">ABOUT</NavLink>
-          <NavLink to="/shop">SHOP</NavLink>
-          <Link to="/bag" className="relative group">
-            <ShoppingBag
-              size={20}
-              className={`${
-                bagItemCount > 0 ? "text-omnis-white" : "text-omnis-lightgray"
-              } group-hover:text-omnis-white transition-colors duration-300`}
-            />
-            {bagItemCount > 0 && (
-              <Badge
-                variant="default"
-                className={`absolute -top-2 -right-2 h-5 w-5 flex items-center justify-center p-0 bg-red-600 text-white text-xs font-medium ${
-                  animateBadge ? "animate-pulse scale-125" : ""
-                }`}
-              >
-                {bagItemCount}
-              </Badge>
-            )}
-          </Link>
-        </nav>
-
-        {/* Mobile Menu Button */}
-        <button
-          className="md:hidden text-omnis-white z-50"
-          onClick={toggleMenu}
-          aria-label={isOpen ? "Close menu" : "Open menu"}
-        >
-          {isOpen ? <X size={24} /> : <Menu size={24} />}
-        </button>
-
-        {/* Mobile Navigation Overlay */}
-        <div
-          className={cn(
-            "fixed inset-0 bg-omnis-black flex flex-col items-center justify-center transition-all duration-500 ease-in-out md:hidden",
-            isOpen ? "opacity-100 visible" : "opacity-0 invisible"
-          )}
-        >
-          <nav className="flex flex-col items-center space-y-8 text-2xl">
-            <MobileNavLink to="/about" onClick={toggleMenu}>
-              ABOUT
-            </MobileNavLink>
-            <MobileNavLink to="/shop" onClick={toggleMenu}>
-              SHOP
-            </MobileNavLink>
-            <MobileNavLink to="/bag" onClick={toggleMenu}>
-              BAG{" "}
-              {bagItemCount > 0 && (
-                <span className="inline-flex items-center justify-center ml-2 bg-red-600 text-white rounded-full h-5 w-5 text-xs">
-                  {bagItemCount}
-                </span>
-              )}
-            </MobileNavLink>
+        {/* Flex container for navigation items */}
+        <div className="flex justify-between items-center py-4">
+          {/* Left side navigation */}
+          <nav className="hidden md:flex items-center space-x-8">
+            <NavLink to="/about">ABOUT</NavLink>
           </nav>
+
+          {/* Right side navigation */}
+          <nav className="hidden md:flex items-center space-x-8 ml-auto">
+            <NavLink to="/shop">SHOP</NavLink>
+            <Link to="/bag" className="relative group">
+              <ShoppingBag
+                size={20}
+                className={`${
+                  bagItemCount > 0 ? "text-omnis-white" : "text-omnis-lightgray"
+                } group-hover:text-omnis-white transition-colors duration-300`}
+              />
+              {bagItemCount > 0 && (
+                <Badge
+                  variant="default"
+                  className={`absolute -top-2 -right-2 h-5 w-5 flex items-center justify-center p-0 bg-red-600 text-white text-xs font-medium ${
+                    animateBadge ? "animate-pulse scale-125" : ""
+                  }`}
+                >
+                  {bagItemCount}
+                </Badge>
+              )}
+            </Link>
+          </nav>
+
+          {/* Mobile Menu Button */}
+          <button
+            className="md:hidden text-omnis-white z-50 ml-auto"
+            onClick={toggleMenu}
+            aria-label={isOpen ? "Close menu" : "Open menu"}
+          >
+            {isOpen ? <X size={24} /> : <Menu size={24} />}
+          </button>
+
+          {/* Mobile Navigation Overlay */}
+          <div
+            className={cn(
+              "fixed inset-0 bg-omnis-black flex flex-col items-center justify-center transition-all duration-500 ease-in-out md:hidden",
+              isOpen ? "opacity-100 visible" : "opacity-0 invisible"
+            )}
+          >
+            <nav className="flex flex-col items-center space-y-8 text-2xl">
+              <MobileNavLink to="/about" onClick={toggleMenu}>
+                ABOUT
+              </MobileNavLink>
+              <MobileNavLink to="/shop" onClick={toggleMenu}>
+                SHOP
+              </MobileNavLink>
+              <MobileNavLink to="/bag" onClick={toggleMenu}>
+                BAG{" "}
+                {bagItemCount > 0 && (
+                  <span className="inline-flex items-center justify-center ml-2 bg-red-600 text-white rounded-full h-5 w-5 text-xs">
+                    {bagItemCount}
+                  </span>
+                )}
+              </MobileNavLink>
+            </nav>
+          </div>
         </div>
       </div>
     </header>
