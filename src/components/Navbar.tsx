@@ -123,7 +123,11 @@ const Navbar = ({ scrollY = 0, showLogoEffect = false }: NavbarProps) => {
         {/* Absolute positioned logo in the center - only shown when effect is enabled */}
         {showLogoEffect && (
           <div className="absolute left-0 right-0 flex justify-center z-50 w-full pointer-events-none">
-            <div className="pointer-events-auto">
+            <div
+              className={
+                isFullyScrolled ? "pointer-events-auto" : "pointer-events-none"
+              }
+            >
               <motion.div
                 style={{
                   transform: `translateY(${logoY}px) scale(${logoScale})`,
@@ -134,13 +138,18 @@ const Navbar = ({ scrollY = 0, showLogoEffect = false }: NavbarProps) => {
               >
                 <Link
                   to="/"
-                  className="text-xl sm:text-3xl md:text-5xl font-logo font-medium hover:text-white hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.7)]"
+                  className={`text-xl sm:text-3xl md:text-5xl font-logo font-medium ${
+                    isFullyScrolled
+                      ? "hover:text-white hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.7)] cursor-pointer"
+                      : "cursor-default"
+                  }`}
                   style={{
                     letterSpacing: "-0.5px",
                     whiteSpace: "nowrap",
                     maxHeight: isFullyScrolled ? "60px" : "none",
                     display: "block",
                     lineHeight: isFullyScrolled ? "60px" : "normal",
+                    pointerEvents: isFullyScrolled ? "auto" : "none", // Only clickable when small
                   }}
                 >
                   OMNIS
