@@ -69,12 +69,20 @@ const Navbar = ({ scrollY = 0 }: NavbarProps) => {
     };
   }, []);
 
+  // Track if we're fully scrolled for logo height calculations
+  const [isFullyScrolled, setIsFullyScrolled] = useState(false);
+
+  // Update isFullyScrolled state when scroll position changes
+  useEffect(() => {
+    setIsFullyScrolled(scrollY >= 300);
+  }, [scrollY]);
+
   // Calculate logo transform values based on scroll position
   const maxScroll = 300; // The scroll amount at which the transition completes
   const progress = Math.min(1, scrollY / maxScroll);
 
-  // Calculate scale - from 12 (large) to 1.5 (navbar size)
-  const logoScale = 12 - progress * 10.5 + 1.5 * progress;
+  // Calculate scale - from 8 (large) to appropriate navbar size
+  const logoScale = 8 - progress * (8 - 1.5);
 
   // Calculate Y position - from 100px to 0 (navbar position)
   // When fully scrolled (progress = 1), we want the logo to be vertically centered
@@ -107,8 +115,14 @@ const Navbar = ({ scrollY = 0 }: NavbarProps) => {
             >
               <Link
                 to="/"
-                className="text-2xl md:text-4xl font-logo font-medium hover:text-white hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.7)]"
-                style={{ letterSpacing: "-0.5px", whiteSpace: "nowrap" }}
+                className="text-2xl md:text-3xl font-logo font-medium hover:text-white hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.7)]"
+                style={{
+                  letterSpacing: "-0.5px",
+                  whiteSpace: "nowrap",
+                  maxHeight: isFullyScrolled ? "40px" : "none",
+                  display: "block",
+                  lineHeight: isFullyScrolled ? "40px" : "normal",
+                }}
               >
                 OMNIS
               </Link>
