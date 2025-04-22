@@ -115,8 +115,8 @@ const Navbar = ({ scrollY = 0, showLogoEffect = false }: NavbarProps) => {
       className={cn(
         "fixed top-0 left-0 right-0 z-50 transition-all duration-500",
         !showLogoEffect || scrolled
-          ? "bg-omnis-black/90 backdrop-blur-sm py-4 shadow-md"
-          : "bg-transparent py-6"
+          ? "bg-omnis-black/90 backdrop-blur-sm py-5 shadow-md"
+          : "bg-transparent py-7"
       )}
     >
       <div className="container mx-auto px-6 md:px-8 relative">
@@ -134,13 +134,13 @@ const Navbar = ({ scrollY = 0, showLogoEffect = false }: NavbarProps) => {
               >
                 <Link
                   to="/"
-                  className="text-xl sm:text-2xl md:text-3xl font-logo font-medium hover:text-white hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.7)]"
+                  className="text-xl sm:text-2xl md:text-4xl font-logo font-medium hover:text-white hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.7)]"
                   style={{
                     letterSpacing: "-0.5px",
                     whiteSpace: "nowrap",
-                    maxHeight: isFullyScrolled ? "40px" : "none",
+                    maxHeight: isFullyScrolled ? "60px" : "none",
                     display: "block",
-                    lineHeight: isFullyScrolled ? "40px" : "normal",
+                    lineHeight: isFullyScrolled ? "60px" : "normal",
                   }}
                 >
                   OMNIS
@@ -156,13 +156,13 @@ const Navbar = ({ scrollY = 0, showLogoEffect = false }: NavbarProps) => {
             <div className="pointer-events-auto">
               <Link
                 to="/"
-                className="text-xl sm:text-2xl md:text-3xl font-logo font-medium hover:text-white hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.7)]"
+                className="text-xl sm:text-2xl md:text-4xl font-logo font-medium hover:text-white hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.7)]"
                 style={{
                   letterSpacing: "-0.5px",
                   whiteSpace: "nowrap",
-                  maxHeight: "40px",
+                  maxHeight: "60px",
                   display: "block",
-                  lineHeight: "40px",
+                  lineHeight: "60px",
                 }}
               >
                 OMNIS
