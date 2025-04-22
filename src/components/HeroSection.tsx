@@ -124,7 +124,7 @@ const HeroSection = () => {
       <motion.div
         variants={arrowVariants}
         animate="animate"
-        className="absolute bottom-10 left-1/2 transform -translate-x-1/2 z-20 flex flex-col items-center ml-7"
+        className="absolute bottom-10 left-1/2 transform -translate-x-1/2 z-20 flex flex-col items-center -ml-7"
       >
         <span className="text-xs font-light tracking-widest mb-2">SCROLL</span>
         <ArrowDown size={20} className="text-omnis-white" />
