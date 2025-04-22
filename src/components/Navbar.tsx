@@ -144,7 +144,7 @@ const Navbar = ({ scrollY = 0, showLogoEffect = false }: NavbarProps) => {
                       : "cursor-default"
                   }`}
                   style={{
-                    letterSpacing: "-0.5px",
+                    letterSpacing: "-2.8px",
                     whiteSpace: "nowrap",
                     maxHeight: isFullyScrolled ? "60px" : "none",
                     display: "block",
@@ -167,7 +167,7 @@ const Navbar = ({ scrollY = 0, showLogoEffect = false }: NavbarProps) => {
                 to="/"
                 className="text-xl sm:text-3xl md:text-5xl font-logo font-medium hover:text-white hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.7)]"
                 style={{
-                  letterSpacing: "-0.5px",
+                  letterSpacing: "-2.8px",
                   whiteSpace: "nowrap",
                   maxHeight: "60px",
                   display: "block",
