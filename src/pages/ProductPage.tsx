@@ -164,11 +164,11 @@ const ProductPage = () => {
   return (
     <>
       <Navbar />
-      <div className="container mx-auto px-6 py-12 md:py-20">
+      <div className="container mx-auto px-6 py-12 md:py-20 mb-4">
         {/* Back button */}
         <Button
           variant="ghost"
-          className="mb-8 group"
+          className="my-8 group"
           onClick={() => navigate(-1)}
         >
           <ArrowLeft className="mr-2 h-4 w-4 group-hover:-translate-x-1 transition-transform" />
