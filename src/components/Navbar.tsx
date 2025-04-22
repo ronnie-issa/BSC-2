@@ -91,7 +91,7 @@ const Navbar = ({ scrollY = 0, showLogoEffect = false }: NavbarProps) => {
   // Calculate responsive scale based on screen width
   // On mobile, use a smaller initial scale (4x instead of 8x)
   const initialScale = windowWidth < 768 ? 4 : 8;
-  const finalScale = 1.5;
+  const finalScale = 1;
 
   // Calculate scale - from initialScale (large) to finalScale (navbar size)
   // If logo effect is disabled, always use the final scale
@@ -134,7 +134,7 @@ const Navbar = ({ scrollY = 0, showLogoEffect = false }: NavbarProps) => {
               >
                 <Link
                   to="/"
-                  className="text-xl sm:text-2xl md:text-4xl font-logo font-medium hover:text-white hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.7)]"
+                  className="text-xl sm:text-3xl md:text-5xl font-logo font-medium hover:text-white hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.7)]"
                   style={{
                     letterSpacing: "-0.5px",
                     whiteSpace: "nowrap",
@@ -156,7 +156,7 @@ const Navbar = ({ scrollY = 0, showLogoEffect = false }: NavbarProps) => {
             <div className="pointer-events-auto">
               <Link
                 to="/"
-                className="text-xl sm:text-2xl md:text-4xl font-logo font-medium hover:text-white hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.7)]"
+                className="text-xl sm:text-3xl md:text-5xl font-logo font-medium hover:text-white hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.7)]"
                 style={{
                   letterSpacing: "-0.5px",
                   whiteSpace: "nowrap",
