@@ -73,10 +73,11 @@ const Navbar = ({ scrollY = 0 }: NavbarProps) => {
   const maxScroll = 300; // The scroll amount at which the transition completes
   const progress = Math.min(1, scrollY / maxScroll);
 
-  // Calculate scale - from 4 (large) to 1 (normal navbar size)
-  const logoScale = 4 - progress * 3;
+  // Calculate scale - from 12 (large) to 1.5 (navbar size)
+  const logoScale = 12 - progress * 10.5 + 1.5 * progress;
 
   // Calculate Y position - from 100px to 0 (navbar position)
+  // When fully scrolled (progress = 1), we want the logo to be vertically centered
   const logoY = 100 * (1 - progress);
 
   // Calculate X position - always centered
@@ -88,11 +89,11 @@ const Navbar = ({ scrollY = 0 }: NavbarProps) => {
       className={cn(
         "fixed top-0 left-0 right-0 z-50 transition-all duration-500",
         scrolled
-          ? "bg-omnis-black/90 backdrop-blur-sm py-3 shadow-md"
-          : "bg-transparent py-5"
+          ? "bg-omnis-black/90 backdrop-blur-sm py-4 shadow-md"
+          : "bg-transparent py-6"
       )}
     >
-      <div className="container mx-auto px-6 relative">
+      <div className="container mx-auto px-6 md:px-8 relative">
         {/* Absolute positioned logo in the center */}
         <div className="absolute left-0 right-0 flex justify-center z-50 w-full pointer-events-none">
           <div className="pointer-events-auto">
@@ -106,7 +107,7 @@ const Navbar = ({ scrollY = 0 }: NavbarProps) => {
             >
               <Link
                 to="/"
-                className="text-2xl md:text-3xl font-logo font-medium hover:text-white hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.7)]"
+                className="text-2xl md:text-4xl font-logo font-medium hover:text-white hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.7)]"
                 style={{ letterSpacing: "-0.5px", whiteSpace: "nowrap" }}
               >
                 OMNIS
@@ -116,14 +117,14 @@ const Navbar = ({ scrollY = 0 }: NavbarProps) => {
         </div>
 
         {/* Flex container for navigation items */}
-        <div className="flex justify-between items-center py-4">
+        <div className="flex justify-between items-center py-6">
           {/* Left side navigation */}
-          <nav className="hidden md:flex items-center space-x-8">
+          <nav className="hidden md:flex items-center space-x-10">
             <NavLink to="/about">ABOUT</NavLink>
           </nav>
 
           {/* Right side navigation */}
-          <nav className="hidden md:flex items-center space-x-8 ml-auto">
+          <nav className="hidden md:flex items-center space-x-10 ml-auto">
             <NavLink to="/shop">SHOP</NavLink>
             <Link to="/bag" className="relative group">
               <ShoppingBag
