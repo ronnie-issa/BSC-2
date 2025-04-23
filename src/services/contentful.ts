@@ -2,12 +2,25 @@ import { createClient } from 'contentful';
 import type { EntryCollection } from 'contentful';
 import type { Product } from '../contexts/ProductContext';
 
-// Contentful client
-const client = createClient({
+// Contentful delivery client (for published content)
+const deliveryClient = createClient({
   space: import.meta.env.CONTENTFUL_SPACE_ID || '',
   accessToken: import.meta.env.CONTENTFUL_ACCESS_TOKEN || '',
   environment: import.meta.env.CONTENTFUL_ENVIRONMENT || 'master',
 });
+
+// Contentful preview client (for draft content)
+const previewClient = createClient({
+  space: import.meta.env.CONTENTFUL_SPACE_ID || '',
+  accessToken: import.meta.env.CONTENTFUL_PREVIEW_TOKEN || '',
+  environment: import.meta.env.CONTENTFUL_ENVIRONMENT || 'master',
+  host: 'preview.contentful.com', // Use the preview API host
+});
+
+// Helper function to get the appropriate client based on preview mode
+const getClient = (preview = false) => {
+  return preview ? previewClient : deliveryClient;
+};
 
 // Interface for Contentful product entry
 interface ContentfulProduct {
@@ -43,9 +56,11 @@ interface ContentfulProduct {
 
 /**
  * Fetch all products from Contentful
+ * @param preview Whether to use the preview API (for draft content)
  */
-export async function fetchAllProducts(): Promise<Product[]> {
+export async function fetchAllProducts(preview = false): Promise<Product[]> {
   try {
+    const client = getClient(preview);
     const entries: EntryCollection<ContentfulProduct> = await client.getEntries({
       content_type: 'product',
       include: 2,
@@ -53,7 +68,7 @@ export async function fetchAllProducts(): Promise<Product[]> {
 
     return entries.items.map((item) => {
       const fields = item.fields;
-      
+
       return {
         id: parseInt(item.sys.id),
         name: fields.name,
@@ -83,9 +98,11 @@ export async function fetchAllProducts(): Promise<Product[]> {
 
 /**
  * Fetch featured products from Contentful
+ * @param preview Whether to use the preview API (for draft content)
  */
-export async function fetchFeaturedProducts(): Promise<Product[]> {
+export async function fetchFeaturedProducts(preview = false): Promise<Product[]> {
   try {
+    const client = getClient(preview);
     const entries: EntryCollection<ContentfulProduct> = await client.getEntries({
       content_type: 'product',
       'fields.featured': true,
@@ -94,7 +111,7 @@ export async function fetchFeaturedProducts(): Promise<Product[]> {
 
     return entries.items.map((item) => {
       const fields = item.fields;
-      
+
       return {
         id: parseInt(item.sys.id),
         name: fields.name,
@@ -124,15 +141,18 @@ export async function fetchFeaturedProducts(): Promise<Product[]> {
 
 /**
  * Fetch a single product by ID
+ * @param id The product ID
+ * @param preview Whether to use the preview API (for draft content)
  */
-export async function fetchProductById(id: number): Promise<Product | null> {
+export async function fetchProductById(id: number, preview = false): Promise<Product | null> {
   try {
+    const client = getClient(preview);
     const entry = await client.getEntry<ContentfulProduct>(id.toString(), {
       include: 2,
     });
 
     const fields = entry.fields;
-    
+
     return {
       id: parseInt(entry.sys.id),
       name: fields.name,

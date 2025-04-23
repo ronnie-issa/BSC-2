@@ -26,6 +26,7 @@ export default defineConfig(({ mode }) => {
       // Expose environment variables to the client
       'import.meta.env.CONTENTFUL_SPACE_ID': JSON.stringify(env.CONTENTFUL_SPACE_ID),
       'import.meta.env.CONTENTFUL_ACCESS_TOKEN': JSON.stringify(env.CONTENTFUL_ACCESS_TOKEN),
+      'import.meta.env.CONTENTFUL_PREVIEW_TOKEN': JSON.stringify(env.CONTENTFUL_PREVIEW_TOKEN),
       'import.meta.env.CONTENTFUL_ENVIRONMENT': JSON.stringify(env.CONTENTFUL_ENVIRONMENT || 'master'),
     },
   };

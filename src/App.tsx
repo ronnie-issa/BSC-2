@@ -4,6 +4,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import ScrollToTop from "@/components/ScrollToTop";
+import PreviewToggle from "@/components/PreviewToggle";
 import { ContentfulProductsProvider } from "./contexts/ContentfulProductsProvider";
 import { ProductProvider } from "./contexts/ProductContext";
 import Index from "./pages/Index";
@@ -33,6 +34,7 @@ const App = () => (
           <Sonner />
           <BrowserRouter>
             <ScrollToTop />
+            <PreviewToggle />
             <Routes>
               <Route path="/" element={<Index />} />
               <Route path="/shop" element={<Shop />} />
