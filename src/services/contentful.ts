@@ -90,10 +90,20 @@ export async function fetchAllProducts(preview = false): Promise<Product[]> {
   try {
     console.log('Fetching all products, preview mode:', preview);
     const client = getClient(preview);
-    const entries: EntryCollection<ContentfulProduct> = await client.getEntries({
-      content_type: 'product',
-      include: 2,
-    });
+    // Try with both lowercase and uppercase content type names
+    let entries: EntryCollection<ContentfulProduct>;
+    try {
+      entries = await client.getEntries({
+        content_type: 'product',
+        include: 2,
+      });
+    } catch (error) {
+      console.log('Trying with uppercase Product content type...');
+      entries = await client.getEntries({
+        content_type: 'Product',
+        include: 2,
+      });
+    }
 
     console.log('Content types available:', entries.items.map(item => item.sys.contentType?.sys.id));
 
@@ -137,11 +147,22 @@ export async function fetchAllProducts(preview = false): Promise<Product[]> {
 export async function fetchFeaturedProducts(preview = false): Promise<Product[]> {
   try {
     const client = getClient(preview);
-    const entries: EntryCollection<ContentfulProduct> = await client.getEntries({
-      content_type: 'product',
-      'fields.featured': true,
-      include: 2,
-    });
+    // Try with both lowercase and uppercase content type names
+    let entries: EntryCollection<ContentfulProduct>;
+    try {
+      entries = await client.getEntries({
+        content_type: 'product',
+        'fields.featured': true,
+        include: 2,
+      });
+    } catch (error) {
+      console.log('Trying with uppercase Product content type for featured products...');
+      entries = await client.getEntries({
+        content_type: 'Product',
+        'fields.featured': true,
+        include: 2,
+      });
+    }
 
     return entries.items.map((item) => {
       const fields = item.fields;
@@ -180,33 +201,42 @@ export async function fetchFeaturedProducts(preview = false): Promise<Product[]>
  */
 export async function fetchProductById(id: number, preview = false): Promise<Product | null> {
   try {
+    console.log(`Fetching product with ID ${id}, preview mode: ${preview}`);
     const client = getClient(preview);
-    const entry = await client.getEntry<ContentfulProduct>(id.toString(), {
-      include: 2,
-    });
 
-    const fields = entry.fields;
+    try {
+      const entry = await client.getEntry<ContentfulProduct>(id.toString(), {
+        include: 2,
+      });
 
-    return {
-      id: parseInt(entry.sys.id),
-      name: fields.name,
-      price: fields.price,
-      description: fields.description,
-      image: fields.image?.fields?.file?.url || '',
-      featured: fields.featured || false,
-      variations: fields.variations?.map((variation) => ({
-        name: variation.fields.name,
-        value: variation.fields.value,
-      })) || [],
-      colors: fields.variations?.map((variation) => ({
-        name: variation.fields.name,
-        value: variation.fields.value,
-      })) || [],
-      sizes: fields.sizes?.map((size) => ({
-        name: size.fields.name,
-        value: size.fields.value,
-      })) || [],
-    };
+      const fields = entry.fields;
+
+      console.log('Product entry found:', entry);
+
+      return {
+        id: parseInt(entry.sys.id),
+        name: fields.name,
+        price: fields.price,
+        description: fields.description,
+        image: fields.image?.fields?.file?.url || '',
+        featured: fields.featured || false,
+        variations: fields.variations?.map((variation) => ({
+          name: variation.fields.name,
+          value: variation.fields.value,
+        })) || [],
+        colors: fields.variations?.map((variation) => ({
+          name: variation.fields.name,
+          value: variation.fields.value,
+        })) || [],
+        sizes: fields.sizes?.map((size) => ({
+          name: size.fields.name,
+          value: size.fields.value,
+        })) || [],
+      };
+    } catch (entryError) {
+      console.error(`Error fetching entry with ID ${id}:`, entryError);
+      return null;
+    }
   } catch (error) {
     console.error(`Error fetching product with ID ${id}:`, error);
     return null;
