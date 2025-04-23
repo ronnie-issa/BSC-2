@@ -30,3 +30,4 @@ export default defineConfig(({ mode }) => {
       'import.meta.env.CONTENTFUL_ENVIRONMENT': JSON.stringify(env.CONTENTFUL_ENVIRONMENT || 'master'),
     },
   };
+});
