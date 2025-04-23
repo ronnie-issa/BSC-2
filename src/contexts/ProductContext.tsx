@@ -6,6 +6,11 @@ export interface Product {
   price: number;
   image: string;
   description: string;
+  featured?: boolean;
+  variations: {
+    name: string;
+    value: string;
+  }[];
   colors: {
     name: string;
     value: string;

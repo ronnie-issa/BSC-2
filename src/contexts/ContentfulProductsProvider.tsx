@@ -36,22 +36,28 @@ export const ContentfulProductsProvider: React.FC<{ children: ReactNode }> = ({
 
   // Function to fetch products from Contentful
   const refreshProducts = async () => {
+    console.log("Starting to refresh products, preview mode:", previewMode);
     setLoading(true);
     setError(null);
 
     try {
       // Fetch all products using the current preview mode setting
+      console.log("Calling fetchAllProducts...");
       const allProducts = await fetchAllProducts(previewMode);
+      console.log("All products fetched:", allProducts.length);
       setProducts(allProducts);
 
       // Fetch featured products using the current preview mode setting
+      console.log("Calling fetchFeaturedProducts...");
       const featured = await fetchFeaturedProducts(previewMode);
+      console.log("Featured products fetched:", featured.length);
       setFeaturedProducts(featured);
     } catch (err) {
       console.error("Error fetching products:", err);
       setError("Failed to fetch products. Please try again later.");
     } finally {
       setLoading(false);
+      console.log("Finished refreshing products, loading state set to false");
     }
   };
 

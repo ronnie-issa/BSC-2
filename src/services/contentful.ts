@@ -3,6 +3,34 @@ import type { EntryCollection } from 'contentful';
 import type { Product } from '../contexts/ProductContext';
 
 // Contentful delivery client (for published content)
+console.log('Contentful Config:', {
+  spaceId: import.meta.env.CONTENTFUL_SPACE_ID,
+  accessToken: import.meta.env.CONTENTFUL_ACCESS_TOKEN ? 'Set (hidden for security)' : 'Not set',
+  environment: import.meta.env.CONTENTFUL_ENVIRONMENT || 'master',
+});
+
+// Debug function to list all content types
+async function listContentTypes() {
+  try {
+    const client = createClient({
+      space: import.meta.env.CONTENTFUL_SPACE_ID || '',
+      accessToken: import.meta.env.CONTENTFUL_ACCESS_TOKEN || '',
+      environment: import.meta.env.CONTENTFUL_ENVIRONMENT || 'master',
+    });
+
+    const contentTypes = await client.getContentTypes();
+    console.log('Available content types:', contentTypes.items.map(type => ({
+      id: type.sys.id,
+      name: type.name
+    })));
+  } catch (error) {
+    console.error('Error fetching content types:', error);
+  }
+}
+
+// Call the debug function
+listContentTypes();
+
 const deliveryClient = createClient({
   space: import.meta.env.CONTENTFUL_SPACE_ID || '',
   accessToken: import.meta.env.CONTENTFUL_ACCESS_TOKEN || '',
@@ -60,11 +88,17 @@ interface ContentfulProduct {
  */
 export async function fetchAllProducts(preview = false): Promise<Product[]> {
   try {
+    console.log('Fetching all products, preview mode:', preview);
     const client = getClient(preview);
     const entries: EntryCollection<ContentfulProduct> = await client.getEntries({
       content_type: 'product',
       include: 2,
     });
+
+    console.log('Content types available:', entries.items.map(item => item.sys.contentType?.sys.id));
+
+    console.log('Fetched products:', entries.items.length);
+    console.log('Raw response:', JSON.stringify(entries, null, 2));
 
     return entries.items.map((item) => {
       const fields = item.fields;
