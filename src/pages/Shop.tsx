@@ -1,15 +1,22 @@
-import { useRef } from "react";
+import { useRef, useEffect } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { motion, useInView } from "@/lib/framer";
-
-import { products } from "@/data/products";
+import { useContentfulProducts } from "@/contexts/ContentfulProductsProvider";
 import ProductCard from "@/components/ProductCard";
 
 const Shop = () => {
   // Refs for animations
   const shopRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(shopRef, { once: true, amount: 0.2 });
+
+  // Get products from context
+  const { products, loading, error, refreshProducts } = useContentfulProducts();
+
+  // Refresh products when component mounts
+  useEffect(() => {
+    refreshProducts();
+  }, [refreshProducts]);
 
   return (
     <div
@@ -48,22 +55,43 @@ const Shop = () => {
               {/* Product counter removed */}
 
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                {products.map((product, index) => (
-                  <motion.div
-                    key={product.id}
-                    initial={{ y: 50, opacity: 0 }}
-                    animate={
-                      isInView ? { y: 0, opacity: 1 } : { y: 50, opacity: 0 }
-                    }
-                    transition={{
-                      duration: 0.6,
-                      ease: "easeOut",
-                      delay: 0.3 + index * 0.1, // Staggered animation
-                    }}
-                  >
-                    <ProductCard product={product} index={index} />
-                  </motion.div>
-                ))}
+                {loading ? (
+                  <div className="col-span-3 text-center py-20">
+                    <div className="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-omnis-white"></div>
+                    <p className="mt-4">Loading products...</p>
+                  </div>
+                ) : error ? (
+                  <div className="col-span-3 text-center py-20">
+                    <p className="text-red-500">{error}</p>
+                    <button
+                      className="mt-4 px-4 py-2 border border-omnis-white hover:bg-omnis-white hover:text-omnis-black transition-colors"
+                      onClick={() => refreshProducts()}
+                    >
+                      Try Again
+                    </button>
+                  </div>
+                ) : products.length === 0 ? (
+                  <div className="col-span-3 text-center py-20">
+                    <p>No products found.</p>
+                  </div>
+                ) : (
+                  products.map((product, index) => (
+                    <motion.div
+                      key={product.id}
+                      initial={{ y: 50, opacity: 0 }}
+                      animate={
+                        isInView ? { y: 0, opacity: 1 } : { y: 50, opacity: 0 }
+                      }
+                      transition={{
+                        duration: 0.6,
+                        ease: "easeOut",
+                        delay: 0.3 + index * 0.1, // Staggered animation
+                      }}
+                    >
+                      <ProductCard product={product} index={index} />
+                    </motion.div>
+                  ))
+                )}
               </div>
             </div>
           </div>

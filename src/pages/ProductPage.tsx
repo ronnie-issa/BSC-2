@@ -2,8 +2,9 @@ import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { ArrowLeft, MessageSquare, ShoppingBag } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { products } from "@/data/products";
 import { useProductContext } from "@/contexts/ProductContext";
+import { useContentfulProducts } from "@/contexts/ContentfulProductsProvider";
+import { fetchProductById } from "@/services/contentful";
 import { toast } from "@/hooks/use-toast";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -13,12 +14,49 @@ const ProductPage = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { addToCart } = useProductContext();
+  const { products } = useContentfulProducts();
 
   const [quantity, setQuantity] = useState(1);
   const [selectedColor, setSelectedColor] = useState("");
   const [selectedSize, setSelectedSize] = useState("");
+  const [product, setProduct] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  const product = products.find((p) => p.id === Number(id));
+  // Fetch product from Contentful
+  useEffect(() => {
+    const getProduct = async () => {
+      setLoading(true);
+      setError(null);
+
+      try {
+        // First try to find the product in the already loaded products
+        const foundProduct = products.find((p) => p.id === Number(id));
+
+        if (foundProduct) {
+          setProduct(foundProduct);
+        } else {
+          // If not found, fetch it directly from Contentful
+          const contentfulProduct = await fetchProductById(Number(id));
+
+          if (contentfulProduct) {
+            setProduct(contentfulProduct);
+          } else {
+            setError("Product not found");
+          }
+        }
+      } catch (err) {
+        console.error("Error fetching product:", err);
+        setError("Failed to fetch product. Please try again later.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (id) {
+      getProduct();
+    }
+  }, [id, products]);
 
   // Set default color and size when product loads
   useEffect(() => {
@@ -33,12 +71,27 @@ const ProductPage = () => {
     // No need to scroll to top here as ScrollToTop component handles it
   }, [product]);
 
-  if (!product) {
+  if (loading) {
     return (
       <>
         <Navbar />
         <div className="container mx-auto px-4 py-20 min-h-[60vh] flex flex-col items-center justify-center">
-          <h1 className="text-2xl font-bold mb-4">Product Not Found</h1>
+          <div className="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-omnis-white mb-4"></div>
+          <p>Loading product...</p>
+        </div>
+        <Footer />
+      </>
+    );
+  }
+
+  if (error || !product) {
+    return (
+      <>
+        <Navbar />
+        <div className="container mx-auto px-4 py-20 min-h-[60vh] flex flex-col items-center justify-center">
+          <h1 className="text-2xl font-bold mb-4">
+            {error || "Product Not Found"}
+          </h1>
           <Button onClick={() => navigate("/shop")}>Return to Shop</Button>
         </div>
         <Footer />

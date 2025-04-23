@@ -4,6 +4,8 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import ScrollToTop from "@/components/ScrollToTop";
+import { ContentfulProductsProvider } from "./contexts/ContentfulProductsProvider";
+import { ProductProvider } from "./contexts/ProductContext";
 import Index from "./pages/Index";
 import Shop from "./pages/Shop";
 import About from "./pages/About";
@@ -24,34 +26,38 @@ const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <ScrollToTop />
-        <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/shop" element={<Shop />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/collections" element={<Collections />} />
-          <Route path="/contact" element={<Contact />} />
-          <Route path="/shipping" element={<Shipping />} />
-          <Route path="/returns" element={<Returns />} />
-          <Route path="/sizing" element={<Sizing />} />
-          <Route path="/help" element={<Help />} />
-          <Route path="/legal" element={<Legal />} />
-          <Route path="/product/:id" element={<ProductPage />} />
-          <Route path="/bag" element={<BagPage />} />
-          <Route path="/checkout" element={<CheckoutPage />} />
-          <Route
-            path="/order-confirmation"
-            element={<OrderConfirmationPage />}
-          />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
-    </TooltipProvider>
+    <ContentfulProductsProvider>
+      <ProductProvider>
+        <TooltipProvider>
+          <Toaster />
+          <Sonner />
+          <BrowserRouter>
+            <ScrollToTop />
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/shop" element={<Shop />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/collections" element={<Collections />} />
+              <Route path="/contact" element={<Contact />} />
+              <Route path="/shipping" element={<Shipping />} />
+              <Route path="/returns" element={<Returns />} />
+              <Route path="/sizing" element={<Sizing />} />
+              <Route path="/help" element={<Help />} />
+              <Route path="/legal" element={<Legal />} />
+              <Route path="/product/:id" element={<ProductPage />} />
+              <Route path="/bag" element={<BagPage />} />
+              <Route path="/checkout" element={<CheckoutPage />} />
+              <Route
+                path="/order-confirmation"
+                element={<OrderConfirmationPage />}
+              />
+              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </BrowserRouter>
+        </TooltipProvider>
+      </ProductProvider>
+    </ContentfulProductsProvider>
   </QueryClientProvider>
 );
 
