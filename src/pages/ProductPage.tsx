@@ -14,7 +14,7 @@ const ProductPage = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { addToCart } = useProductContext();
-  const { products, getProductById } = useContentfulProducts();
+  const { products, getProductById, refreshProducts } = useContentfulProducts();
 
   const [quantity, setQuantity] = useState(1);
   const [selectedColor, setSelectedColor] = useState("");
@@ -40,22 +40,69 @@ const ProductPage = () => {
 
       try {
         // First try to find the product in the already loaded products
-        // Note: Contentful uses string IDs, so we need to compare with string
-        const foundProduct = products.find(
-          (p) => p.id.toString() === productId
-        );
+        // We need to handle both numeric IDs from the URL and Contentful IDs from sessionStorage
+        const foundProduct = products.find((p) => {
+          // Convert both to strings for comparison
+          const pId = p.id.toString();
+          const searchId = productId.toString();
+
+          // Check if they match directly or if the product has a contentfulId that matches
+          return pId === searchId || (p as any).contentfulId === productId;
+        });
 
         if (foundProduct) {
+          console.log("Found product in loaded products:", foundProduct);
           setProduct(foundProduct);
-        } else {
-          // If not found, fetch it directly from Contentful
-          // Pass the ID as a string to the fetchProductById function
-          const contentfulProduct = await getProductById(productId);
 
-          if (contentfulProduct) {
-            setProduct(contentfulProduct);
+          // If we have a contentfulId, store it for future refreshes
+          if ((foundProduct as any).contentfulId) {
+            sessionStorage.setItem(
+              "contentfulProductId",
+              (foundProduct as any).contentfulId
+            );
+          }
+        } else {
+          // If not found in loaded products, try to get it from Contentful
+          // First check if we have a Contentful ID stored
+          const contentfulId = sessionStorage.getItem("contentfulProductId");
+
+          if (contentfulId) {
+            // If we have a Contentful ID, use it directly
+            console.log("Using stored Contentful ID:", contentfulId);
+            const contentfulProduct = await getProductById(contentfulId);
+
+            if (contentfulProduct) {
+              setProduct(contentfulProduct);
+            } else {
+              setError("Product not found with stored Contentful ID");
+            }
           } else {
-            setError("Product not found");
+            // If we don't have a Contentful ID, try to find the product by numeric ID
+            // This will work for initial loads but not for refreshes
+            console.log("Trying to find product with ID:", productId);
+
+            // First try to load all products to ensure we have the latest data
+            await refreshProducts(true);
+
+            // Then look for the product again
+            const refreshedProduct = products.find(
+              (p) => p.id.toString() === productId.toString()
+            );
+
+            if (refreshedProduct) {
+              console.log("Found product after refresh:", refreshedProduct);
+              setProduct(refreshedProduct);
+
+              // If we have a contentfulId, store it for future refreshes
+              if ((refreshedProduct as any).contentfulId) {
+                sessionStorage.setItem(
+                  "contentfulProductId",
+                  (refreshedProduct as any).contentfulId
+                );
+              }
+            } else {
+              setError("Product not found. Please try again later.");
+            }
           }
         }
       } catch (err) {
@@ -73,7 +120,7 @@ const ProductPage = () => {
     } else if (sessionStorage.getItem("currentProductId")) {
       getProduct();
     }
-  }, [id, products, getProductById]);
+  }, [id, products, getProductById, refreshProducts]);
 
   // Set default color and size when product loads
   useEffect(() => {

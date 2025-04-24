@@ -156,9 +156,12 @@ The project uses Contentful as a headless CMS to manage product data:
    - Continue Lighthouse audit, reach 100s across the board
    - Change og image to OMNIS logo
    - Bag page should be responsive
+   - in internal pages on load the navbar has padding of "py-5 md:py-4" on scroll it changes to "py-3 md:py-2"
 
 2. **Contentful CMS Enhancements**
 
+   - Organize Contentful content structure
+   - Products and attributes (Size, Variation) should each be in a separate group
    - Add more products (at least 6 total - 3 featured, 3 non-featured)
    - Implement rich text renderer for product descriptions using `@contentful/rich-text-react-renderer`
    - Add more variations and sizes for products

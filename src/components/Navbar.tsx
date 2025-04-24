@@ -136,8 +136,8 @@ const Navbar = ({ scrollY = 0, showLogoEffect = false }: NavbarProps) => {
   // Otherwise, use fixed values for the navbar logo
 
   // Calculate responsive scale based on screen width
-  // On mobile, use a smaller initial scale (4x instead of 8x)
-  const initialScale = windowWidth < 768 ? 4 : 8;
+  // On mobile, use a smaller initial scale (3x instead of 8x)
+  const initialScale = windowWidth < 768 ? 3 : 8;
   const finalScale = 1;
 
   // Calculate scale - from initialScale (large) to finalScale (navbar size)
@@ -147,8 +147,8 @@ const Navbar = ({ scrollY = 0, showLogoEffect = false }: NavbarProps) => {
     : finalScale;
 
   // Calculate Y position - responsive based on screen width
-  // Use a smaller initial Y offset on mobile, add 50px to push the big logo down
-  const initialY = windowWidth < 768 ? 48 : 164;
+  // Use a smaller initial Y offset on mobile to keep it in view
+  const initialY = windowWidth < 768 ? 100 : 164;
 
   // When fully scrolled (progress = 1), we want the logo to be vertically centered
   // If logo effect is disabled, always use 0 for Y position
@@ -162,8 +162,8 @@ const Navbar = ({ scrollY = 0, showLogoEffect = false }: NavbarProps) => {
       className={cn(
         "fixed top-0 left-0 right-0 z-50 transition-all duration-500",
         !showLogoEffect || scrolled
-          ? "bg-omnis-black/90 backdrop-blur-sm py-5 shadow-md"
-          : "bg-transparent pt-2 pb-6"
+          ? "bg-omnis-black/90 backdrop-blur-sm py-3 md:py-2 shadow-md"
+          : "bg-transparent py-5 md:py-4"
       )}
     >
       <div className="container mx-auto relative">
@@ -185,7 +185,7 @@ const Navbar = ({ scrollY = 0, showLogoEffect = false }: NavbarProps) => {
               >
                 <Link
                   to="/"
-                  className={`text-xl sm:text-3xl md:text-5xl font-logo font-medium ${
+                  className={`text-2xl sm:text-3xl md:text-5xl font-logo font-medium ${
                     isFullyScrolled
                       ? "hover:text-white hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.7)] cursor-pointer"
                       : "cursor-default"
@@ -193,9 +193,18 @@ const Navbar = ({ scrollY = 0, showLogoEffect = false }: NavbarProps) => {
                   style={{
                     letterSpacing: "-0.5px",
                     whiteSpace: "nowrap",
-                    maxHeight: isFullyScrolled ? "60px" : "none",
+                    maxHeight: isFullyScrolled
+                      ? windowWidth < 768
+                        ? "40px"
+                        : "64px"
+                      : "none",
                     display: "block",
-                    lineHeight: isFullyScrolled ? "60px" : "normal",
+                    lineHeight: isFullyScrolled
+                      ? windowWidth < 768
+                        ? "40px"
+                        : "64px"
+                      : "normal",
+                    fontSize: windowWidth < 768 ? "40px" : undefined,
                     pointerEvents: isFullyScrolled ? "auto" : "none", // Only clickable when small
                   }}
                 >
@@ -212,13 +221,14 @@ const Navbar = ({ scrollY = 0, showLogoEffect = false }: NavbarProps) => {
             <div className="pointer-events-auto">
               <Link
                 to="/"
-                className="text-xl sm:text-3xl md:text-5xl font-logo font-medium hover:text-white hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.7)]"
+                className="text-2xl sm:text-3xl md:text-5xl font-logo font-medium hover:text-white hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.7)]"
                 style={{
                   letterSpacing: "-0.5px",
                   whiteSpace: "nowrap",
-                  maxHeight: "60px",
+                  maxHeight: windowWidth < 768 ? "40px" : "64px",
                   display: "block",
-                  lineHeight: "60px",
+                  lineHeight: windowWidth < 768 ? "40px" : "64px",
+                  fontSize: windowWidth < 768 ? "40px" : undefined,
                 }}
               >
                 OMNIS
@@ -228,7 +238,7 @@ const Navbar = ({ scrollY = 0, showLogoEffect = false }: NavbarProps) => {
         )}
 
         {/* Flex container for navigation items */}
-        <div className="flex justify-between items-center py-6">
+        <div className="flex justify-between items-center py-2 md:py-2">
           {/* Left side navigation */}
           <nav className="hidden md:flex items-center space-x-10">
             <NavLink to="/about">ABOUT</NavLink>

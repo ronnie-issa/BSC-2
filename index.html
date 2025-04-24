@@ -30,9 +30,15 @@
     (function () {
       const urlParams = new URLSearchParams(window.location.search);
       const path = urlParams.get('path');
+      const contentfulId = urlParams.get('contentfulId');
 
       if (path) {
-        // Remove the query parameter to avoid infinite loops
+        // If we have a contentfulId, store it in sessionStorage
+        if (contentfulId) {
+          sessionStorage.setItem('contentfulProductId', contentfulId);
+        }
+
+        // Remove the query parameters to avoid infinite loops
         const newUrl = window.location.origin + path;
         window.history.replaceState({}, document.title, newUrl);
       }

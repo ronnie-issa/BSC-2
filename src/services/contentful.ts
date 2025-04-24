@@ -381,8 +381,19 @@ export async function fetchProductById(id: string | number, preview = false): Pr
         }
       }
 
+      // Try to parse the ID as a number for compatibility with the rest of the app
+      // But also store the original Contentful ID for future reference
+      let numericId;
+      try {
+        numericId = parseInt(entry.sys.id);
+      } catch (e) {
+        // If we can't parse it as a number, use a fallback ID
+        numericId = Math.floor(Math.random() * 10000);
+      }
+
       const product = {
-        id: parseInt(entry.sys.id),
+        id: numericId,
+        contentfulId: entry.sys.id, // Store the original Contentful ID
         name: fields.name,
         price: fields.price,
         description: description,

@@ -61,7 +61,7 @@ const HeroSection = () => {
 
   return (
     <section
-      className="relative min-h-screen overflow-hidden flex items-center pt-36 md:pt-60"
+      className="relative min-h-screen overflow-hidden flex items-center pt-24 md:pt-60"
       ref={heroRef}
     >
       {/* Background Image with Parallax */}
@@ -82,7 +82,7 @@ const HeroSection = () => {
       {/* Gradient Overlay */}
       <div className="absolute inset-0 bg-gradient-to-b from-omnis-black via-omnis-black/70 to-omnis-black z-10" />
 
-      <div className="container mx-auto relative z-20 pt-20">
+      <div className="container mx-auto relative z-20 pt-10 md:pt-20">
         <div className="max-w-4xl mx-auto text-center">
           <motion.h1
             ref={headingAnimation.containerRef}

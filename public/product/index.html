@@ -75,7 +75,17 @@
       if (productId && productId !== 'index.html') {
         // Store the product ID in sessionStorage to help with page refresh
         sessionStorage.setItem('currentProductId', productId);
-        window.location.href = '/index.html?path=/product/' + productId;
+
+        // Check if we have a contentfulId stored for this product
+        const contentfulId = sessionStorage.getItem('contentfulProductId');
+
+        // If we have a contentfulId, use it in the URL to ensure proper loading
+        if (contentfulId) {
+          // Add a special parameter to indicate we're using a contentful ID
+          window.location.href = '/index.html?path=/product/' + productId + '&contentfulId=' + contentfulId;
+        } else {
+          window.location.href = '/index.html?path=/product/' + productId;
+        }
       } else {
         // If no product ID, redirect to shop
         window.location.href = '/index.html?path=/shop';

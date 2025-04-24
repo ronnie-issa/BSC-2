@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState, ReactNode } from "react";
 
 export interface Product {
   id: number;
+  contentfulId?: string; // Added to store the original Contentful ID
   name: string;
   price: number;
   image: string;
