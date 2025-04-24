@@ -95,30 +95,85 @@ The project uses Contentful as a headless CMS to manage product data:
 - Content can be scheduled for future publishing
 - Multiple users can collaborate on content creation and management
 
-## Upcoming Changes
+## Project Status
 
-1. **Animation Migration**
+### Completed Features
 
-   - Status: ✅ Completed
-   - All components and pages have been migrated to Framer Motion
-   - GSAP compatibility layer has been removed
+1. **Core E-commerce Functionality**
+
+   - ✅ Product browsing and filtering
+   - ✅ Shopping cart management
+   - ✅ Checkout process
+   - ✅ WhatsApp ordering integration
+
+2. **Content Management**
+
+   - ✅ Contentful CMS integration
+   - ✅ Product data management
+   - ✅ Rich text product descriptions
+   - ✅ Image management through Contentful CDN
+
+3. **User Experience**
+   - ✅ Responsive design for all devices
+   - ✅ Animated transitions using Framer Motion
+   - ✅ Lazy loading for improved performance
+   - ✅ Newsletter subscription system
+
+### In Progress
+
+1. **Email Marketing**
+
+   - ✅ Basic newsletter subscription
+   - ✅ Welcome email template
+   - ⏳ Unsubscribe functionality
+   - ⏳ Email template optimization
 
 2. **Performance Optimization**
-   - Status: Partially Completed
-   - ✅ Implemented lazy loading for images
-   - Add proper suspense boundaries
-   - Optimize animation performance
+   - ✅ Image lazy loading
+   - ⏳ React Suspense implementation
+   - ⏳ Code splitting
+   - ⏳ Animation performance tuning
 
-## TODO (purpose)
+## Roadmap
 
-- Migrate to NextJS, or a simpler/faster solution (SEO)
-  - Create Schema
-- Test Mailjet newsletter subscription welcome email (Marketing)
-  - unsubscribe functionality
-- Add Hotjar or Clarity and adjust privacy policy (Analytics)
-- Contentful CMS Enhancements:
-  - Add more products to Contentful (at least 6 total - 3 featured, 3 non-featured)
-  - Consider implementing rich text renderer for product descriptions using `@contentful/rich-text-react-renderer`
-  - Add more variations and sizes for products
-  - Implement image galleries for products (multiple images per product)
-  - Add content model for collections to manage them through Contentful
+### Short-term Goals
+
+1. **Contentful CMS Enhancements**
+
+   - Add more products (at least 6 total - 3 featured, 3 non-featured)
+   - Implement rich text renderer for product descriptions using `@contentful/rich-text-react-renderer`
+   - Add more variations and sizes for products
+   - Implement image galleries for products (multiple images per product)
+   - Create content model for collections to replace static data
+
+2. **Email Marketing Improvements**
+   - Complete unsubscribe functionality
+   - Test and optimize welcome email delivery
+   - Implement email analytics tracking
+
+### Medium-term Goals
+
+1. **Analytics Integration**
+
+   - Add Hotjar or Clarity for user behavior tracking
+   - Update privacy policy to reflect analytics usage
+   - Implement conversion tracking
+
+2. **SEO Enhancements**
+   - Create structured data schema
+   - Optimize meta tags and descriptions
+   - Improve site performance metrics
+
+### Long-term Vision
+
+1. **Framework Migration**
+
+   - Evaluate migration to Next.js for improved SEO and performance
+   - Consider server-side rendering options
+   - Implement incremental static regeneration for product pages
+
+2. **Advanced Features**
+   - User accounts and order history
+   - Wishlist functionality
+   - Product reviews and ratings
+   - Internationalization support
