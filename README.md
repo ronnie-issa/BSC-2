@@ -151,7 +151,11 @@ The project uses Contentful as a headless CMS to manage product data:
 
 ### Short-term Goals
 
-1. **Contentful CMS Enhancements**
+1. **General**
+
+   - Change og image to OMNIS logo
+
+2. **Contentful CMS Enhancements**
 
    - Add more products (at least 6 total - 3 featured, 3 non-featured)
    - Implement rich text renderer for product descriptions using `@contentful/rich-text-react-renderer`
@@ -159,9 +163,11 @@ The project uses Contentful as a headless CMS to manage product data:
    - Implement image galleries for products (multiple images per product)
    - ✅ Clean up redundant files and code
 
-2. **Email Marketing Improvements**
+3. **Email System Migration and Improvements**
+   - Migrate from Mailjet to Resend for improved developer experience
+   - Implement React-based email templates
+   - Create welcome email and order confirmation templates
    - Complete unsubscribe functionality
-   - Test and optimize welcome email delivery
    - Implement email analytics tracking
 
 ### Medium-term Goals
@@ -190,3 +196,5 @@ The project uses Contentful as a headless CMS to manage product data:
    - Wishlist functionality
    - Product reviews and ratings
    - Internationalization support
+   - Advanced email marketing flows and automation
+   - Personalized product recommendations in emails
