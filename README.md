@@ -156,7 +156,7 @@ The project uses Contentful as a headless CMS to manage product data:
    - Continue Lighthouse audit, reach 100s across the board
    - Change og image to OMNIS logo
    - Bag page should be responsive
-   - in internal pages on load the navbar has padding of "py-5 md:py-4" on scroll it changes to "py-3 md:py-2"
+   - in internal pages on load the navbar should have a padding of "py-5 md:py-4" on scroll it should change to "py-3 md:py-2"
 
 2. **Contentful CMS Enhancements**
 
