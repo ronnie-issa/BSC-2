@@ -1,0 +1,8 @@
+# Netlify redirects file
+# This file is used in addition to netlify.toml for redundancy
+
+# Redirect all routes to index.html for client-side routing
+/*    /index.html   200
+
+# Force HTTPS
+http://*   https://:splat   301!

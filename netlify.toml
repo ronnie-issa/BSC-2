@@ -30,18 +30,19 @@
   to = "/admin/simple-github.html"
   status = 200
 
-# Custom 404 page
-[[redirects]]
-  from = "/404"
-  to = "/404.html"
-  status = 404
-
-# Support client-side routing
+# Support client-side routing - this must come before the 404 redirect
 [[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
+  force = true
   conditions = {Path = {exclude = ["/admin/*", "/api/*"]}}
+
+# Custom 404 page - this should come after the client-side routing redirect
+[[redirects]]
+  from = "/404"
+  to = "/404.html"
+  status = 404
 
 # Force HTTPS
 [[redirects]]

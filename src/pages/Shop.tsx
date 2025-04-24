@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useRef, useEffect } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { motion, useInView } from "@/lib/framer";
@@ -15,7 +15,12 @@ const Shop = () => {
   const { products, isLoading, error, refreshProducts } =
     useContentfulProducts();
 
-  // No need to refresh products here as it's already done in ContentfulProductsProvider
+  // Force refresh products when the shop page loads
+  useEffect(() => {
+    // This ensures products are loaded when the shop page is refreshed
+    refreshProducts(true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div

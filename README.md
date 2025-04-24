@@ -153,6 +153,7 @@ The project uses Contentful as a headless CMS to manage product data:
 
 1. **General**
 
+   - Continue Lighthouse audit, reach 100s across the board
    - Change og image to OMNIS logo
    - Bag page should be responsive
 
