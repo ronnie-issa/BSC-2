@@ -13,10 +13,7 @@ const Shop = () => {
   // Get products from context
   const { products, loading, error, refreshProducts } = useContentfulProducts();
 
-  // Refresh products when component mounts
-  useEffect(() => {
-    refreshProducts();
-  }, [refreshProducts]);
+  // No need to refresh products here as it's already done in ContentfulProductsProvider
 
   return (
     <div

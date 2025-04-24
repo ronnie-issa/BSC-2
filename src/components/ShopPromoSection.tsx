@@ -14,10 +14,7 @@ const ShopPromoSection = () => {
   const { featuredProducts, loading, error, refreshProducts } =
     useContentfulProducts();
 
-  // Refresh products when component mounts
-  useEffect(() => {
-    refreshProducts();
-  }, [refreshProducts]);
+  // No need to refresh products here as it's already done in ContentfulProductsProvider
 
   return (
     <section

@@ -72,7 +72,13 @@ const LazyImage = ({
 
       <img
         ref={imgRef}
-        src={isInView ? src : placeholderSrc}
+        src={
+          isInView
+            ? src.startsWith("//")
+              ? `https:${src}`
+              : src
+            : placeholderSrc
+        }
         alt={alt}
         loading="lazy"
         onLoad={handleLoad}

@@ -21,6 +21,7 @@ OMNIS is a modern fashion e-commerce website built with React and TypeScript. Th
 - shadcn-ui (UI components)
 - Tailwind CSS (styling)
 - Framer Motion (animations)
+- Contentful (headless CMS for product management)
 
 ## Image Organization
 
@@ -85,8 +86,28 @@ src/
 ├── components/         # Reusable UI components
 ├── pages/             # Route-based page components
 ├── lib/               # Utilities and hooks
+├── contexts/          # React context providers
+├── services/          # API services and external integrations
 └── styles/            # Global styles and Tailwind config
 ```
+
+## Contentful CMS Integration
+
+The project uses Contentful as a headless CMS to manage product data:
+
+### Content Models
+
+- **Product**: Main product information (name, price, description, image, featured flag)
+- **Variation**: Product color/material variations
+- **Size**: Product size options
+
+### Implementation Details
+
+- Products are fetched from Contentful using the Content Delivery API
+- Featured products are displayed on the homepage
+- All products are displayed on the shop page
+- Product data is cached to improve performance and reduce API calls
+- Preview mode is available for testing content changes before publishing
 
 ## Upcoming Changes
 
@@ -109,3 +130,9 @@ src/
 - Test Mailjet newsletter subscription welcome email (Marketing)
   - unsubscribe functionality
 - Add Hotjar or Clarity and adjust privacy policy (Analytics)
+- Contentful CMS Enhancements:
+  - Add more products to Contentful (at least 6 total - 3 featured, 3 non-featured)
+  - Consider implementing rich text renderer for product descriptions using `@contentful/rich-text-react-renderer`
+  - Add more variations and sizes for products
+  - Implement image galleries for products (multiple images per product)
+  - Add content model for collections to manage them through Contentful

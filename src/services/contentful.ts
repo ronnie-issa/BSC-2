@@ -82,12 +82,35 @@ interface ContentfulProduct {
   };
 }
 
+// Cache for products to reduce API calls
+let productsCache: {
+  standard: Product[] | null;
+  preview: Product[] | null;
+  timestamp: number;
+} = {
+  standard: null,
+  preview: null,
+  timestamp: 0
+};
+
+// Cache expiration time (5 minutes)
+const CACHE_EXPIRATION = 5 * 60 * 1000;
+
 /**
  * Fetch all products from Contentful
  * @param preview Whether to use the preview API (for draft content)
  */
 export async function fetchAllProducts(preview = false): Promise<Product[]> {
   try {
+    // Check if we have cached data that's not expired
+    const now = Date.now();
+    const cacheKey = preview ? 'preview' : 'standard';
+
+    if (productsCache[cacheKey] && (now - productsCache.timestamp < CACHE_EXPIRATION)) {
+      console.log('Using cached products data');
+      return productsCache[cacheKey] || [];
+    }
+
     console.log('Fetching all products, preview mode:', preview);
     const client = getClient(preview);
     // Try with both lowercase and uppercase content type names
@@ -110,15 +133,42 @@ export async function fetchAllProducts(preview = false): Promise<Product[]> {
     console.log('Fetched products:', entries.items.length);
     console.log('Raw response:', JSON.stringify(entries, null, 2));
 
-    return entries.items.map((item) => {
+    const products = entries.items.map((item) => {
       const fields = item.fields;
+
+      // Ensure image URL has https:// prefix if it starts with //
+      let imageUrl = fields.image?.fields?.file?.url || '';
+      if (imageUrl.startsWith('//')) {
+        imageUrl = 'https:' + imageUrl;
+      }
+
+      // Extract text content from rich text description if it's an object
+      let description = fields.description;
+      if (description && typeof description === 'object' && description.content) {
+        try {
+          // Try to extract text from the rich text object
+          description = description.content
+            .map(block => {
+              if (block.content) {
+                return block.content
+                  .map(item => item.value || '')
+                  .join('');
+              }
+              return '';
+            })
+            .join('\n\n');
+        } catch (e) {
+          console.warn('Error extracting text from rich text:', e);
+          description = 'Product description unavailable';
+        }
+      }
 
       return {
         id: parseInt(item.sys.id),
         name: fields.name,
         price: fields.price,
-        description: fields.description,
-        image: fields.image?.fields?.file?.url || '',
+        description: description,
+        image: imageUrl,
         featured: fields.featured || false,
         variations: fields.variations?.map((variation) => ({
           name: variation.fields.name,
@@ -134,11 +184,28 @@ export async function fetchAllProducts(preview = false): Promise<Product[]> {
         })) || [],
       };
     });
+
+    // Update cache
+    productsCache[cacheKey] = products;
+    productsCache.timestamp = now;
+
+    return products;
   } catch (error) {
     console.error('Error fetching products from Contentful:', error);
     return [];
   }
 }
+
+// Cache for featured products
+let featuredProductsCache: {
+  standard: Product[] | null;
+  preview: Product[] | null;
+  timestamp: number;
+} = {
+  standard: null,
+  preview: null,
+  timestamp: 0
+};
 
 /**
  * Fetch featured products from Contentful
@@ -146,6 +213,24 @@ export async function fetchAllProducts(preview = false): Promise<Product[]> {
  */
 export async function fetchFeaturedProducts(preview = false): Promise<Product[]> {
   try {
+    // Check if we have cached data that's not expired
+    const now = Date.now();
+    const cacheKey = preview ? 'preview' : 'standard';
+
+    if (featuredProductsCache[cacheKey] && (now - featuredProductsCache.timestamp < CACHE_EXPIRATION)) {
+      console.log('Using cached featured products data');
+      return featuredProductsCache[cacheKey] || [];
+    }
+
+    // If we already have all products cached, filter them instead of making a new API call
+    if (productsCache[cacheKey] && (now - productsCache.timestamp < CACHE_EXPIRATION)) {
+      console.log('Filtering featured products from cached data');
+      const featured = productsCache[cacheKey]?.filter(product => product.featured) || [];
+      featuredProductsCache[cacheKey] = featured;
+      featuredProductsCache.timestamp = now;
+      return featured;
+    }
+
     const client = getClient(preview);
     // Try with both lowercase and uppercase content type names
     let entries: EntryCollection<ContentfulProduct>;
@@ -164,15 +249,42 @@ export async function fetchFeaturedProducts(preview = false): Promise<Product[]>
       });
     }
 
-    return entries.items.map((item) => {
+    const featuredProducts = entries.items.map((item) => {
       const fields = item.fields;
+
+      // Ensure image URL has https:// prefix if it starts with //
+      let imageUrl = fields.image?.fields?.file?.url || '';
+      if (imageUrl.startsWith('//')) {
+        imageUrl = 'https:' + imageUrl;
+      }
+
+      // Extract text content from rich text description if it's an object
+      let description = fields.description;
+      if (description && typeof description === 'object' && description.content) {
+        try {
+          // Try to extract text from the rich text object
+          description = description.content
+            .map(block => {
+              if (block.content) {
+                return block.content
+                  .map(item => item.value || '')
+                  .join('');
+              }
+              return '';
+            })
+            .join('\n\n');
+        } catch (e) {
+          console.warn('Error extracting text from rich text:', e);
+          description = 'Product description unavailable';
+        }
+      }
 
       return {
         id: parseInt(item.sys.id),
         name: fields.name,
         price: fields.price,
-        description: fields.description,
-        image: fields.image?.fields?.file?.url || '',
+        description: description,
+        image: imageUrl,
         featured: fields.featured || false,
         variations: fields.variations?.map((variation) => ({
           name: variation.fields.name,
@@ -188,11 +300,20 @@ export async function fetchFeaturedProducts(preview = false): Promise<Product[]>
         })) || [],
       };
     });
+
+    // Update cache
+    featuredProductsCache[cacheKey] = featuredProducts;
+    featuredProductsCache.timestamp = now;
+
+    return featuredProducts;
   } catch (error) {
     console.error('Error fetching featured products from Contentful:', error);
     return [];
   }
 }
+
+// Cache for individual products
+const productCache: Record<string, { product: Product | null; timestamp: number }> = {};
 
 /**
  * Fetch a single product by ID
@@ -201,6 +322,26 @@ export async function fetchFeaturedProducts(preview = false): Promise<Product[]>
  */
 export async function fetchProductById(id: number, preview = false): Promise<Product | null> {
   try {
+    const cacheKey = `${id}-${preview ? 'preview' : 'standard'}`;
+    const now = Date.now();
+
+    // Check if we have this product cached and not expired
+    if (productCache[cacheKey] && (now - productCache[cacheKey].timestamp < CACHE_EXPIRATION)) {
+      console.log(`Using cached product data for ID ${id}`);
+      return productCache[cacheKey].product;
+    }
+
+    // Check if we can find this product in the all products cache
+    const allProductsCacheKey = preview ? 'preview' : 'standard';
+    if (productsCache[allProductsCacheKey] && (now - productsCache.timestamp < CACHE_EXPIRATION)) {
+      const cachedProduct = productsCache[allProductsCacheKey]?.find(p => p.id === id);
+      if (cachedProduct) {
+        console.log(`Found product ID ${id} in all products cache`);
+        productCache[cacheKey] = { product: cachedProduct, timestamp: now };
+        return cachedProduct;
+      }
+    }
+
     console.log(`Fetching product with ID ${id}, preview mode: ${preview}`);
     const client = getClient(preview);
 
@@ -213,12 +354,39 @@ export async function fetchProductById(id: number, preview = false): Promise<Pro
 
       console.log('Product entry found:', entry);
 
-      return {
+      // Ensure image URL has https:// prefix if it starts with //
+      let imageUrl = fields.image?.fields?.file?.url || '';
+      if (imageUrl.startsWith('//')) {
+        imageUrl = 'https:' + imageUrl;
+      }
+
+      // Extract text content from rich text description if it's an object
+      let description = fields.description;
+      if (description && typeof description === 'object' && description.content) {
+        try {
+          // Try to extract text from the rich text object
+          description = description.content
+            .map(block => {
+              if (block.content) {
+                return block.content
+                  .map(item => item.value || '')
+                  .join('');
+              }
+              return '';
+            })
+            .join('\n\n');
+        } catch (e) {
+          console.warn('Error extracting text from rich text:', e);
+          description = 'Product description unavailable';
+        }
+      }
+
+      const product = {
         id: parseInt(entry.sys.id),
         name: fields.name,
         price: fields.price,
-        description: fields.description,
-        image: fields.image?.fields?.file?.url || '',
+        description: description,
+        image: imageUrl,
         featured: fields.featured || false,
         variations: fields.variations?.map((variation) => ({
           name: variation.fields.name,
@@ -233,6 +401,11 @@ export async function fetchProductById(id: number, preview = false): Promise<Pro
           value: size.fields.value,
         })) || [],
       };
+
+      // Update cache
+      productCache[cacheKey] = { product, timestamp: now };
+
+      return product;
     } catch (entryError) {
       console.error(`Error fetching entry with ID ${id}:`, entryError);
       return null;

@@ -231,7 +231,11 @@ const ProductPage = () => {
           {/* Product image */}
           <div className="aspect-[3/4] bg-omnis-darkgray">
             <img
-              src={product.image}
+              src={
+                product.image.startsWith("//")
+                  ? `https:${product.image}`
+                  : product.image
+              }
               alt={product.name}
               className="w-full h-full object-cover"
               style={{ filter: "grayscale(80%)" }}
@@ -244,7 +248,13 @@ const ProductPage = () => {
             <p className="text-2xl mt-2 mb-6">${product.price.toFixed(2)}</p>
 
             <div className="border-t border-omnis-gray pt-6 mb-6">
-              <p className="text-omnis-lightgray mb-8">{product.description}</p>
+              <div className="text-omnis-lightgray mb-8">
+                {product.description.split("\n\n").map((paragraph, index) => (
+                  <p key={index} className="mb-4">
+                    {paragraph}
+                  </p>
+                ))}
+              </div>
 
               {/* Variation selection */}
               <div className="mb-8">
