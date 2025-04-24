@@ -1,61 +1,83 @@
-import { useState } from "react";
-import { useContentfulProducts } from "@/contexts/ContentfulProductsProvider";
-import { Switch } from "@/components/ui/switch";
-import { Label } from "@/components/ui/label";
-import { EyeIcon, ChevronUpIcon } from "lucide-react";
+import { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
+import { Switch } from '@/components/ui/switch';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
+import { EyeIcon } from 'lucide-react';
+import { useContentfulProducts } from '../contexts/ContentfulProductsProvider';
 
-/**
- * A component that allows toggling between preview and published content
- * Now with a collapsed state to be less intrusive
- */
 const PreviewToggle = () => {
   const { previewMode, setPreviewMode } = useContentfulProducts();
-  const [isCollapsed, setIsCollapsed] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
+
+  const handleTogglePreview = () => {
+    if (!previewMode) {
+      // If turning preview mode on, show confirmation dialog
+      document.getElementById('preview-confirm-trigger')?.click();
+    } else {
+      // If turning preview mode off, just do it
+      setPreviewMode(false);
+    }
+  };
+
+  const confirmEnablePreview = () => {
+    setPreviewMode(true);
+  };
 
   return (
-    <div
-      className={`fixed bottom-4 right-4 bg-black/60 hover:bg-black/80 text-white ${
-        isCollapsed ? "p-2" : "p-3"
-      } rounded-lg shadow-lg z-50 flex items-center gap-2 transition-all duration-300 cursor-pointer`}
-      onClick={() => isCollapsed && setIsCollapsed(false)}
-    >
-      {isCollapsed ? (
-        <EyeIcon className="h-4 w-4" />
-      ) : (
-        <>
-          <EyeIcon className="h-4 w-4" />
-          <Label htmlFor="preview-mode" className="text-sm cursor-pointer">
-            Preview Mode
-          </Label>
-          <Switch
-            id="preview-mode"
-            checked={previewMode}
-            onCheckedChange={(checked) => {
-              // Only allow enabling preview mode with explicit confirmation
-              if (checked && !previewMode) {
-                if (
-                  window.confirm(
-                    "Enable preview mode? This may cause performance issues."
-                  )
-                ) {
-                  setPreviewMode(true);
-                }
-              } else {
-                setPreviewMode(checked);
-              }
-            }}
-            aria-label="Toggle preview mode"
-            onClick={(e) => e.stopPropagation()}
-          />
-          <ChevronUpIcon
-            className="h-4 w-4 ml-1 cursor-pointer"
-            onClick={(e) => {
-              e.stopPropagation();
-              setIsCollapsed(true);
-            }}
-          />
-        </>
-      )}
+    <div className="fixed bottom-4 right-4 z-50">
+      <Collapsible
+        open={isOpen}
+        onOpenChange={setIsOpen}
+        className="bg-black/80 backdrop-blur-sm rounded-lg shadow-lg overflow-hidden"
+      >
+        <CollapsibleTrigger asChild>
+          <Button
+            variant="outline"
+            size="icon"
+            className="h-10 w-10 rounded-full bg-black border-white/20 hover:bg-black/90"
+          >
+            <EyeIcon className="h-4 w-4 text-white" />
+            <span className="sr-only">Toggle preview mode</span>
+          </Button>
+        </CollapsibleTrigger>
+        <CollapsibleContent className="p-4 w-[240px]">
+          <div className="flex items-center justify-between">
+            <span className="text-sm text-white">Preview Mode</span>
+            <Switch
+              checked={previewMode}
+              onCheckedChange={handleTogglePreview}
+              className="data-[state=checked]:bg-white data-[state=checked]:text-black"
+            />
+          </div>
+          <p className="text-xs text-white/70 mt-2">
+            {previewMode
+              ? "You're viewing draft content. Changes may not be published yet."
+              : "Enable to see unpublished content."}
+          </p>
+        </CollapsibleContent>
+      </Collapsible>
+
+      {/* Hidden trigger for the confirmation dialog */}
+      <AlertDialog>
+        <AlertDialogTrigger id="preview-confirm-trigger" className="hidden">
+          Open
+        </AlertDialogTrigger>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Enable Preview Mode?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Preview mode will show unpublished content from Contentful. This is intended for testing only and may show content that isn't ready for production.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={confirmEnablePreview}>
+              Enable Preview
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };

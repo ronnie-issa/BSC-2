@@ -1,123 +1,121 @@
-import React, {
-  createContext,
-  useContext,
-  useState,
-  useEffect,
-  useCallback,
-  useRef,
-  ReactNode,
-} from "react";
-import { Product } from "./ProductContext";
-import {
-  fetchAllProducts,
-  fetchFeaturedProducts,
-} from "../services/contentful";
+import React, { createContext, useContext, useState, useEffect, useCallback, useRef } from 'react';
+import { fetchAllProducts, fetchFeaturedProducts, fetchProductById } from '../services/contentful';
+import type { Product } from './ProductContext';
 
-interface ProductsContextType {
+// Define the context type
+interface ContentfulProductsContextType {
   products: Product[];
   featuredProducts: Product[];
-  loading: boolean;
+  isLoading: boolean;
   error: string | null;
   previewMode: boolean;
-  setPreviewMode: (preview: boolean) => void;
-  refreshProducts: () => Promise<void>;
+  setPreviewMode: (mode: boolean) => void;
+  refreshProducts: (skipDebounce?: boolean) => Promise<void>;
+  getProductById: (id: string) => Promise<Product | null>;
 }
 
-const ProductsContext = createContext<ProductsContextType | undefined>(
-  undefined
-);
+// Create the context with default values
+const ContentfulProductsContext = createContext<ContentfulProductsContextType>({
+  products: [],
+  featuredProducts: [],
+  isLoading: true,
+  error: null,
+  previewMode: false,
+  setPreviewMode: () => {},
+  refreshProducts: async () => {},
+  getProductById: async () => null,
+});
 
-export const ContentfulProductsProvider: React.FC<{ children: ReactNode }> = ({
-  children,
-}) => {
+// Custom hook to use the context
+export const useContentfulProducts = () => useContext(ContentfulProductsContext);
+
+// Provider component
+export const ContentfulProductsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [products, setProducts] = useState<Product[]>([]);
   const [featuredProducts, setFeaturedProducts] = useState<Product[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  // Default to false to avoid excessive API calls
-  const [previewMode, setPreviewMode] = useState<boolean>(false);
-
-  // Track if a refresh is in progress to prevent duplicate calls
-  const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
-
-  // Debounce timer reference
-  const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
-
-  // Last refresh timestamp to prevent too frequent refreshes
+  const [previewMode, setPreviewMode] = useState(false);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  
+  // Refs for debouncing
   const lastRefreshRef = useRef<number>(0);
-
-  // Minimum time between refreshes (2 seconds)
+  const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
+  
+  // Minimum time between refreshes (in milliseconds)
   const MIN_REFRESH_INTERVAL = 2000;
 
+  // Function to fetch a single product by ID
+  const getProductById = useCallback(async (id: string): Promise<Product | null> => {
+    try {
+      return await fetchProductById(id, previewMode);
+    } catch (error) {
+      console.error('Error fetching product by ID:', error);
+      return null;
+    }
+  }, [previewMode]);
+
   // Function to fetch products from Contentful (wrapped in useCallback to maintain reference stability)
-  const refreshProducts = useCallback(
-    async (skipDebounce = false) => {
-      // Prevent multiple simultaneous refreshes
-      if (isRefreshing) {
-        console.log("Refresh already in progress, skipping...");
-        return;
+  const refreshProducts = useCallback(async (skipDebounce = false) => {
+    // Prevent multiple simultaneous refreshes
+    if (isRefreshing) {
+      console.log("Refresh already in progress, skipping...");
+      return;
+    }
+    
+    // Check if we've refreshed recently (unless skipDebounce is true)
+    const now = Date.now();
+    if (!skipDebounce && now - lastRefreshRef.current < MIN_REFRESH_INTERVAL) {
+      console.log("Refresh called too frequently, debouncing...");
+      
+      // Clear any existing timer
+      if (debounceTimerRef.current) {
+        clearTimeout(debounceTimerRef.current);
       }
-
-      // Check if we've refreshed recently (unless skipDebounce is true)
-      const now = Date.now();
-      if (
-        !skipDebounce &&
-        now - lastRefreshRef.current < MIN_REFRESH_INTERVAL
-      ) {
-        console.log("Refresh called too frequently, debouncing...");
-
-        // Clear any existing timer
-        if (debounceTimerRef.current) {
-          clearTimeout(debounceTimerRef.current);
-        }
-
-        // Set a new timer
-        debounceTimerRef.current = setTimeout(() => {
-          console.log("Executing debounced refresh...");
-          refreshProducts(true); // Skip debounce on the retry
-        }, MIN_REFRESH_INTERVAL);
-
-        return;
-      }
-
-      // Update last refresh timestamp
-      lastRefreshRef.current = now;
-
+      
+      // Set a new timer
+      debounceTimerRef.current = setTimeout(() => {
+        console.log("Executing debounced refresh...");
+        refreshProducts(true); // Skip debounce on the retry
+      }, MIN_REFRESH_INTERVAL);
+      
+      return;
+    }
+    
+    // Update the last refresh time
+    lastRefreshRef.current = now;
+    
+    // Set loading state
+    setIsRefreshing(true);
+    setError(null);
+    
+    try {
       console.log("Starting to refresh products, preview mode:", previewMode);
-      setLoading(true);
-      setError(null);
-      setIsRefreshing(true);
-
-      try {
-        // Fetch all products using the current preview mode setting
-        console.log("Calling fetchAllProducts...");
-        const allProducts = await fetchAllProducts(previewMode);
-        console.log("All products fetched:", allProducts.length);
-        setProducts(allProducts);
-
-        // Fetch featured products using the current preview mode setting
-        console.log("Calling fetchFeaturedProducts...");
-        const featured = await fetchFeaturedProducts(previewMode);
-        console.log("Featured products fetched:", featured.length);
-        setFeaturedProducts(featured);
-      } catch (err) {
-        console.error("Error fetching products:", err);
-        setError("Failed to fetch products. Please try again later.");
-      } finally {
-        setLoading(false);
-        setIsRefreshing(false);
-        console.log("Finished refreshing products, loading state set to false");
-      }
-      // We're using isRefreshing inside the function but not including it in the deps array
-      // to prevent the function from being recreated when isRefreshing changes
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    },
-    [previewMode]
-  );
-
-  // We don't need a separate effect for previewMode changes because
-  // refreshProducts already depends on previewMode and will be called
-  // when previewMode changes
+      
+      // Fetch all products
+      console.log("Calling fetchAllProducts...");
+      const allProducts = await fetchAllProducts(previewMode);
+      console.log("All products fetched:", allProducts.length);
+      setProducts(allProducts);
+      
+      // Fetch featured products
+      console.log("Calling fetchFeaturedProducts...");
+      const featured = await fetchFeaturedProducts(previewMode);
+      console.log("Featured products fetched:", featured.length);
+      setFeaturedProducts(featured);
+      
+    } catch (error) {
+      console.error("Error refreshing products:", error);
+      setError("Failed to load products. Please try again later.");
+    } finally {
+      setIsRefreshing(false);
+      setIsLoading(false);
+      console.log("Finished refreshing products, loading state set to false");
+    }
+  // We're using isRefreshing inside the function but not including it in the deps array
+  // to prevent the function from being recreated when isRefreshing changes
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [previewMode]);
 
   // Clean up debounce timer on unmount and handle initial fetch
   useEffect(() => {
@@ -126,7 +124,7 @@ export const ContentfulProductsProvider: React.FC<{ children: ReactNode }> = ({
       console.log("Performing initial fetch...");
       refreshProducts(true); // Skip debounce for initial fetch
     }, 100);
-
+    
     return () => {
       // Clean up all timers on unmount
       if (debounceTimerRef.current) {
@@ -137,29 +135,21 @@ export const ContentfulProductsProvider: React.FC<{ children: ReactNode }> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []); // Intentionally not including refreshProducts in deps to avoid infinite loop
 
-  return (
-    <ProductsContext.Provider
-      value={{
-        products,
-        featuredProducts,
-        loading,
-        error,
-        previewMode,
-        setPreviewMode,
-        refreshProducts,
-      }}
-    >
-      {children}
-    </ProductsContext.Provider>
-  );
-};
+  // Provide the context value
+  const contextValue = {
+    products,
+    featuredProducts,
+    isLoading,
+    error,
+    previewMode,
+    setPreviewMode,
+    refreshProducts,
+    getProductById,
+  };
 
-export const useContentfulProducts = () => {
-  const context = useContext(ProductsContext);
-  if (context === undefined) {
-    throw new Error(
-      "useContentfulProducts must be used within a ContentfulProductsProvider"
-    );
-  }
-  return context;
+  return (
+    <ContentfulProductsContext.Provider value={contextValue}>
+      {children}
+    </ContentfulProductsContext.Provider>
+  );
 };
