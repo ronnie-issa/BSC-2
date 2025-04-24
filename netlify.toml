@@ -1,7 +1,38 @@
 [build]
   functions = "functions"
+  publish = "dist"
+  command = "npm run build"
 
+# API redirects
 [[redirects]]
   from = "/api/*"
   to = "/.netlify/functions/:splat"
   status = 200
+
+# Admin pages
+[[redirects]]
+  from = "/admin"
+  to = "/admin/simple-github.html"
+  status = 200
+
+[[redirects]]
+  from = "/admin-direct"
+  to = "/admin/direct-github.html"
+  status = 200
+
+[[redirects]]
+  from = "/admin-simple"
+  to = "/admin/simple.html"
+  status = 200
+
+[[redirects]]
+  from = "/admin-github"
+  to = "/admin/simple-github.html"
+  status = 200
+
+# Support client-side routing
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+  conditions = {Path = {exclude = ["/admin/*", "/api/*"]}}

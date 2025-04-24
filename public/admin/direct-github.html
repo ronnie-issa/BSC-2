@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OMNIS Product Manager (Direct GitHub)</title>
+  <link rel="icon" type="image/png" href="/favicon.ico">
+  <style>
+    /* Reset and base styles */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: #111;
+      color: #fff;
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 0;
+      border-bottom: 1px solid #333;
+      margin-bottom: 30px;
+    }
+
+    h1,
+    h2,
+    h3 {
+      margin-bottom: 20px;
+    }
+
+    button,
+    .button {
+      background-color: #000;
+      color: #fff;
+      border: 1px solid #fff;
+      padding: 10px 15px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: all 0.3s ease;
+    }
+
+    button:hover,
+    .button:hover {
+      background-color: #fff;
+      color: #000;
+    }
+
+    input,
+    textarea,
+    select {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      background-color: #222;
+      border: 1px solid #444;
+      color: #fff;
+    }
+
+    .card {
+      background-color: #1a1a1a;
+      border-radius: 4px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 20px;
+    }
+
+    .product-card {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .product-card img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+    }
+
+    .product-card .actions {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 10px;
+    }
+
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0, 0, 0, 0.8);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      padding: 20px;
+    }
+
+    .modal-content {
+      background-color: #1a1a1a;
+      padding: 30px;
+      border-radius: 4px;
+      max-width: 600px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .close {
+      background: none;
+      border: none;
+      font-size: 24px;
+      cursor: pointer;
+      color: #fff;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    .variation-list,
+    .size-list {
+      margin-bottom: 15px;
+    }
+
+    .variation-item,
+    .size-item {
+      display: flex;
+      margin-bottom: 10px;
+    }
+
+    .variation-item input,
+    .size-item input {
+      flex: 1;
+      margin-right: 10px;
+      margin-bottom: 0;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .featured-badge {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background-color: gold;
+      color: black;
+      padding: 5px 10px;
+      border-radius: 3px;
+      font-weight: bold;
+    }
+
+    .loading {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 200px;
+    }
+
+    .spinner {
+      border: 4px solid rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      border-top: 4px solid white;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% {
+        transform: rotate(0deg);
+      }
+
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- GitHub Login Modal -->
+  <div id="login-modal" class="modal">
+    <div class="modal-content" style="max-width: 400px;">
+      <div class="modal-header">
+        <h2>OMNIS CMS Login</h2>
+      </div>
+
+      <form id="login-form">
+        <div class="form-group">
+          <label for="github-token">GitHub Personal Access Token</label>
+          <input type="password" id="github-token" required>
+          <small>Needs repo scope. <a href="https://github.com/settings/tokens" target="_blank"
+              style="color: #fff;">Create one here</a></small>
+        </div>
+
+        <button type="submit">Login</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="container" style="display: none;">
+    <header>
+      <h1>OMNIS Product Manager</h1>
+      <div>
+        <button id="add-product-btn">Add New Product</button>
+        <button id="logout-btn">Logout</button>
+      </div>
+    </header>
+
+    <div class="card">
+      <h2>Products</h2>
+      <p>Manage your products below. Featured products will appear on the homepage.</p>
+
+      <div id="products-container" class="product-grid">
+        <div class="loading">
+          <div class="spinner"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Add/Edit Product Modal -->
+    <div id="product-modal" class="modal hidden">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 id="modal-title">Add New Product</h2>
+          <button class="close" id="close-modal">&times;</button>
+        </div>
+
+        <form id="product-form">
+          <input type="hidden" id="product-id">
+
+          <div class="form-group">
+            <label for="product-name">Product Name</label>
+            <input type="text" id="product-name" required>
+          </div>
+
+          <div class="form-group">
+            <label for="product-price">Price ($)</label>
+            <input type="number" id="product-price" step="0.01" required>
+          </div>
+
+          <div class="form-group">
+            <label for="product-description">Description</label>
+            <textarea id="product-description" rows="4" required></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="product-image">Image URL</label>
+            <input type="text" id="product-image" required>
+          </div>
+
+          <div class="form-group">
+            <label>
+              <input type="checkbox" id="product-featured">
+              Featured on Homepage
+            </label>
+          </div>
+
+          <div class="form-group">
+            <label>Variations</label>
+            <div id="variations-container" class="variation-list">
+              <!-- Variation inputs will be added here -->
+            </div>
+            <button type="button" id="add-variation-btn">Add Variation</button>
+          </div>
+
+          <div class="form-group">
+            <label>Sizes</label>
+            <div id="sizes-container" class="size-list">
+              <!-- Size inputs will be added here -->
+            </div>
+            <button type="button" id="add-size-btn">Add Size</button>
+          </div>
+
+          <button type="submit" id="save-product-btn">Save Product</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- GitHub API Client -->
+  <script src="https://cdn.jsdelivr.net/npm/@octokit/rest@19.0.13/dist/index.umd.min.js"></script>
+
+  <script>
+    // GitHub API client
+    let octokit = null;
+
+    // GitHub repository information
+    const owner = 'kevinabouhanna';
+    const repo = 'Omnis';
+    const branch = 'github-cms';
+    const path = 'data/products.json';
+
+    // Product data
+    let products = [];
+    let fileSha = null;
+
+    // DOM Elements
+    const loginModal = document.getElementById('login-modal');
+    const loginForm = document.getElementById('login-form');
+    const githubTokenInput = document.getElementById('github-token');
+    const container = document.querySelector('.container');
+    const productsContainer = document.getElementById('products-container');
+    const productModal = document.getElementById('product-modal');
+    const productForm = document.getElementById('product-form');
+    const modalTitle = document.getElementById('modal-title');
+    const productIdInput = document.getElementById('product-id');
+    const productNameInput = document.getElementById('product-name');
+    const productPriceInput = document.getElementById('product-price');
+    const productDescriptionInput = document.getElementById('product-description');
+    const productImageInput = document.getElementById('product-image');
+    const productFeaturedInput = document.getElementById('product-featured');
+    const variationsContainer = document.getElementById('variations-container');
+    const sizesContainer = document.getElementById('sizes-container');
+    const addProductBtn = document.getElementById('add-product-btn');
+    const closeModalBtn = document.getElementById('close-modal');
+    const addVariationBtn = document.getElementById('add-variation-btn');
+    const addSizeBtn = document.getElementById('add-size-btn');
+    const logoutBtn = document.getElementById('logout-btn');
+
+    // Handle login
+    loginForm.addEventListener('submit', async function (event) {
+      event.preventDefault();
+
+      // Show loading indicator
+      const submitButton = loginForm.querySelector('button[type="submit"]');
+      const originalButtonText = submitButton.textContent;
+      submitButton.textContent = 'Logging in...';
+      submitButton.disabled = true;
+
+      try {
+        // Get GitHub token
+        const token = githubTokenInput.value;
+
+        console.log('Attempting to initialize Octokit...');
+
+        // Check if Octokit is defined
+        if (typeof Octokit === 'undefined') {
+          throw new Error('Octokit library not loaded. Please refresh the page and try again.');
+        }
+
+        // Initialize Octokit
+        try {
+          octokit = new Octokit.Octokit({
+            auth: token
+          });
+          console.log('Octokit initialized successfully');
+        } catch (initError) {
+          console.error('Error initializing Octokit:', initError);
+          throw new Error(`Failed to initialize GitHub API client: ${initError.message}`);
+        }
+
+        // Test authentication by getting user info
+        try {
+          console.log('Testing authentication...');
+          const { data: user } = await octokit.rest.users.getAuthenticated();
+          console.log(`Authenticated as ${user.login}`);
+        } catch (authError) {
+          console.error('Authentication API call failed:', authError);
+          throw new Error(`GitHub authentication failed: ${authError.message}. Please check your token.`);
+        }
+
+        // Hide login modal and show container
+        loginModal.classList.add('hidden');
+        container.style.display = 'block';
+
+        // Fetch products
+        await fetchProducts();
+      } catch (error) {
+        console.error('Authentication failed:', error);
+        alert(`Authentication failed: ${error.message}. Please check your token and try again.`);
+      } finally {
+        // Reset button
+        submitButton.textContent = originalButtonText;
+        submitButton.disabled = false;
+      }
+    });
+
+    // Handle logout
+    logoutBtn.addEventListener('click', function () {
+      octokit = null;
+      container.style.display = 'none';
+      loginModal.classList.remove('hidden');
+      githubTokenInput.value = '';
+    });
+
+    // Fetch products from GitHub
+    async function fetchProducts() {
+      try {
+        productsContainer.innerHTML = '<div class="loading"><div class="spinner"></div></div>';
+
+        try {
+          // Get file content
+          const { data: fileData } = await octokit.rest.repos.getContent({
+            owner,
+            repo,
+            path,
+            ref: branch
+          });
+
+          // Save file SHA for later updates
+          fileSha = fileData.sha;
+
+          // Decode content
+          const content = atob(fileData.content);
+          const data = JSON.parse(content);
+          products = data.products;
+        } catch (error) {
+          console.log('File may not exist, creating default products:', error);
+
+          // Create default products
+          products = [
+            {
+              "id": 1,
+              "name": "ZENITH JACKET",
+              "price": 450,
+              "image": "/images/products/zenith-jacket-black.jpg",
+              "description": "The Zenith Jacket embodies the essence of modern minimalism.",
+              "featured": true,
+              "variations": [
+                { "name": "Black", "value": "#000000" },
+                { "name": "White", "value": "#FFFFFF" }
+              ],
+              "sizes": [
+                { "name": "XS", "value": "xs" },
+                { "name": "S", "value": "s" },
+                { "name": "M", "value": "m" },
+                { "name": "L", "value": "l" },
+                { "name": "XL", "value": "xl" }
+              ]
+            },
+            {
+              "id": 2,
+              "name": "ECLIPSE PANTS",
+              "price": 320,
+              "image": "/images/products/eclipse-pants-navy.jpg",
+              "description": "Eclipse Pants blend formal sensibilities with modern construction.",
+              "featured": true,
+              "variations": [
+                { "name": "Black", "value": "#000000" },
+                { "name": "White", "value": "#FFFFFF" }
+              ],
+              "sizes": [
+                { "name": "XS", "value": "xs" },
+                { "name": "S", "value": "s" },
+                { "name": "M", "value": "m" },
+                { "name": "L", "value": "l" },
+                { "name": "XL", "value": "xl" }
+              ]
+            },
+            {
+              "id": 3,
+              "name": "SHADOW TEE",
+              "price": 180,
+              "image": "/images/products/ether-tee-white.jpg",
+              "description": "The Shadow Tee exemplifies our commitment to quality basics.",
+              "featured": true,
+              "variations": [
+                { "name": "Black", "value": "#000000" },
+                { "name": "White", "value": "#FFFFFF" }
+              ],
+              "sizes": [
+                { "name": "XS", "value": "xs" },
+                { "name": "S", "value": "s" },
+                { "name": "M", "value": "m" },
+                { "name": "L", "value": "l" },
+                { "name": "XL", "value": "xl" }
+              ]
+            }
+          ];
+
+          // Save default products
+          await saveProducts();
+        }
+
+        renderProducts();
+      } catch (error) {
+        console.error('Failed to fetch products:', error);
+        alert(`Failed to fetch products: ${error.message}. Please try again.`);
+      }
+    }
+
+    // Render products
+    function renderProducts() {
+      productsContainer.innerHTML = '';
+
+      if (products.length === 0) {
+        productsContainer.innerHTML = '<p>No products found. Add your first product!</p>';
+        return;
+      }
+
+      products.forEach(product => {
+        const productCard = document.createElement('div');
+        productCard.className = 'product-card card';
+
+        if (product.featured) {
+          const featuredBadge = document.createElement('div');
+          featuredBadge.className = 'featured-badge';
+          featuredBadge.textContent = 'Featured';
+          productCard.appendChild(featuredBadge);
+        }
+
+        productCard.innerHTML += `
+          <img src="${product.image}" alt="${product.name}">
+          <h3>${product.name}</h3>
+          <p>$${product.price}</p>
+          <div class="actions">
+            <button class="edit-btn" data-id="${product.id}">Edit</button>
+            <button class="delete-btn" data-id="${product.id}">Delete</button>
+          </div>
+        `;
+
+        productsContainer.appendChild(productCard);
+      });
+
+      // Add event listeners to edit and delete buttons
+      document.querySelectorAll('.edit-btn').forEach(btn => {
+        btn.addEventListener('click', () => editProduct(parseInt(btn.dataset.id)));
+      });
+
+      document.querySelectorAll('.delete-btn').forEach(btn => {
+        btn.addEventListener('click', () => deleteProduct(parseInt(btn.dataset.id)));
+      });
+    }
+
+    // Open modal to add a new product
+    function openAddProductModal() {
+      modalTitle.textContent = 'Add New Product';
+      productForm.reset();
+      productIdInput.value = '';
+
+      // Clear variations and sizes
+      variationsContainer.innerHTML = '';
+      sizesContainer.innerHTML = '';
+
+      // Add default variation and size
+      addVariationField();
+      addSizeField();
+
+      productModal.classList.remove('hidden');
+    }
+
+    // Open modal to edit a product
+    function editProduct(id) {
+      const product = products.find(p => p.id === id);
+      if (!product) return;
+
+      modalTitle.textContent = 'Edit Product';
+      productIdInput.value = product.id;
+      productNameInput.value = product.name;
+      productPriceInput.value = product.price;
+      productDescriptionInput.value = product.description;
+      productImageInput.value = product.image;
+      productFeaturedInput.checked = product.featured;
+
+      // Clear variations and sizes
+      variationsContainer.innerHTML = '';
+      sizesContainer.innerHTML = '';
+
+      // Add existing variations
+      if (product.variations && product.variations.length > 0) {
+        product.variations.forEach(variation => {
+          addVariationField(variation.name, variation.value);
+        });
+      } else {
+        addVariationField();
+      }
+
+      // Add existing sizes
+      if (product.sizes && product.sizes.length > 0) {
+        product.sizes.forEach(size => {
+          addSizeField(size.name, size.value);
+        });
+      } else {
+        addSizeField();
+      }
+
+      productModal.classList.remove('hidden');
+    }
+
+    // Delete a product
+    function deleteProduct(id) {
+      if (confirm('Are you sure you want to delete this product?')) {
+        products = products.filter(p => p.id !== id);
+        saveProducts();
+      }
+    }
+
+    // Add a variation field to the form
+    function addVariationField(name = '', value = '') {
+      const variationItem = document.createElement('div');
+      variationItem.className = 'variation-item';
+      variationItem.innerHTML = `
+        <input type="text" class="variation-name" placeholder="Variation Name" value="${name}" required>
+        <input type="text" class="variation-value" placeholder="Variation Value (e.g. #000000)" value="${value}" required>
+        <button type="button" class="remove-variation-btn">Remove</button>
+      `;
+
+      variationItem.querySelector('.remove-variation-btn').addEventListener('click', () => {
+        variationItem.remove();
+      });
+
+      variationsContainer.appendChild(variationItem);
+    }
+
+    // Add a size field to the form
+    function addSizeField(name = '', value = '') {
+      const sizeItem = document.createElement('div');
+      sizeItem.className = 'size-item';
+      sizeItem.innerHTML = `
+        <input type="text" class="size-name" placeholder="Size Name" value="${name}" required>
+        <input type="text" class="size-value" placeholder="Size Value" value="${value}" required>
+        <button type="button" class="remove-size-btn">Remove</button>
+      `;
+
+      sizeItem.querySelector('.remove-size-btn').addEventListener('click', () => {
+        sizeItem.remove();
+      });
+
+      sizesContainer.appendChild(sizeItem);
+    }
+
+    // Save products to GitHub
+    async function saveProducts() {
+      try {
+        // Create content
+        const content = JSON.stringify({ products }, null, 2);
+
+        // Convert to base64
+        const contentBase64 = btoa(content);
+
+        // Create or update file
+        const commitMessage = fileSha ? 'Update products via CMS' : 'Create products.json via CMS';
+
+        const params = {
+          owner,
+          repo,
+          path,
+          message: commitMessage,
+          content: contentBase64,
+          branch
+        };
+
+        // If we have a SHA, it's an update
+        if (fileSha) {
+          params.sha = fileSha;
+        }
+
+        const { data } = await octokit.rest.repos.createOrUpdateFileContents(params);
+
+        // Update file SHA for next update
+        fileSha = data.content.sha;
+
+        alert('Products saved successfully!');
+        renderProducts();
+      } catch (error) {
+        console.error('Failed to save products:', error);
+        alert(`Failed to save products: ${error.message}`);
+      }
+    }
+
+    // Save a product
+    function saveProduct(event) {
+      event.preventDefault();
+
+      // Get form values
+      const id = productIdInput.value ? parseInt(productIdInput.value) : Date.now();
+      const name = productNameInput.value;
+      const price = parseFloat(productPriceInput.value);
+      const description = productDescriptionInput.value;
+      const image = productImageInput.value;
+      const featured = productFeaturedInput.checked;
+
+      // Get variations
+      const variations = [];
+      document.querySelectorAll('.variation-item').forEach(item => {
+        const variationName = item.querySelector('.variation-name').value;
+        const variationValue = item.querySelector('.variation-value').value;
+
+        if (variationName && variationValue) {
+          variations.push({ name: variationName, value: variationValue });
+        }
+      });
+
+      // Get sizes
+      const sizes = [];
+      document.querySelectorAll('.size-item').forEach(item => {
+        const sizeName = item.querySelector('.size-name').value;
+        const sizeValue = item.querySelector('.size-value').value;
+
+        if (sizeName && sizeValue) {
+          sizes.push({ name: sizeName, value: sizeValue });
+        }
+      });
+
+      // Create or update product
+      const product = {
+        id,
+        name,
+        price,
+        description,
+        image,
+        featured,
+        variations,
+        sizes
+      };
+
+      // Check if we're editing or adding
+      const existingIndex = products.findIndex(p => p.id === id);
+      if (existingIndex !== -1) {
+        // Update existing product
+        products[existingIndex] = product;
+      } else {
+        // Add new product
+        products.push(product);
+      }
+
+      // Save and render
+      saveProducts();
+
+      // Close modal
+      productModal.classList.add('hidden');
+    }
+
+    // Event Listeners
+    addProductBtn.addEventListener('click', openAddProductModal);
+    closeModalBtn.addEventListener('click', () => productModal.classList.add('hidden'));
+    productForm.addEventListener('submit', saveProduct);
+    addVariationBtn.addEventListener('click', () => addVariationField());
+    addSizeBtn.addEventListener('click', () => addSizeField());
+
+    // Close modal when clicking outside
+    productModal.addEventListener('click', event => {
+      if (event.target === productModal) {
+        productModal.classList.add('hidden');
+      }
+    });
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', () => {
+      // Check if we have a stored token
+      const storedToken = localStorage.getItem('github_token');
+      if (storedToken) {
+        githubTokenInput.value = storedToken;
+        loginForm.dispatchEvent(new Event('submit'));
+      }
+    });
+  </script>
+</body>
+
+</html>
