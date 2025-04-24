@@ -23,25 +23,28 @@ OMNIS is a modern fashion e-commerce website built with React and TypeScript. Th
 - Framer Motion (animations)
 - Contentful (headless CMS for product management)
 
-## Image Organization
+## Image Management
 
-Images are organized in a logical structure for better management and SEO:
+### UI and Static Images
+
+Static images for UI elements are organized in the public directory:
 
 ```
 public/images/
 ├── hero/           # Hero section background images
 ├── backgrounds/    # Background images for various sections
-├── products/       # Product images with descriptive names
 ├── about/          # Images for the about section
-├── collections/    # Collection-specific images
 └── og/             # Open Graph images for social media sharing
 ```
 
-Naming convention:
+### Product Images
 
-- All images use descriptive, SEO-friendly names (e.g., `zenith-jacket-black.jpg` instead of `product1.jpg`)
-- Images include color in the filename when applicable
-- All images have proper alt text for accessibility
+Product images are managed through Contentful CMS:
+
+- Images are uploaded and stored in Contentful's media library
+- Each product references its image through the Contentful API
+- Images are served through Contentful's global CDN for optimal performance
+- Image URLs are automatically formatted with proper dimensions and optimizations
 
 ### Lazy Loading
 
@@ -52,32 +55,6 @@ All images use lazy loading for improved performance:
 - Images only load when they enter the viewport (or approach it)
 - A placeholder is shown until the image loads
 - Smooth fade-in transition when images appear
-
-Usage example:
-
-```tsx
-<LazyImage
-  src="/images/products/zenith-jacket-black.jpg"
-  alt="ZENITH JACKET in Black"
-  imgClassName="w-full h-full object-cover"
-  wrapperClassName="w-full h-full"
-/>
-```
-
-### Image Troubleshooting
-
-If images are not loading properly:
-
-1. Check that the image file exists in the correct directory
-2. Verify the file size is not 0 bytes (which indicates a failed download)
-3. Make sure the path in the code matches the actual file path
-4. For collection images, ensure all product images and background images are properly downloaded
-
-To fix broken images, you can use the following command to copy an existing image as a placeholder:
-
-```bash
-cp public/images/products/existing-image.jpg public/images/products/missing-image.jpg
-```
 
 ## Project Structure
 
@@ -108,6 +85,15 @@ The project uses Contentful as a headless CMS to manage product data:
 - All products are displayed on the shop page
 - Product data is cached to improve performance and reduce API calls
 - Preview mode is available for testing content changes before publishing
+- Rich text format is supported for product descriptions
+- Images are served through Contentful's CDN with automatic optimizations
+
+### Content Management
+
+- Products can be added, edited, and removed through the Contentful web interface
+- Changes can be previewed before publishing using the preview mode
+- Content can be scheduled for future publishing
+- Multiple users can collaborate on content creation and management
 
 ## Upcoming Changes
 
