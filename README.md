@@ -7,8 +7,9 @@ OMNIS is a modern fashion e-commerce website built with React and TypeScript. Th
 ### Key Features
 
 - Animated page transitions and scroll effects using Framer Motion
-- Responsive product galleries and collections
-- Newsletter subscription system
+- Responsive product galleries with Contentful integration
+- Newsletter subscription system with welcome emails
+- WhatsApp ordering integration
 - Size guide and product information
 - Customer support and FAQ section
 - Legal documentation and shipping information
@@ -67,6 +68,18 @@ src/
 ├── services/          # API services and external integrations
 └── styles/            # Global styles and Tailwind config
 ```
+
+### Key Directories and Files
+
+- `src/components/`: UI components including Navbar, Footer, and product-related components
+- `src/contexts/`: Context providers for state management
+  - `ContentfulProductsProvider.tsx`: Manages product data from Contentful
+  - `ProductContext.tsx`: Manages shopping cart state
+- `src/services/`: External API integrations
+  - `contentful.ts`: Handles fetching product data from Contentful
+- `functions/`: Netlify serverless functions
+  - `subscribe.js`: Handles newsletter subscriptions
+  - `welcome-email.js`: Sends welcome emails to new subscribers
 
 ## Contentful CMS Integration
 
@@ -144,8 +157,7 @@ The project uses Contentful as a headless CMS to manage product data:
    - Implement rich text renderer for product descriptions using `@contentful/rich-text-react-renderer`
    - Add more variations and sizes for products
    - Implement image galleries for products (multiple images per product)
-   - Create content model for collections to replace static data
-   - Clean up redundant files (remove `/public/images/products/` folder)
+   - ✅ Clean up redundant files and code
 
 2. **Email Marketing Improvements**
    - Complete unsubscribe functionality
