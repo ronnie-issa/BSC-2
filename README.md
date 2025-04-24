@@ -145,6 +145,7 @@ The project uses Contentful as a headless CMS to manage product data:
    - Add more variations and sizes for products
    - Implement image galleries for products (multiple images per product)
    - Create content model for collections to replace static data
+   - Clean up redundant files (remove `/public/images/products/` folder)
 
 2. **Email Marketing Improvements**
    - Complete unsubscribe functionality
