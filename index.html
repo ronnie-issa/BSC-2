@@ -25,6 +25,20 @@
 <body>
   <div id="root"></div>
 
+  <script>
+    // Handle redirects from fallback pages
+    (function () {
+      const urlParams = new URLSearchParams(window.location.search);
+      const path = urlParams.get('path');
+
+      if (path) {
+        // Remove the query parameter to avoid infinite loops
+        const newUrl = window.location.origin + path;
+        window.history.replaceState({}, document.title, newUrl);
+      }
+    })();
+  </script>
+
   <script type="module" src="/src/main.tsx"></script>
 
   <!-- No Netlify Identity Script needed in main app -->

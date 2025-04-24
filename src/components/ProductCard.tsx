@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { motion } from "@/lib/framer";
 import { LazyImage } from "@/components/ui/lazy-image";
 import { Product } from "@/contexts/ProductContext";
+import { VisuallyHidden } from "@/components/ui/visually-hidden";
 
 interface ProductCardProps {
   product: Product;
@@ -18,6 +19,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
       className="block group"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
+      aria-label={`View ${product.name}, $${product.price}`}
     >
       <div className="relative overflow-hidden aspect-[3/4] mb-4">
         <motion.div
@@ -35,9 +37,14 @@ const ProductCard = ({ product }: ProductCardProps) => {
           />
         </motion.div>
         <div className="absolute inset-0 bg-omnis-black/30 flex items-center justify-center transition-all duration-300">
-          <span className="text-omnis-white text-sm tracking-widest font-medium px-4 py-2 border border-white/50 backdrop-blur-sm bg-black/20 transform transition-transform duration-300 group-hover:scale-110">
+          <span
+            className="text-omnis-white text-sm tracking-widest font-medium px-4 py-2 border border-white/50 backdrop-blur-sm bg-black/20 transform transition-transform duration-300 group-hover:scale-110"
+            role="button"
+            aria-hidden="true"
+          >
             VIEW
           </span>
+          <VisuallyHidden>View {product.name} details</VisuallyHidden>
         </div>
       </div>
       <h3 className="text-lg font-medium mb-1">{product.name}</h3>

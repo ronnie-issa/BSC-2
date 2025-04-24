@@ -29,17 +29,28 @@ const ProductPage = () => {
       setLoading(true);
       setError(null);
 
+      // Get the product ID from the URL params or from sessionStorage if refreshing
+      const productId = id || sessionStorage.getItem("currentProductId");
+
+      if (!productId) {
+        setError("Product not found");
+        setLoading(false);
+        return;
+      }
+
       try {
         // First try to find the product in the already loaded products
         // Note: Contentful uses string IDs, so we need to compare with string
-        const foundProduct = products.find((p) => p.id.toString() === id);
+        const foundProduct = products.find(
+          (p) => p.id.toString() === productId
+        );
 
         if (foundProduct) {
           setProduct(foundProduct);
         } else {
           // If not found, fetch it directly from Contentful
           // Pass the ID as a string to the fetchProductById function
-          const contentfulProduct = await getProductById(id);
+          const contentfulProduct = await getProductById(productId);
 
           if (contentfulProduct) {
             setProduct(contentfulProduct);
@@ -55,7 +66,11 @@ const ProductPage = () => {
       }
     };
 
+    // Store the current product ID in sessionStorage for refresh handling
     if (id) {
+      sessionStorage.setItem("currentProductId", id);
+      getProduct();
+    } else if (sessionStorage.getItem("currentProductId")) {
       getProduct();
     }
   }, [id, products, getProductById]);

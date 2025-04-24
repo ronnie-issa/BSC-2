@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Products | OMNIS</title>
+  <meta name="description"
+    content="Explore our premium streetwear products. Each piece is crafted with meticulous attention to detail, ensuring unparalleled quality and distinctive style.">
+  <meta property="og:title" content="Products | OMNIS">
+  <meta property="og:description"
+    content="Explore our premium streetwear products. Each piece is crafted with meticulous attention to detail, ensuring unparalleled quality and distinctive style.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="/images/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@omnis_wear">
+  <meta name="twitter:image" content="/images/og-image.png">
+  <link rel="icon" type="image/png" href="/favicon.ico">
+  <style>
+    body {
+      font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      background-color: #000;
+      color: #fff;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      text-align: center;
+    }
+
+    .loading {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .spinner {
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      border-top-color: #fff;
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
+      animation: spin 1s linear infinite;
+      margin-bottom: 20px;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+  </style>
+  <script>
+    // Extract the product ID from the URL and redirect to the product page
+    const path = window.location.pathname;
+    const segments = path.split('/');
+    const productId = segments[segments.length - 1];
+
+    // Show loading state while redirecting
+    document.addEventListener('DOMContentLoaded', function () {
+      document.body.innerHTML = `
+        <div class="loading">
+          <div class="spinner"></div>
+          <p>Loading product details...</p>
+        </div>
+      `;
+    });
+
+    // Small delay to ensure the loading state is shown
+    setTimeout(function () {
+      if (productId && productId !== 'index.html') {
+        // Store the product ID in sessionStorage to help with page refresh
+        sessionStorage.setItem('currentProductId', productId);
+        window.location.href = '/index.html?path=/product/' + productId;
+      } else {
+        // If no product ID, redirect to shop
+        window.location.href = '/index.html?path=/shop';
+      }
+    }, 300);
+  </script>
+</head>
+
+<body>
+  <div class="loading">
+    <div class="spinner"></div>
+    <p>Loading product details...</p>
+  </div>
+  <noscript>
+    <h1>OMNIS Products</h1>
+    <p>JavaScript is required to view product details. Please enable JavaScript or <a href="/">return to the
+        homepage</a>.</p>
+  </noscript>
+</body>
+
+</html>

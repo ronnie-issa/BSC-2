@@ -71,10 +71,13 @@ const AboutSection = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.8, duration: 0.6 }}
             >
-              <Link to="/about">
+              <Link
+                to="/about"
+                aria-label="Learn more about OMNIS brand philosophy and vision"
+              >
                 <Button
                   variant="outline"
-                  className="mt-4 border-omnis-white text-omnis-white hover:bg-omnis-white hover:text-omnis-black transition-all duration-300 group"
+                  className="mt-4 border-omnis-white text-omnis-white hover:bg-omnis-white hover:text-omnis-black transition-all duration-300 group px-6 py-3"
                 >
                   LEARN MORE ABOUT US
                   <ArrowRight className="ml-2 h-4 w-4 transform transition-transform duration-300 group-hover:translate-x-1" />

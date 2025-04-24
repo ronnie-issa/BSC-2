@@ -55,10 +55,32 @@ interface ProductContextType {
 
 const ProductContext = createContext<ProductContextType | undefined>(undefined);
 
+// Helper function to load cart from localStorage
+const loadCartFromStorage = (): BagItem[] => {
+  try {
+    const savedCart = localStorage.getItem("omnisCart");
+    if (savedCart) {
+      return JSON.parse(savedCart);
+    }
+  } catch (error) {
+    console.error("Error loading cart from localStorage:", error);
+  }
+  return [];
+};
+
+// Helper function to save cart to localStorage
+const saveCartToStorage = (cart: BagItem[]) => {
+  try {
+    localStorage.setItem("omnisCart", JSON.stringify(cart));
+  } catch (error) {
+    console.error("Error saving cart to localStorage:", error);
+  }
+};
+
 export const ProductProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
-  const [cart, setCart] = useState<BagItem[]>([]);
+  const [cart, setCart] = useState<BagItem[]>(loadCartFromStorage());
   const [addToCartEvent, setAddToCartEvent] = useState(false);
 
   const resetAddToCartEvent = () => {
@@ -83,18 +105,22 @@ export const ProductProvider: React.FC<{ children: ReactNode }> = ({
           item.selectedSize === selectedSize
       );
 
+      let newCart;
       if (existingItemIndex >= 0) {
         // Update quantity of existing item
-        const newCart = [...prevCart];
+        newCart = [...prevCart];
         newCart[existingItemIndex].quantity += quantity;
-        return newCart;
       } else {
         // Add new item to bag
-        return [
+        newCart = [
           ...prevCart,
           { product, quantity, selectedColor, selectedSize },
         ];
       }
+
+      // Save to localStorage
+      saveCartToStorage(newCart);
+      return newCart;
     });
   };
 
@@ -103,35 +129,37 @@ export const ProductProvider: React.FC<{ children: ReactNode }> = ({
     selectedColor?: string,
     selectedSize?: string
   ) => {
-    if (selectedColor && selectedSize) {
-      // Remove specific item with matching product ID, color and size
-      setCart((prevCart) =>
-        prevCart.filter(
+    setCart((prevCart) => {
+      let newCart;
+
+      if (selectedColor && selectedSize) {
+        // Remove specific item with matching product ID, color and size
+        newCart = prevCart.filter(
           (item) =>
             !(
               item.product.id === productId &&
               item.selectedColor === selectedColor &&
               item.selectedSize === selectedSize
             )
-        )
-      );
-    } else if (selectedColor) {
-      // Remove specific item with matching product ID and color
-      setCart((prevCart) =>
-        prevCart.filter(
+        );
+      } else if (selectedColor) {
+        // Remove specific item with matching product ID and color
+        newCart = prevCart.filter(
           (item) =>
             !(
               item.product.id === productId &&
               item.selectedColor === selectedColor
             )
-        )
-      );
-    } else {
-      // Remove all items with matching product ID
-      setCart((prevCart) =>
-        prevCart.filter((item) => item.product.id !== productId)
-      );
-    }
+        );
+      } else {
+        // Remove all items with matching product ID
+        newCart = prevCart.filter((item) => item.product.id !== productId);
+      }
+
+      // Save to localStorage
+      saveCartToStorage(newCart);
+      return newCart;
+    });
   };
 
   const updateCartItemQuantity = (
@@ -141,7 +169,7 @@ export const ProductProvider: React.FC<{ children: ReactNode }> = ({
     newQuantity: number
   ) => {
     setCart((prevCart) => {
-      return prevCart.map((item) => {
+      const newCart = prevCart.map((item) => {
         if (
           item.product.id === productId &&
           item.selectedColor === selectedColor &&
@@ -151,11 +179,16 @@ export const ProductProvider: React.FC<{ children: ReactNode }> = ({
         }
         return item;
       });
+
+      // Save to localStorage
+      saveCartToStorage(newCart);
+      return newCart;
     });
   };
 
   const clearCart = () => {
     setCart([]);
+    localStorage.removeItem("omnisCart");
   };
 
   const getCartTotal = () => {

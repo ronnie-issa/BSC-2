@@ -148,7 +148,7 @@ const Navbar = ({ scrollY = 0, showLogoEffect = false }: NavbarProps) => {
 
   // Calculate Y position - responsive based on screen width
   // Use a smaller initial Y offset on mobile, add 50px to push the big logo down
-  const initialY = windowWidth < 768 ? 110 : 150;
+  const initialY = windowWidth < 768 ? 48 : 164;
 
   // When fully scrolled (progress = 1), we want the logo to be vertically centered
   // If logo effect is disabled, always use 0 for Y position
@@ -163,7 +163,7 @@ const Navbar = ({ scrollY = 0, showLogoEffect = false }: NavbarProps) => {
         "fixed top-0 left-0 right-0 z-50 transition-all duration-500",
         !showLogoEffect || scrolled
           ? "bg-omnis-black/90 backdrop-blur-sm py-5 shadow-md"
-          : "bg-transparent py-7"
+          : "bg-transparent pt-2 pb-6"
       )}
     >
       <div className="container mx-auto relative">
@@ -239,9 +239,12 @@ const Navbar = ({ scrollY = 0, showLogoEffect = false }: NavbarProps) => {
             <NavLink to="/shop">SHOP</NavLink>
             <Popover open={bagDropdownOpen} onOpenChange={setBagDropdownOpen}>
               <PopoverTrigger asChild>
-                <button className="relative group">
+                <button
+                  className="relative group p-3"
+                  aria-label={`Shopping bag with ${bagItemCount} items`}
+                >
                   <ShoppingBag
-                    size={20}
+                    size={24}
                     className={`${
                       bagItemCount > 0
                         ? "text-omnis-white"
@@ -251,7 +254,7 @@ const Navbar = ({ scrollY = 0, showLogoEffect = false }: NavbarProps) => {
                   {bagItemCount > 0 && (
                     <Badge
                       variant="default"
-                      className={`absolute -top-2 -right-2 h-5 w-5 flex items-center justify-center p-0 bg-red-600 text-white text-xs font-medium ${
+                      className={`absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 bg-red-600 text-white text-xs font-medium ${
                         animateBadge ? "animate-pulse scale-125" : ""
                       }`}
                     >
@@ -319,7 +322,7 @@ const NavLink = ({
   return (
     <Link
       to={to}
-      className="text-omnis-white text-sm tracking-wider font-medium hover:text-gray-300 transition-colors relative after:absolute after:bottom-0 after:left-0 after:w-full after:h-[1px] after:bg-omnis-white after:origin-bottom-right after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-300 hover:after:origin-bottom-left"
+      className="text-omnis-white text-sm tracking-wider font-medium hover:text-gray-300 transition-colors relative after:absolute after:bottom-0 after:left-0 after:w-full after:h-[1px] after:bg-omnis-white after:origin-bottom-right after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-300 hover:after:origin-bottom-left p-3"
     >
       {children}
     </Link>
@@ -338,7 +341,7 @@ const MobileNavLink = ({
   return (
     <Link
       to={to}
-      className="text-omnis-white tracking-widest font-medium"
+      className="text-omnis-white tracking-widest font-medium p-4"
       onClick={onClick}
     >
       {children}

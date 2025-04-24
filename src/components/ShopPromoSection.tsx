@@ -88,7 +88,7 @@ const ShopPromoSection = () => {
           animate={isInView ? { y: 0, opacity: 1 } : { y: 30, opacity: 0 }}
           transition={{ duration: 0.8, ease: "easeOut", delay: 0.6 }}
         >
-          <Link to="/shop">
+          <Link to="/shop" aria-label="View all products in our collection">
             <Button
               variant="outline"
               size="lg"

@@ -30,6 +30,27 @@
   to = "/admin/simple-github.html"
   status = 200
 
+# Specific routes for common pages
+[[redirects]]
+  from = "/shop"
+  to = "/shop/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/product/*"
+  to = "/product/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/bag"
+  to = "/bag/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/checkout"
+  to = "/checkout/index.html"
+  status = 200
+
 # Support client-side routing - this must come before the 404 redirect
 [[redirects]]
   from = "/*"

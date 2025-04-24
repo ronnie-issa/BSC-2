@@ -113,6 +113,7 @@ const HeroSection = () => {
             <Link
               to="/shop"
               className="inline-block border border-omnis-white px-8 py-4 text-sm font-medium tracking-widest hover:bg-omnis-white hover:text-omnis-black transition-all duration-300"
+              aria-label="Explore our collection of premium streetwear"
             >
               EXPLORE COLLECTION
             </Link>
@@ -125,6 +126,17 @@ const HeroSection = () => {
         variants={arrowVariants}
         animate="animate"
         className="absolute bottom-10 left-1/2 transform -translate-x-1/2 z-20 flex flex-col items-center -ml-7"
+        role="button"
+        aria-label="Scroll down to see more content"
+        tabIndex={0}
+        onClick={() =>
+          window.scrollBy({ top: window.innerHeight, behavior: "smooth" })
+        }
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            window.scrollBy({ top: window.innerHeight, behavior: "smooth" });
+          }
+        }}
       >
         <span className="text-xs font-light tracking-widest mb-2">SCROLL</span>
         <ArrowDown size={20} className="text-omnis-white" />
