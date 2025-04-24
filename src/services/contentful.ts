@@ -320,7 +320,7 @@ const productCache: Record<string, { product: Product | null; timestamp: number 
  * @param id The product ID
  * @param preview Whether to use the preview API (for draft content)
  */
-export async function fetchProductById(id: number, preview = false): Promise<Product | null> {
+export async function fetchProductById(id: string | number, preview = false): Promise<Product | null> {
   try {
     const cacheKey = `${id}-${preview ? 'preview' : 'standard'}`;
     const now = Date.now();
