@@ -1,4 +1,4 @@
-import { useRef, useEffect } from "react";
+import { useRef } from "react";
 import { Link } from "react-router-dom";
 import { motion, useInView } from "@/lib/framer";
 import { ArrowRight } from "lucide-react";
@@ -11,7 +11,7 @@ const ShopPromoSection = () => {
   const isInView = useInView(sectionRef, { once: true, amount: 0.2 });
 
   // Get featured products from context
-  const { featuredProducts, loading, error, refreshProducts } =
+  const { featuredProducts, isLoading, error, refreshProducts } =
     useContentfulProducts();
 
   // No need to refresh products here as it's already done in ContentfulProductsProvider
@@ -41,7 +41,7 @@ const ShopPromoSection = () => {
 
         {/* Featured Products */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
-          {loading ? (
+          {isLoading ? (
             <div className="col-span-3 text-center py-20">
               <div className="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-omnis-white"></div>
               <p className="mt-4">Loading featured products...</p>

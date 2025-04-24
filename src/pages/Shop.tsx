@@ -11,7 +11,8 @@ const Shop = () => {
   const isInView = useInView(shopRef, { once: true, amount: 0.2 });
 
   // Get products from context
-  const { products, loading, error, refreshProducts } = useContentfulProducts();
+  const { products, isLoading, error, refreshProducts } =
+    useContentfulProducts();
 
   // No need to refresh products here as it's already done in ContentfulProductsProvider
 
@@ -52,7 +53,7 @@ const Shop = () => {
               {/* Product counter removed */}
 
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                {loading ? (
+                {isLoading ? (
                   <div className="col-span-3 text-center py-20">
                     <div className="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-omnis-white"></div>
                     <p className="mt-4">Loading products...</p>

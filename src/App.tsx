@@ -10,7 +10,6 @@ import { ProductProvider } from "./contexts/ProductContext";
 import Index from "./pages/Index";
 import Shop from "./pages/Shop";
 import About from "./pages/About";
-import Collections from "./pages/Collections";
 import Contact from "./pages/Contact";
 import Shipping from "./pages/Shipping";
 import Returns from "./pages/Returns";
@@ -39,7 +38,6 @@ const App = () => (
               <Route path="/" element={<Index />} />
               <Route path="/shop" element={<Shop />} />
               <Route path="/about" element={<About />} />
-              <Route path="/collections" element={<Collections />} />
               <Route path="/contact" element={<Contact />} />
               <Route path="/shipping" element={<Shipping />} />
               <Route path="/returns" element={<Returns />} />
