@@ -4,7 +4,6 @@ import { ArrowLeft, MessageSquare, ShoppingBag } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useProductContext } from "@/contexts/ProductContext";
 import { useContentfulProducts } from "@/contexts/ContentfulProductsProvider";
-import { fetchProductById } from "@/services/contentful";
 import { toast } from "@/hooks/use-toast";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -14,7 +13,7 @@ const ProductPage = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { addToCart } = useProductContext();
-  const { products } = useContentfulProducts();
+  const { products, getProductById } = useContentfulProducts();
 
   const [quantity, setQuantity] = useState(1);
   const [selectedColor, setSelectedColor] = useState("");
@@ -31,13 +30,15 @@ const ProductPage = () => {
 
       try {
         // First try to find the product in the already loaded products
-        const foundProduct = products.find((p) => p.id === Number(id));
+        // Note: Contentful uses string IDs, so we need to compare with string
+        const foundProduct = products.find((p) => p.id.toString() === id);
 
         if (foundProduct) {
           setProduct(foundProduct);
         } else {
           // If not found, fetch it directly from Contentful
-          const contentfulProduct = await fetchProductById(Number(id));
+          // Pass the ID as a string to the fetchProductById function
+          const contentfulProduct = await getProductById(id);
 
           if (contentfulProduct) {
             setProduct(contentfulProduct);
@@ -56,7 +57,7 @@ const ProductPage = () => {
     if (id) {
       getProduct();
     }
-  }, [id, products]);
+  }, [id, products, getProductById]);
 
   // Set default color and size when product loads
   useEffect(() => {
