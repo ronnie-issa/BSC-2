@@ -1,9 +1,10 @@
-import { useRef, useEffect } from "react";
+import { useRef } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { motion, useInView } from "@/lib/framer";
 import { useContentfulProducts } from "@/contexts/ContentfulProductsProvider";
 import ProductCard from "@/components/ProductCard";
+import SEO from "@/components/SEO";
 
 const Shop = () => {
   // Refs for animations
@@ -21,6 +22,10 @@ const Shop = () => {
       className="relative bg-omnis-black text-omnis-white min-h-screen"
       ref={shopRef}
     >
+      <SEO
+        title="Shop | OMNIS"
+        description="Browse our collection of premium streetwear essentials. Each piece is crafted with meticulous attention to detail, ensuring unparalleled quality and distinctive style."
+      />
       <Navbar />
 
       <main className="pt-32 pb-20">

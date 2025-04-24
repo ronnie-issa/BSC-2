@@ -8,6 +8,7 @@ import { toast } from "@/hooks/use-toast";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import QuantitySelector from "@/components/ui/quantity-selector";
+import SEO from "@/components/SEO";
 
 const ProductPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -216,6 +217,12 @@ const ProductPage = () => {
 
   return (
     <>
+      {product && (
+        <SEO
+          title={`${product.name} | OMNIS`}
+          description={product.description.split("\n\n")[0]}
+        />
+      )}
       <Navbar />
       <div className="container mx-auto px-6 py-12 md:py-20 mb-4">
         {/* Back button */}

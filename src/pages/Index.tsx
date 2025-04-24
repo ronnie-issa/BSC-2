@@ -6,6 +6,7 @@ import ShopPromoSection from "@/components/ShopPromoSection";
 import NewsletterSection from "@/components/NewsletterSection";
 import Footer from "@/components/Footer";
 import { motion } from "@/lib/framer";
+import SEO from "@/components/SEO";
 
 const Index = () => {
   // Track scroll position
@@ -31,6 +32,10 @@ const Index = () => {
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
     >
+      <SEO
+        title="OMNIS | True in Form"
+        description="OMNIS - A high-end streetwear brand blending minimalist design with uncompromising quality"
+      />
       {/* Navbar with transforming logo effect enabled */}
       <Navbar scrollY={scrollY} showLogoEffect={true} />
 

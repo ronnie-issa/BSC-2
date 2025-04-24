@@ -114,7 +114,7 @@ The project uses Contentful as a headless CMS to manage product data:
 
 1. **Core E-commerce Functionality**
 
-   - ✅ Product browsing and filtering
+   - ✅ Product browsing
    - ✅ Shopping cart management
    - ✅ Checkout process
    - ✅ WhatsApp ordering integration
@@ -154,6 +154,7 @@ The project uses Contentful as a headless CMS to manage product data:
 1. **General**
 
    - Change og image to OMNIS logo
+   - Bag page should be responsive
 
 2. **Contentful CMS Enhancements**
 
@@ -194,6 +195,7 @@ The project uses Contentful as a headless CMS to manage product data:
 2. **Advanced Features**
    - User accounts and order history
    - Wishlist functionality
+   - Product filtering
    - Product reviews and ratings
    - Internationalization support
    - Advanced email marketing flows and automation
