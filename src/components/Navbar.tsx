@@ -23,6 +23,8 @@ const Navbar = ({ scrollY = 0, showLogoEffect = false }: NavbarProps) => {
   const [scrolled, setScrolled] = useState(false);
   const [animateBadge, setAnimateBadge] = useState(false);
   const [bagDropdownOpen, setBagDropdownOpen] = useState(false);
+  // Separate state for mobile bag dropdown
+  const [mobileBagDropdownOpen, setMobileBagDropdownOpen] = useState(false);
   // Track if the dropdown should be opened by an add-to-bag action
   const [shouldOpenFromAddToBag, setShouldOpenFromAddToBag] = useState(false);
   const {
@@ -36,10 +38,11 @@ const Navbar = ({ scrollY = 0, showLogoEffect = false }: NavbarProps) => {
   // Calculate total items in bag
   const bagItemCount = bag.reduce((total, item) => total + item.quantity, 0);
 
-  // Close dropdown when location changes
+  // Close dropdowns when location changes
   useEffect(() => {
-    // Always close the dropdown when changing pages
+    // Always close the dropdowns when changing pages
     setBagDropdownOpen(false);
+    setMobileBagDropdownOpen(false);
     // Reset the add-to-bag flag when changing pages
     setShouldOpenFromAddToBag(false);
   }, [location]);
@@ -68,7 +71,14 @@ const Navbar = ({ scrollY = 0, showLogoEffect = false }: NavbarProps) => {
 
       // Only open the dropdown if the add-to-bag action triggered it
       if (shouldOpenFromAddToBag) {
-        setBagDropdownOpen(true);
+        // Check if we're on mobile or desktop
+        if (window.innerWidth < 768) {
+          // On mobile, open the mobile dropdown
+          setMobileBagDropdownOpen(true);
+        } else {
+          // On desktop, open the desktop dropdown
+          setBagDropdownOpen(true);
+        }
         // Reset the flag after opening
         setShouldOpenFromAddToBag(false);
       }
@@ -304,28 +314,59 @@ const Navbar = ({ scrollY = 0, showLogoEffect = false }: NavbarProps) => {
           </nav>
 
           {/* Mobile Bag Icon */}
-          <Link
-            to="/bag"
-            className="md:hidden text-omnis-white z-50 p-2 hover:bg-omnis-darkgray/20 rounded-md transition-colors relative mr-12"
-            aria-label={`Shopping bag with ${bagItemCount} items`}
+          <Popover
+            open={mobileBagDropdownOpen}
+            onOpenChange={(open) => {
+              setMobileBagDropdownOpen(open);
+              // If the dropdown is being closed, add a delay before actually closing it
+              if (!open) {
+                // This prevents the dropdown from closing too quickly
+                setTimeout(() => {
+                  setMobileBagDropdownOpen(false);
+                }, 100);
+              }
+            }}
           >
-            <ShoppingBag
-              size={22}
-              className={`${
-                bagItemCount > 0 ? "text-omnis-white" : "text-omnis-lightgray"
-              } transition-colors duration-300`}
-            />
-            {bagItemCount > 0 && (
-              <Badge
-                variant="default"
-                className={`absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 bg-red-600 text-white text-xs font-medium ${
-                  animateBadge ? "animate-pulse scale-125" : ""
-                }`}
+            <PopoverTrigger asChild>
+              <button
+                className="md:hidden text-omnis-white z-50 p-2 hover:bg-omnis-darkgray/20 rounded-md transition-colors relative mr-12"
+                aria-label={`Shopping bag with ${bagItemCount} items`}
+                onClick={() => {
+                  // Toggle the dropdown with a slight delay to ensure it stays open
+                  if (!mobileBagDropdownOpen) {
+                    setMobileBagDropdownOpen(true);
+                  }
+                }}
               >
-                {bagItemCount}
-              </Badge>
-            )}
-          </Link>
+                <ShoppingBag
+                  size={22}
+                  className={`${
+                    bagItemCount > 0
+                      ? "text-omnis-white"
+                      : "text-omnis-lightgray"
+                  } transition-colors duration-300`}
+                />
+                {bagItemCount > 0 && (
+                  <Badge
+                    variant="default"
+                    className={`absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 bg-red-600 text-white text-xs font-medium ${
+                      animateBadge ? "animate-pulse scale-125" : ""
+                    }`}
+                  >
+                    {bagItemCount}
+                  </Badge>
+                )}
+              </button>
+            </PopoverTrigger>
+            <PopoverContent
+              className="p-0 border-0 shadow-xl"
+              align="center"
+              sideOffset={16}
+              side="bottom"
+            >
+              <BagDropdown onClose={() => setMobileBagDropdownOpen(false)} />
+            </PopoverContent>
+          </Popover>
 
           {/* Mobile Menu Button - Always visible on top of overlay */}
           <HamburgerMenu
@@ -381,14 +422,23 @@ const Navbar = ({ scrollY = 0, showLogoEffect = false }: NavbarProps) => {
                 transition={{ delay: 0.3, duration: 0.3 }}
                 className="pointer-events-auto z-[100]"
               >
-                <MobileNavLink to="/bag" onClick={toggleMenu}>
+                <button
+                  className="text-omnis-white flex items-center tracking-widest font-medium relative z-[100] py-4 px-6 after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2 after:w-0 after:h-[1px] after:bg-omnis-white hover:after:w-full after:transition-all after:duration-300"
+                  onClick={() => {
+                    toggleMenu(); // Close the menu
+                    // Open the mobile bag dropdown after a short delay
+                    setTimeout(() => {
+                      setMobileBagDropdownOpen(true);
+                    }, 300); // Longer delay to ensure menu is fully closed
+                  }}
+                >
                   BAG{" "}
                   {bagItemCount > 0 && (
                     <span className="inline-flex items-center justify-center ml-2 bg-red-600 text-white rounded-full h-6 w-6 text-xs">
                       {bagItemCount}
                     </span>
                   )}
-                </MobileNavLink>
+                </button>
               </motion.div>
             </nav>
           </div>

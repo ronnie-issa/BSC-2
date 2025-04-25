@@ -310,10 +310,7 @@ const CheckoutPage = () => {
               onValueChange={setCheckoutMethod}
               className="w-full"
             >
-              <h2 className="text-2xl font-bold mb-6 text-center">
-                CHOOSE HOW TO CHECKOUT
-              </h2>
-              <TabsList className="grid w-full grid-cols-2 h-16 mb-6">
+              <TabsList className="grid w-full grid-cols-2 h-12 mb-6">
                 <TabsTrigger value="website" className="text-lg font-medium">
                   Order on Website
                 </TabsTrigger>
@@ -533,12 +530,6 @@ const CheckoutPage = () => {
 
               <TabsContent value="whatsapp" className="mt-6">
                 <div className="space-y-4">
-                  <p className="text-omnis-lightgray">
-                    Order directly via WhatsApp for a quick and personalized
-                    shopping experience. Fill in your details below and we'll
-                    include them in the WhatsApp message.
-                  </p>
-
                   <Form {...form}>
                     <form
                       onSubmit={(e) => {
@@ -555,7 +546,7 @@ const CheckoutPage = () => {
                     >
                       <div className="space-y-4">
                         <h2 className="text-xl font-bold mb-4">
-                          Your Information
+                          Shipping Information
                         </h2>
 
                         <FormField
