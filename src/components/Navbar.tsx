@@ -337,9 +337,9 @@ const Navbar = ({ scrollY = 0, showLogoEffect = false }: NavbarProps) => {
           {/* Mobile Navigation Overlay */}
           <div
             className={cn(
-              "fixed inset-0 z-[49] bg-omnis-black flex flex-col items-center justify-center transition-all duration-500 ease-in-out md:hidden",
+              "fixed inset-0 z-[99] bg-omnis-black flex flex-col items-center justify-center transition-all duration-500 ease-in-out md:hidden",
               isOpen
-                ? "opacity-100 visible"
+                ? "opacity-100 visible pointer-events-auto"
                 : "opacity-0 invisible pointer-events-none"
             )}
             style={{
@@ -352,11 +352,12 @@ const Navbar = ({ scrollY = 0, showLogoEffect = false }: NavbarProps) => {
               bottom: 0,
             }}
           >
-            <nav className="flex flex-col items-center space-y-10 text-3xl">
+            <nav className="flex flex-col items-center space-y-10 text-3xl z-[100] pointer-events-auto">
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.1, duration: 0.3 }}
+                className="pointer-events-auto z-[100]"
               >
                 <MobileNavLink to="/about" onClick={toggleMenu}>
                   ABOUT
@@ -367,6 +368,7 @@ const Navbar = ({ scrollY = 0, showLogoEffect = false }: NavbarProps) => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2, duration: 0.3 }}
+                className="pointer-events-auto z-[100]"
               >
                 <MobileNavLink to="/shop" onClick={toggleMenu}>
                   SHOP
@@ -377,6 +379,7 @@ const Navbar = ({ scrollY = 0, showLogoEffect = false }: NavbarProps) => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.3, duration: 0.3 }}
+                className="pointer-events-auto z-[100]"
               >
                 <MobileNavLink to="/bag" onClick={toggleMenu}>
                   BAG{" "}
@@ -421,14 +424,36 @@ const MobileNavLink = ({
   onClick: () => void;
   children: React.ReactNode;
 }) => {
+  // Handle click with a small delay to ensure the navigation completes
+  const handleClick = (e: React.MouseEvent) => {
+    e.preventDefault(); // Prevent default to handle navigation manually
+
+    // First close the menu
+    onClick();
+
+    // Use a longer delay for the About page to ensure it loads properly
+    const delay = to === "/about" ? 300 : 50;
+
+    // Then navigate after the delay
+    setTimeout(() => {
+      // For the About page, use a different approach
+      if (to === "/about") {
+        // Force a clean navigation to the About page
+        window.location.replace(to);
+      } else {
+        window.location.href = to; // Use direct location change for other pages
+      }
+    }, delay);
+  };
+
   return (
-    <Link
-      to={to}
-      className="text-omnis-white flex items-center tracking-widest font-medium relative after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2 after:w-0 after:h-[1px] after:bg-omnis-white hover:after:w-full after:transition-all after:duration-300"
-      onClick={onClick}
+    <a
+      href={to}
+      className="text-omnis-white flex items-center tracking-widest font-medium relative z-[100] py-4 px-6 after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2 after:w-0 after:h-[1px] after:bg-omnis-white hover:after:w-full after:transition-all after:duration-300"
+      onClick={handleClick}
     >
       {children}
-    </Link>
+    </a>
   );
 };
 
