@@ -142,26 +142,16 @@ export async function fetchAllProducts(preview = false): Promise<Product[]> {
         imageUrl = 'https:' + imageUrl;
       }
 
-      // Extract text content from rich text description if it's an object
+      // Keep the rich text description as is for the rich text renderer
       let description = fields.description;
-      if (description && typeof description === 'object' && description.content) {
-        try {
-          // Try to extract text from the rich text object
-          description = description.content
-            .map(block => {
-              if (block.content) {
-                return block.content
-                  .map(item => item.value || '')
-                  .join('');
-              }
-              return '';
-            })
-            .join('\n\n');
-        } catch (e) {
-          console.warn('Error extracting text from rich text:', e);
-          description = 'Product description unavailable';
-        }
+      // If it's not a rich text object, convert it to a string for backward compatibility
+      if (description && typeof description === 'string') {
+        description = description;
+      } else if (!description || !description.nodeType) {
+        console.warn('Description is not in expected format:', description);
+        description = 'Product description unavailable';
       }
+      // If it's a rich text object, we'll keep it as is
 
       return {
         id: parseInt(item.sys.id),
@@ -258,26 +248,16 @@ export async function fetchFeaturedProducts(preview = false): Promise<Product[]>
         imageUrl = 'https:' + imageUrl;
       }
 
-      // Extract text content from rich text description if it's an object
+      // Keep the rich text description as is for the rich text renderer
       let description = fields.description;
-      if (description && typeof description === 'object' && description.content) {
-        try {
-          // Try to extract text from the rich text object
-          description = description.content
-            .map(block => {
-              if (block.content) {
-                return block.content
-                  .map(item => item.value || '')
-                  .join('');
-              }
-              return '';
-            })
-            .join('\n\n');
-        } catch (e) {
-          console.warn('Error extracting text from rich text:', e);
-          description = 'Product description unavailable';
-        }
+      // If it's not a rich text object, convert it to a string for backward compatibility
+      if (description && typeof description === 'string') {
+        description = description;
+      } else if (!description || !description.nodeType) {
+        console.warn('Description is not in expected format:', description);
+        description = 'Product description unavailable';
       }
+      // If it's a rich text object, we'll keep it as is
 
       return {
         id: parseInt(item.sys.id),
@@ -360,26 +340,16 @@ export async function fetchProductById(id: string | number, preview = false): Pr
         imageUrl = 'https:' + imageUrl;
       }
 
-      // Extract text content from rich text description if it's an object
+      // Keep the rich text description as is for the rich text renderer
       let description = fields.description;
-      if (description && typeof description === 'object' && description.content) {
-        try {
-          // Try to extract text from the rich text object
-          description = description.content
-            .map(block => {
-              if (block.content) {
-                return block.content
-                  .map(item => item.value || '')
-                  .join('');
-              }
-              return '';
-            })
-            .join('\n\n');
-        } catch (e) {
-          console.warn('Error extracting text from rich text:', e);
-          description = 'Product description unavailable';
-        }
+      // If it's not a rich text object, convert it to a string for backward compatibility
+      if (description && typeof description === 'string') {
+        description = description;
+      } else if (!description || !description.nodeType) {
+        console.warn('Description is not in expected format:', description);
+        description = 'Product description unavailable';
       }
+      // If it's a rich text object, we'll keep it as is
 
       // Try to parse the ID as a number for compatibility with the rest of the app
       // But also store the original Contentful ID for future reference

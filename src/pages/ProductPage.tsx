@@ -9,6 +9,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import QuantitySelector from "@/components/ui/quantity-selector";
+import RichTextRenderer from "@/components/RichTextRenderer";
 import SEO from "@/components/SEO";
 
 const ProductPage = () => {
@@ -227,7 +228,7 @@ const ProductPage = () => {
       "Quantity: " +
       quantity +
       "\n" +
-      "Color: " +
+      "Variation: " +
       colorName +
       "\n" +
       "Price: $" +
@@ -287,7 +288,12 @@ const ProductPage = () => {
       {product && (
         <SEO
           title={`${product.name} | OMNIS`}
-          description={product.description.split("\n\n")[0]}
+          description={
+            typeof product.description === "string"
+              ? product.description.split("\n\n")[0]
+              : product.description?.content?.[0]?.content?.[0]?.value ||
+                `${product.name} - OMNIS`
+          }
         />
       )}
       <Navbar />
@@ -324,11 +330,17 @@ const ProductPage = () => {
 
             <div className="border-t border-omnis-gray pt-6 mb-6">
               <div className="text-omnis-lightgray mb-8">
-                {product.description.split("\n\n").map((paragraph, index) => (
-                  <p key={index} className="mb-4">
-                    {paragraph}
-                  </p>
-                ))}
+                {typeof product.description === "string" ? (
+                  // Handle plain text descriptions (backward compatibility)
+                  product.description.split("\n\n").map((paragraph, index) => (
+                    <p key={index} className="mb-4">
+                      {paragraph}
+                    </p>
+                  ))
+                ) : (
+                  // Handle rich text descriptions
+                  <RichTextRenderer content={product.description} />
+                )}
               </div>
 
               {/* Variation selection */}

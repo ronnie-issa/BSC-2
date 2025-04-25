@@ -6,7 +6,7 @@ export interface Product {
   name: string;
   price: number;
   image: string;
-  description: string;
+  description: string | any; // Can be a string or a Contentful rich text document
   featured?: boolean;
   variations: {
     name: string;

@@ -136,7 +136,6 @@ src/
    - Organize Contentful content structure
      - Products and attributes (Size, Variation) should each be in a separate group
    - Add more products (at least 6 total - 3 featured, 3 non-featured)
-   - Implement rich text renderer for product descriptions using `@contentful/rich-text-react-renderer`
    - Add more variations and sizes for products
    - Implement image galleries for products (multiple images per product)
 
