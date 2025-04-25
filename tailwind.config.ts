@@ -80,9 +80,9 @@ export default {
 				}
 			},
 			borderRadius: {
-				lg: 'var(--radius)',
-				md: 'calc(var(--radius) - 2px)',
-				sm: 'calc(var(--radius) - 4px)'
+				lg: '0', // Brutalist design: no border radius
+				md: '0', // Brutalist design: no border radius
+				sm: '0'  // Brutalist design: no border radius
 			},
 			keyframes: {
 				'accordion-down': {

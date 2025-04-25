@@ -522,7 +522,7 @@ const CheckoutPage = () => {
 
                     <Button
                       type="submit"
-                      className="w-full bg-white text-black hover:bg-gray-100 hover:text-black border border-black font-bold"
+                      className="w-full font-bold"
                       size="lg"
                     >
                       Place Order
@@ -737,7 +737,7 @@ const CheckoutPage = () => {
 
                       <Button
                         type="submit"
-                        className="w-full bg-white text-black hover:bg-gray-100 hover:text-black border border-black font-bold mt-4 flex items-center justify-center"
+                        className="w-full font-bold mt-4 flex items-center justify-center"
                         size="lg"
                         disabled={isProcessing}
                       >

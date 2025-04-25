@@ -379,7 +379,7 @@ const BagPage = () => {
               </div>
 
               <Button
-                className="w-full bg-white text-black hover:bg-gray-100 hover:text-black border border-black font-bold text-sm sm:text-base"
+                className="w-full font-bold text-sm sm:text-base"
                 size="lg"
                 onClick={() => navigate("/checkout")}
                 disabled={bag.length === 0}

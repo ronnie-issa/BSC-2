@@ -139,14 +139,15 @@ const BagDropdown = ({ onClose }: BagDropdownProps) => {
           <div className="flex flex-col sm:flex-row gap-3">
             <Button
               asChild
-              className="w-full bg-black text-white hover:bg-gray-800 text-xs sm:text-sm"
+              variant="primary-light"
+              className="w-full text-xs sm:text-sm"
             >
               <Link to="/checkout">CHECKOUT</Link>
             </Button>
             <Button
               asChild
-              variant="outline"
-              className="w-full bg-white text-black border-black hover:bg-gray-100 hover:text-black text-xs sm:text-sm"
+              variant="outline-light"
+              className="w-full text-xs sm:text-sm"
             >
               <Link to="/bag" onClick={onClose}>
                 VIEW BAG

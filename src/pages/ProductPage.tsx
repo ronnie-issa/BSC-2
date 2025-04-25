@@ -336,10 +336,10 @@ const ProductPage = () => {
                   {product.colors.map((color) => (
                     <button
                       key={color.value}
-                      className={`w-8 h-8 rounded-full border ${
+                      className={`w-8 h-8 border-2 ${
                         selectedColor === color.value
-                          ? "ring-2 ring-offset-2 ring-omnis-black"
-                          : "border-omnis-gray"
+                          ? "border-white"
+                          : "border-omnis-gray hover:border-white"
                       }`}
                       style={{ backgroundColor: color.value }}
                       onClick={() => setSelectedColor(color.value)}
@@ -356,10 +356,10 @@ const ProductPage = () => {
                   {product.sizes.map((size) => (
                     <button
                       key={size.value}
-                      className={`px-4 py-2 border ${
+                      className={`px-4 py-2 border transition-colors ${
                         selectedSize === size.value
                           ? "bg-omnis-black text-white border-white"
-                          : "border-omnis-gray hover:border-omnis-black"
+                          : "border-omnis-gray hover:border-white"
                       }`}
                       onClick={() => setSelectedSize(size.value)}
                     >
@@ -387,15 +387,16 @@ const ProductPage = () => {
                 variant="outline"
                 size="lg"
                 onClick={handleAddToBag}
-                className="border-omnis-black text-white hover:bg-omnis-black hover:text-white transition-all duration-300 flex items-center justify-center"
+                className="border-omnis-white text-white hover:bg-omnis-white hover:text-omnis-black transition-all duration-300 flex items-center justify-center"
               >
                 <ShoppingBag className="mr-2 h-4 w-4" />
                 <span className="inline-block">Add to Bag</span>
               </Button>
               <Button
+                variant="secondary"
                 size="lg"
                 onClick={handleBuyViaWhatsApp}
-                className="bg-omnis-black text-white hover:bg-omnis-gray transition-all duration-300 font-medium tracking-wide shadow-lg transform hover:scale-105 flex items-center justify-center"
+                className="font-medium tracking-wide transition-all duration-300 flex items-center justify-center"
               >
                 <MessageSquare className="mr-2 h-4 w-4" />
                 <span className="inline-block">Buy via WhatsApp</span>

@@ -283,7 +283,7 @@ const Navbar = ({ scrollY = 0, showLogoEffect = false }: NavbarProps) => {
                   {bagItemCount > 0 && (
                     <Badge
                       variant="default"
-                      className={`absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 bg-red-600 text-white text-xs font-medium ${
+                      className={`absolute -top-0 -right-0 h-5 w-5 flex items-center justify-center p-0 bg-red-600 text-white text-xs font-medium ${
                         animateBadge ? "animate-pulse scale-125" : ""
                       }`}
                     >
