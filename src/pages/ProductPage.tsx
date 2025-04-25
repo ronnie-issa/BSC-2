@@ -297,7 +297,7 @@ const ProductPage = () => {
         />
       )}
       <Navbar />
-      <div className="container mx-auto px-6 py-12 md:py-20 mb-4">
+      <div className="container mx-auto py-12 md:py-20 mb-4">
         {/* Back button */}
         <Button
           variant="ghost"

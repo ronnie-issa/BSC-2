@@ -233,7 +233,7 @@ const CheckoutPage = () => {
   return (
     <>
       <Navbar />
-      <div className="container mx-auto px-6 py-12">
+      <div className="container mx-auto py-12">
         <Button
           variant="ghost"
           className="mb-8 group"
