@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { useProductContext } from "@/contexts/ProductContext";
 import { useContentfulProducts } from "@/contexts/ContentfulProductsProvider";
 import { toast } from "@/hooks/use-toast";
+import { useIsMobile } from "@/hooks/use-mobile";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import QuantitySelector from "@/components/ui/quantity-selector";
@@ -15,6 +16,7 @@ const ProductPage = () => {
   const navigate = useNavigate();
   const { addToCart } = useProductContext();
   const { products, getProductById, refreshProducts } = useContentfulProducts();
+  const isMobile = useIsMobile();
 
   const [quantity, setQuantity] = useState(1);
   const [selectedColor, setSelectedColor] = useState("");
@@ -191,11 +193,14 @@ const ProductPage = () => {
     // Add to cart - the dropdown will automatically open due to the useEffect in Navbar
     addToCart(product, quantity, selectedColor, selectedSize);
 
-    toast({
-      title: "Added to Bag",
-      description: `${product.name} has been added to your bag`,
-      duration: 3000,
-    });
+    // Only show the success toast on desktop, not on mobile
+    if (!isMobile) {
+      toast({
+        title: "Added to Bag",
+        description: `${product.name} has been added to your bag`,
+        duration: 3000,
+      });
+    }
   };
 
   const handleBuyViaWhatsApp = () => {
