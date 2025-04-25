@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import Breadcrumbs from "@/components/Breadcrumbs";
 import SEO from "@/components/SEO";
 
 // Simplified About page without heavy animations
@@ -26,6 +27,7 @@ const About = () => {
         } transition-opacity duration-500`}
       >
         <div className="container mx-auto relative">
+          <Breadcrumbs items={[{ label: "ABOUT", path: "/about" }]} />
           <header className="text-center mb-16">
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 uppercase tracking-tight">
               ABOUT{" "}

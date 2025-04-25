@@ -4,6 +4,7 @@ import Footer from "@/components/Footer";
 import { motion, useInView } from "@/lib/framer";
 import { useContentfulProducts } from "@/contexts/ContentfulProductsProvider";
 import ProductCard from "@/components/ProductCard";
+import Breadcrumbs from "@/components/Breadcrumbs";
 import SEO from "@/components/SEO";
 
 const Shop = () => {
@@ -35,6 +36,7 @@ const Shop = () => {
 
       <main className="pt-32 pb-20">
         <div className="container mx-auto relative">
+          <Breadcrumbs items={[{ label: "SHOP", path: "/shop" }]} />
           <motion.header
             className="text-center mb-16"
             initial={{ y: 30, opacity: 0 }}

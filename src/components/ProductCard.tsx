@@ -36,14 +36,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
             style={{ filter: "grayscale(100%)" }}
           />
         </motion.div>
-        <div className="absolute inset-0 bg-omnis-black/30 flex items-center justify-center transition-all duration-300">
-          <span
-            className="text-omnis-white text-sm tracking-widest font-medium px-4 py-2 border border-white/50 backdrop-blur-sm bg-black/20 transform transition-transform duration-300 group-hover:scale-110"
-            role="button"
-            aria-hidden="true"
-          >
-            VIEW
-          </span>
+        <div className="absolute inset-0 bg-omnis-black/30 transition-all duration-300">
           <VisuallyHidden>View {product.name} details</VisuallyHidden>
         </div>
       </div>

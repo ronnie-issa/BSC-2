@@ -62,7 +62,7 @@ const Returns = () => {
               transition={{ duration: 0.8, delay: 0.4, ease: "easeOut" }}
             >
               <h2 className="text-2xl font-bold mb-4">How to Return</h2>
-              <ol className="border-l-2 border-omnis-white pl-6 space-y-4 text-omnis-lightgray list-decimal ml-4">
+              <ol className="space-y-4 text-omnis-lightgray list-decimal ml-4">
                 <li>
                   <span className="font-medium text-omnis-white">
                     Request a Return:
