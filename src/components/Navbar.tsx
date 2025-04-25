@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X, ShoppingBag } from "lucide-react";
+import { ShoppingBag } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useProductContext } from "@/contexts/ProductContext";
 import { Badge } from "@/components/ui/badge";
@@ -306,7 +306,7 @@ const Navbar = ({ scrollY = 0, showLogoEffect = false }: NavbarProps) => {
           {/* Mobile Bag Icon */}
           <Link
             to="/bag"
-            className="md:hidden text-omnis-white z-50 p-2 hover:bg-omnis-darkgray rounded-md transition-colors relative mr-2"
+            className="md:hidden text-omnis-white z-50 p-2 hover:bg-omnis-darkgray/20 rounded-md transition-colors relative mr-12"
             aria-label={`Shopping bag with ${bagItemCount} items`}
           >
             <ShoppingBag
@@ -327,19 +327,17 @@ const Navbar = ({ scrollY = 0, showLogoEffect = false }: NavbarProps) => {
             )}
           </Link>
 
-          {/* Mobile Menu Button */}
-          <button
-            className="md:hidden text-omnis-white z-50 ml-auto p-2 hover:bg-omnis-darkgray rounded-md transition-colors"
+          {/* Mobile Menu Button - Always visible on top of overlay */}
+          <HamburgerMenu
+            isOpen={isOpen}
             onClick={toggleMenu}
-            aria-label={isOpen ? "Close menu" : "Open menu"}
-          >
-            {isOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
+            className="md:hidden z-[101] ml-auto p-2 hover:bg-omnis-darkgray/20 rounded-md transition-colors"
+          />
 
           {/* Mobile Navigation Overlay */}
           <div
             className={cn(
-              "fixed inset-0 z-[100] bg-omnis-black flex flex-col items-center justify-center transition-all duration-500 ease-in-out md:hidden",
+              "fixed inset-0 z-[49] bg-omnis-black flex flex-col items-center justify-center transition-all duration-500 ease-in-out md:hidden",
               isOpen
                 ? "opacity-100 visible"
                 : "opacity-0 invisible pointer-events-none"
@@ -354,30 +352,6 @@ const Navbar = ({ scrollY = 0, showLogoEffect = false }: NavbarProps) => {
               bottom: 0,
             }}
           >
-            <div className="absolute top-6 right-6">
-              <button
-                className="text-omnis-white p-2"
-                onClick={toggleMenu}
-                aria-label="Close menu"
-              >
-                <X size={24} />
-              </button>
-            </div>
-
-            <motion.div
-              className="mb-12"
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.4 }}
-            >
-              <div
-                className="text-5xl font-logo font-medium"
-                style={{ letterSpacing: "-2.8px" }}
-              >
-                OMNIS
-              </div>
-            </motion.div>
-
             <nav className="flex flex-col items-center space-y-10 text-3xl">
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
@@ -450,11 +424,48 @@ const MobileNavLink = ({
   return (
     <Link
       to={to}
-      className="text-omnis-white tracking-widest font-medium p-4 relative after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2 after:w-0 after:h-[1px] after:bg-omnis-white hover:after:w-full after:transition-all after:duration-300"
+      className="text-omnis-white flex items-center tracking-widest font-medium relative after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2 after:w-0 after:h-[1px] after:bg-omnis-white hover:after:w-full after:transition-all after:duration-300"
       onClick={onClick}
     >
       {children}
     </Link>
+  );
+};
+
+// Custom hamburger menu component with 2 lines that animates to an X
+interface HamburgerMenuProps {
+  isOpen: boolean;
+  onClick: () => void;
+  className?: string;
+}
+
+const HamburgerMenu = ({ isOpen, onClick, className }: HamburgerMenuProps) => {
+  return (
+    <button
+      className={cn(
+        "relative w-6 h-6 flex flex-col justify-center items-center",
+        className
+      )}
+      onClick={onClick}
+      aria-label={isOpen ? "Close menu" : "Open menu"}
+    >
+      <span
+        className={cn(
+          "block w-6 h-0.5 bg-omnis-white transition-all duration-300 ease-in-out origin-center",
+          isOpen
+            ? "absolute rotate-45 scale-110" // First line rotates to form one half of the X
+            : "mb-1.5 translate-y-[-2px]" // Normal position for first line, slightly higher
+        )}
+      />
+      <span
+        className={cn(
+          "block w-6 h-0.5 bg-omnis-white transition-all duration-300 ease-in-out origin-center",
+          isOpen
+            ? "absolute -rotate-45 scale-110" // Second line rotates to form other half of the X
+            : "translate-y-[2px]" // Normal position for second line, slightly lower
+        )}
+      />
+    </button>
   );
 };
 
