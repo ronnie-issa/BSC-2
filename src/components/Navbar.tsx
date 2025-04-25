@@ -89,7 +89,8 @@ const Navbar = ({ scrollY = 0, showLogoEffect = false }: NavbarProps) => {
   // Handle scroll for navbar background and update window width
   useEffect(() => {
     const handleScroll = () => {
-      const scrollPosition = window.scrollY;
+      // Ensure scroll position is never negative (prevents issues during pull-to-refresh)
+      const scrollPosition = Math.max(0, window.scrollY);
       if (scrollPosition > 50) {
         // Increased threshold from 10px to 50px
         setScrolled(true);
@@ -120,39 +121,57 @@ const Navbar = ({ scrollY = 0, showLogoEffect = false }: NavbarProps) => {
   // Track if we're fully scrolled for logo height calculations
   const [isFullyScrolled, setIsFullyScrolled] = useState(false);
 
-  // Calculate responsive maxScroll value based on screen size
-  const maxScroll = windowWidth < 768 ? 200 : 300; // Shorter scroll distance on mobile
+  // Calculate responsive maxScroll value based on screen size - much shorter for quick transition
+  const maxScroll = windowWidth < 768 ? 50 : 80; // Very short scroll distance for quick transition
 
   // Update isFullyScrolled state when scroll position changes
   // If logo effect is disabled, always consider it fully scrolled
   useEffect(() => {
-    setIsFullyScrolled(showLogoEffect ? scrollY >= maxScroll : true);
+    // Ensure we're using a non-negative scroll value (prevents issues during pull-to-refresh)
+    const safeScrollY = Math.max(0, scrollY);
+    setIsFullyScrolled(showLogoEffect ? safeScrollY >= maxScroll : true);
   }, [scrollY, maxScroll, showLogoEffect]);
 
   // Calculate logo transform values based on scroll position
-  const progress = Math.min(1, scrollY / maxScroll);
+  // Ensure scrollY is never negative (prevents scaling during pull-to-refresh)
+  const safeScrollY = Math.max(0, scrollY);
+  const progress = Math.min(1, safeScrollY / maxScroll);
 
   // Only calculate transition values if the logo effect is enabled
   // Otherwise, use fixed values for the navbar logo
 
   // Calculate responsive scale based on screen width
-  // On mobile, use a smaller initial scale (3x instead of 8x)
-  const initialScale = windowWidth < 768 ? 3 : 8;
+  // On mobile, use a smaller initial scale (4x instead of 8x)
+  const initialScale = windowWidth < 768 ? 4 : 8;
   const finalScale = 1;
 
   // Calculate scale - from initialScale (large) to finalScale (navbar size)
   // If logo effect is disabled, always use the final scale
+  // Use easeOutQuad easing for smoother transition
+  const easeOutQuad = (t: number) => t * (2 - t);
+
+  // For mobile, once the logo is collapsed, prevent it from scaling back up
+  // For desktop, allow normal scaling behavior
+  // Also add a check for scrolled state to keep logo locked during pull-to-refresh
   const logoScale = showLogoEffect
-    ? initialScale - progress * (initialScale - finalScale)
+    ? windowWidth < 768 && (isFullyScrolled || scrolled)
+      ? finalScale // Keep at final scale once fully scrolled or when navbar is in scrolled state
+      : initialScale - easeOutQuad(progress) * (initialScale - finalScale)
     : finalScale;
 
   // Calculate Y position - responsive based on screen width
   // Use a smaller initial Y offset on mobile to keep it in view
-  const initialY = windowWidth < 768 ? 100 : 164;
+  const initialY = windowWidth < 768 ? 120 : 180;
 
   // When fully scrolled (progress = 1), we want the logo to be vertically centered
   // If logo effect is disabled, always use 0 for Y position
-  const logoY = showLogoEffect ? initialY * (1 - progress) : 0;
+  // Use the same easeOutQuad easing for smoother transition
+  // For mobile, ensure the logo is vertically centered when collapsed
+  const logoY = showLogoEffect
+    ? windowWidth < 768 && (isFullyScrolled || scrolled)
+      ? 0 // Keep at 0 (vertically centered) once fully scrolled or when navbar is in scrolled state
+      : initialY * (1 - easeOutQuad(progress))
+    : 0;
 
   // We don't need logoX anymore as we're using CSS centering
   // const logoX = 0;
@@ -169,7 +188,7 @@ const Navbar = ({ scrollY = 0, showLogoEffect = false }: NavbarProps) => {
       <div className="container mx-auto relative">
         {/* Absolute positioned logo in the center - only shown when effect is enabled */}
         {showLogoEffect && (
-          <div className="absolute left-0 right-0 flex justify-center z-50 w-full pointer-events-none">
+          <div className="absolute left-0 right-0 flex justify-center items-center z-50 w-full h-full pointer-events-none">
             <div
               className={
                 isFullyScrolled ? "pointer-events-auto" : "pointer-events-none"
@@ -179,7 +198,7 @@ const Navbar = ({ scrollY = 0, showLogoEffect = false }: NavbarProps) => {
                 style={{
                   transform: `translateY(${logoY}px) scale(${logoScale})`,
                   transformOrigin: "center center",
-                  transition: "transform 0.2s cubic-bezier(0.25, 0.1, 0.25, 1)",
+                  transition: "transform 0.3s cubic-bezier(0.25, 0.1, 0.25, 1)",
                 }}
                 className="relative"
               >
@@ -274,18 +293,43 @@ const Navbar = ({ scrollY = 0, showLogoEffect = false }: NavbarProps) => {
                 </button>
               </PopoverTrigger>
               <PopoverContent
-                className="p-0 w-[350px] md:w-[450px] border-0 shadow-xl"
+                className="p-0 w-[90vw] sm:w-[350px] md:w-[450px] border-0 shadow-xl"
                 align="end"
                 sideOffset={16}
+                side="bottom"
               >
                 <BagDropdown onClose={() => setBagDropdownOpen(false)} />
               </PopoverContent>
             </Popover>
           </nav>
 
+          {/* Mobile Bag Icon */}
+          <Link
+            to="/bag"
+            className="md:hidden text-omnis-white z-50 p-2 hover:bg-omnis-darkgray rounded-md transition-colors relative mr-2"
+            aria-label={`Shopping bag with ${bagItemCount} items`}
+          >
+            <ShoppingBag
+              size={22}
+              className={`${
+                bagItemCount > 0 ? "text-omnis-white" : "text-omnis-lightgray"
+              } transition-colors duration-300`}
+            />
+            {bagItemCount > 0 && (
+              <Badge
+                variant="default"
+                className={`absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 bg-red-600 text-white text-xs font-medium ${
+                  animateBadge ? "animate-pulse scale-125" : ""
+                }`}
+              >
+                {bagItemCount}
+              </Badge>
+            )}
+          </Link>
+
           {/* Mobile Menu Button */}
           <button
-            className="md:hidden text-omnis-white z-50 ml-auto"
+            className="md:hidden text-omnis-white z-50 ml-auto p-2 hover:bg-omnis-darkgray rounded-md transition-colors"
             onClick={toggleMenu}
             aria-label={isOpen ? "Close menu" : "Open menu"}
           >
@@ -295,25 +339,80 @@ const Navbar = ({ scrollY = 0, showLogoEffect = false }: NavbarProps) => {
           {/* Mobile Navigation Overlay */}
           <div
             className={cn(
-              "fixed inset-0 bg-omnis-black flex flex-col items-center justify-center transition-all duration-500 ease-in-out md:hidden",
-              isOpen ? "opacity-100 visible" : "opacity-0 invisible"
+              "fixed inset-0 z-[100] bg-omnis-black flex flex-col items-center justify-center transition-all duration-500 ease-in-out md:hidden",
+              isOpen
+                ? "opacity-100 visible"
+                : "opacity-0 invisible pointer-events-none"
             )}
+            style={{
+              height: "100dvh", // Use dynamic viewport height for better mobile experience
+              width: "100vw",
+              position: "fixed",
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+            }}
           >
-            <nav className="flex flex-col items-center space-y-8 text-2xl">
-              <MobileNavLink to="/about" onClick={toggleMenu}>
-                ABOUT
-              </MobileNavLink>
-              <MobileNavLink to="/shop" onClick={toggleMenu}>
-                SHOP
-              </MobileNavLink>
-              <MobileNavLink to="/bag" onClick={toggleMenu}>
-                BAG{" "}
-                {bagItemCount > 0 && (
-                  <span className="inline-flex items-center justify-center ml-2 bg-red-600 text-white rounded-full h-5 w-5 text-xs">
-                    {bagItemCount}
-                  </span>
-                )}
-              </MobileNavLink>
+            <div className="absolute top-6 right-6">
+              <button
+                className="text-omnis-white p-2"
+                onClick={toggleMenu}
+                aria-label="Close menu"
+              >
+                <X size={24} />
+              </button>
+            </div>
+
+            <motion.div
+              className="mb-12"
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.4 }}
+            >
+              <div
+                className="text-5xl font-logo font-medium"
+                style={{ letterSpacing: "-2.8px" }}
+              >
+                OMNIS
+              </div>
+            </motion.div>
+
+            <nav className="flex flex-col items-center space-y-10 text-3xl">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.1, duration: 0.3 }}
+              >
+                <MobileNavLink to="/about" onClick={toggleMenu}>
+                  ABOUT
+                </MobileNavLink>
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2, duration: 0.3 }}
+              >
+                <MobileNavLink to="/shop" onClick={toggleMenu}>
+                  SHOP
+                </MobileNavLink>
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3, duration: 0.3 }}
+              >
+                <MobileNavLink to="/bag" onClick={toggleMenu}>
+                  BAG{" "}
+                  {bagItemCount > 0 && (
+                    <span className="inline-flex items-center justify-center ml-2 bg-red-600 text-white rounded-full h-6 w-6 text-xs">
+                      {bagItemCount}
+                    </span>
+                  )}
+                </MobileNavLink>
+              </motion.div>
             </nav>
           </div>
         </div>
@@ -351,7 +450,7 @@ const MobileNavLink = ({
   return (
     <Link
       to={to}
-      className="text-omnis-white tracking-widest font-medium p-4"
+      className="text-omnis-white tracking-widest font-medium p-4 relative after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2 after:w-0 after:h-[1px] after:bg-omnis-white hover:after:w-full after:transition-all after:duration-300"
       onClick={onClick}
     >
       {children}

@@ -127,11 +127,14 @@ const BagPage = () => {
           Back
         </Button>
 
-        <div className="flex justify-between items-center mb-8">
-          <h1 className="text-3xl font-bold">YOUR SELECTIONS</h1>
-          <Button variant="ghost" className="flex items-center gap-2">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
+          <h1 className="text-2xl sm:text-3xl font-bold">YOUR SELECTIONS</h1>
+          <Button
+            variant="ghost"
+            className="flex items-center gap-2 px-2 sm:px-4"
+          >
             <Printer size={18} />
-            Print
+            <span className="hidden sm:inline">Print</span>
           </Button>
         </div>
 
@@ -147,9 +150,9 @@ const BagPage = () => {
 
                 return (
                   <div key={`${item.product.id}-${index}`}>
-                    <div className="flex gap-6">
+                    <div className="flex flex-col sm:flex-row gap-4 sm:gap-6">
                       {/* Product image */}
-                      <div className="w-32 h-32 bg-omnis-darkgray flex-shrink-0">
+                      <div className="w-full sm:w-32 h-48 sm:h-32 bg-omnis-darkgray flex-shrink-0">
                         <img
                           src={item.product.image}
                           alt={item.product.name}
@@ -160,13 +163,20 @@ const BagPage = () => {
 
                       {/* Product details */}
                       <div className="flex-grow">
-                        <div className="flex justify-between">
+                        <div className="flex flex-col sm:flex-row justify-between">
                           <div>
-                            <h3 className="font-medium text-lg">
-                              {item.product.name}
-                            </h3>
+                            <div className="flex justify-between sm:block">
+                              <h3 className="font-medium text-lg">
+                                {item.product.name}
+                              </h3>
+                              <div className="text-right sm:hidden">
+                                <span className="font-medium text-lg">
+                                  $ {item.product.price.toFixed(2)}
+                                </span>
+                              </div>
+                            </div>
 
-                            <div className="text-sm text-omnis-lightgray mt-1 flex items-center gap-2">
+                            <div className="text-sm text-omnis-lightgray mt-2 flex items-center gap-2">
                               <span>Variation:</span>
                               <Select
                                 value={item.selectedColor}
@@ -192,7 +202,7 @@ const BagPage = () => {
                                   }
                                 }}
                               >
-                                <SelectTrigger className="w-[140px] h-8 text-xs border-omnis-gray/30 focus:ring-0 focus:ring-offset-0 bg-transparent text-omnis-white">
+                                <SelectTrigger className="w-[120px] sm:w-[140px] h-8 text-xs border-omnis-gray/30 focus:ring-0 focus:ring-offset-0 bg-transparent text-omnis-white">
                                   <SelectValue placeholder="Select color">
                                     {colorName}
                                   </SelectValue>
@@ -209,7 +219,7 @@ const BagPage = () => {
                                 </SelectContent>
                               </Select>
                             </div>
-                            <div className="text-sm text-omnis-lightgray mt-1 flex items-center gap-2">
+                            <div className="text-sm text-omnis-lightgray mt-2 flex items-center gap-2">
                               <span>Size:</span>
                               <Select
                                 value={item.selectedSize || ""}
@@ -236,7 +246,7 @@ const BagPage = () => {
                                   }
                                 }}
                               >
-                                <SelectTrigger className="w-[140px] h-8 text-xs border-omnis-gray/30 focus:ring-0 focus:ring-offset-0 bg-transparent text-omnis-white">
+                                <SelectTrigger className="w-[120px] sm:w-[140px] h-8 text-xs border-omnis-gray/30 focus:ring-0 focus:ring-offset-0 bg-transparent text-omnis-white">
                                   <SelectValue placeholder="Select size">
                                     {item.selectedSize
                                       ? item.selectedSize.toUpperCase()
@@ -256,14 +266,14 @@ const BagPage = () => {
                               </Select>
                             </div>
                           </div>
-                          <div className="text-right">
+                          <div className="text-right hidden sm:block">
                             <span className="font-medium text-lg">
                               $ {item.product.price.toFixed(2)}
                             </span>
                           </div>
                         </div>
 
-                        <div className="mt-4 flex items-center gap-4">
+                        <div className="mt-4 flex flex-col sm:flex-row sm:items-center gap-4">
                           {/* Quantity selector */}
                           <div className="flex items-center">
                             <QuantitySelector
@@ -279,10 +289,10 @@ const BagPage = () => {
                             />
                           </div>
 
-                          <div className="flex items-center gap-4 ml-4">
+                          <div className="flex items-center gap-4 sm:ml-4 mt-2 sm:mt-0">
                             <Button
                               variant="link"
-                              className="text-omnis-lightgray hover:text-omnis-white p-0 h-auto"
+                              className="text-omnis-lightgray hover:text-omnis-white p-0 h-auto text-sm"
                               onClick={() =>
                                 handleRemoveItem(
                                   item.product.id,
@@ -293,10 +303,13 @@ const BagPage = () => {
                             >
                               REMOVE
                             </Button>
-                            <Separator orientation="vertical" className="h-4" />
+                            <Separator
+                              orientation="vertical"
+                              className="h-4 hidden sm:block"
+                            />
                             <Button
                               variant="link"
-                              className="text-omnis-lightgray hover:text-omnis-white p-0 h-auto flex items-center gap-1"
+                              className="text-omnis-lightgray hover:text-omnis-white p-0 h-auto flex items-center gap-1 text-sm"
                               onClick={() =>
                                 navigate(`/product/${item.product.id}`)
                               }
@@ -327,28 +340,31 @@ const BagPage = () => {
 
           {/* Order summary */}
           <div className="lg:col-span-1">
-            <div className="border border-omnis-gray/20 p-6 sticky top-24">
-              <h2 className="text-xl font-bold mb-6">ORDER SUMMARY</h2>
-              <p className="text-sm text-omnis-lightgray mb-4">
+            <div className="border border-omnis-gray/20 p-4 sm:p-6 sticky top-24">
+              <h2 className="text-lg sm:text-xl font-bold mb-4 sm:mb-6">
+                ORDER SUMMARY
+              </h2>
+              <p className="text-xs sm:text-sm text-omnis-lightgray mb-4">
                 USCART{Math.floor(Math.random() * 10000000)}
               </p>
 
-              <div className="space-y-4 mb-6">
-                <div className="flex justify-between">
+              <div className="space-y-3 sm:space-y-4 mb-6">
+                <div className="flex justify-between text-sm sm:text-base">
                   <span>Subtotal</span>
                   <span>$ {getBagTotal().toFixed(2)}</span>
                 </div>
-                <div className="flex justify-between">
+                <div className="flex justify-between text-sm sm:text-base">
                   <span>Shipping</span>
-                  <span className="text-omnis-lightgray">
-                    Free (Premium Express)
+                  <span className="text-omnis-lightgray text-right">
+                    Free
+                    <span className="hidden sm:inline"> (Premium Express)</span>
                   </span>
                 </div>
-                <div className="flex justify-between">
+                <div className="flex justify-between text-sm sm:text-base">
                   <span>Estimated Tax</span>
                   <Button
                     variant="link"
-                    className="p-0 h-auto text-omnis-lightgray hover:text-omnis-white"
+                    className="p-0 h-auto text-omnis-lightgray hover:text-omnis-white text-xs sm:text-sm"
                   >
                     Calculate
                   </Button>
@@ -356,14 +372,14 @@ const BagPage = () => {
               </div>
 
               <div className="border-t border-omnis-gray/30 pt-4 mb-6">
-                <div className="flex justify-between font-bold text-lg">
+                <div className="flex justify-between font-bold text-base sm:text-lg">
                   <span>Estimated Total</span>
                   <span>$ {getBagTotal().toFixed(2)}</span>
                 </div>
               </div>
 
               <Button
-                className="w-full bg-white text-black hover:bg-gray-100 hover:text-black border border-black font-bold"
+                className="w-full bg-white text-black hover:bg-gray-100 hover:text-black border border-black font-bold text-sm sm:text-base"
                 size="lg"
                 onClick={() => navigate("/checkout")}
                 disabled={bag.length === 0}
@@ -377,23 +393,23 @@ const BagPage = () => {
               <Collapsible
                 open={helpOpen}
                 onOpenChange={setHelpOpen}
-                className="mt-8"
+                className="mt-6 sm:mt-8"
               >
                 <CollapsibleTrigger asChild>
-                  <div className="flex justify-between items-center mb-4 cursor-pointer p-2 -mx-2 group">
-                    <h3 className="font-medium relative after:absolute after:bottom-0 after:left-0 after:w-full after:h-[1px] after:bg-omnis-white after:origin-bottom-right after:scale-x-0 group-hover:after:scale-x-100 after:transition-transform after:duration-300 group-hover:after:origin-bottom-left">
+                  <div className="flex justify-between items-center mb-3 sm:mb-4 cursor-pointer p-2 -mx-2 group">
+                    <h3 className="font-medium text-sm sm:text-base relative after:absolute after:bottom-0 after:left-0 after:w-full after:h-[1px] after:bg-omnis-white after:origin-bottom-right after:scale-x-0 group-hover:after:scale-x-100 after:transition-transform after:duration-300 group-hover:after:origin-bottom-left">
                       MAY WE HELP?
                     </h3>
                     <div>
                       {helpOpen ? (
-                        <ChevronUp size={16} />
+                        <ChevronUp size={14} className="sm:w-4 sm:h-4" />
                       ) : (
-                        <ChevronDown size={16} />
+                        <ChevronDown size={14} className="sm:w-4 sm:h-4" />
                       )}
                     </div>
                   </div>
                 </CollapsibleTrigger>
-                <CollapsibleContent className="space-y-2 text-sm">
+                <CollapsibleContent className="space-y-2 text-xs sm:text-sm">
                   <p className="flex items-center gap-2">
                     <span>📞</span>
                     <a href="tel:+96181386697" className="hover:underline">
@@ -415,30 +431,30 @@ const BagPage = () => {
               <Collapsible
                 open={paymentOpen}
                 onOpenChange={setPaymentOpen}
-                className="mt-6"
+                className="mt-4 sm:mt-6"
               >
                 <CollapsibleTrigger asChild>
-                  <div className="flex justify-between items-center mb-4 cursor-pointer p-2 -mx-2 group">
-                    <h3 className="font-medium relative after:absolute after:bottom-0 after:left-0 after:w-full after:h-[1px] after:bg-omnis-white after:origin-bottom-right after:scale-x-0 group-hover:after:scale-x-100 after:transition-transform after:duration-300 group-hover:after:origin-bottom-left">
+                  <div className="flex justify-between items-center mb-3 sm:mb-4 cursor-pointer p-2 -mx-2 group">
+                    <h3 className="font-medium text-sm sm:text-base relative after:absolute after:bottom-0 after:left-0 after:w-full after:h-[1px] after:bg-omnis-white after:origin-bottom-right after:scale-x-0 group-hover:after:scale-x-100 after:transition-transform after:duration-300 group-hover:after:origin-bottom-left">
                       PAYMENT OPTIONS
                     </h3>
                     <div>
                       {paymentOpen ? (
-                        <ChevronUp size={16} />
+                        <ChevronUp size={14} className="sm:w-4 sm:h-4" />
                       ) : (
-                        <ChevronDown size={16} />
+                        <ChevronDown size={14} className="sm:w-4 sm:h-4" />
                       )}
                     </div>
                   </div>
                 </CollapsibleTrigger>
-                <CollapsibleContent className="space-y-4 text-sm">
+                <CollapsibleContent className="space-y-3 sm:space-y-4 text-xs sm:text-sm">
                   <div className="flex items-center gap-2">
-                    <CreditCard size={16} />
+                    <CreditCard size={14} className="sm:w-4 sm:h-4" />
                     <span>Credit/Debit Cards</span>
                   </div>
                   <div>
                     <p>We accept Visa, Mastercard, and American Express.</p>
-                    <p className="mt-2">
+                    <p className="mt-1 sm:mt-2">
                       All transactions are secure and encrypted.
                     </p>
                   </div>
@@ -448,30 +464,30 @@ const BagPage = () => {
               <Collapsible
                 open={shippingOpen}
                 onOpenChange={setShippingOpen}
-                className="mt-6"
+                className="mt-4 sm:mt-6"
               >
                 <CollapsibleTrigger asChild>
-                  <div className="flex justify-between items-center mb-4 cursor-pointer p-2 -mx-2 group">
-                    <h3 className="font-medium relative after:absolute after:bottom-0 after:left-0 after:w-full after:h-[1px] after:bg-omnis-white after:origin-bottom-right after:scale-x-0 group-hover:after:scale-x-100 after:transition-transform after:duration-300 group-hover:after:origin-bottom-left">
+                  <div className="flex justify-between items-center mb-3 sm:mb-4 cursor-pointer p-2 -mx-2 group">
+                    <h3 className="font-medium text-sm sm:text-base relative after:absolute after:bottom-0 after:left-0 after:w-full after:h-[1px] after:bg-omnis-white after:origin-bottom-right after:scale-x-0 group-hover:after:scale-x-100 after:transition-transform after:duration-300 group-hover:after:origin-bottom-left">
                       SHIPPING OPTIONS
                     </h3>
                     <div>
                       {shippingOpen ? (
-                        <ChevronUp size={16} />
+                        <ChevronUp size={14} className="sm:w-4 sm:h-4" />
                       ) : (
-                        <ChevronDown size={16} />
+                        <ChevronDown size={14} className="sm:w-4 sm:h-4" />
                       )}
                     </div>
                   </div>
                 </CollapsibleTrigger>
-                <CollapsibleContent className="space-y-4 text-sm">
+                <CollapsibleContent className="space-y-3 sm:space-y-4 text-xs sm:text-sm">
                   <div className="flex items-center gap-2">
-                    <Truck size={16} />
+                    <Truck size={14} className="sm:w-4 sm:h-4" />
                     <span>Premium Express</span>
                   </div>
                   <div>
                     <p>Free shipping on all orders.</p>
-                    <p className="mt-2">
+                    <p className="mt-1 sm:mt-2">
                       Estimated delivery: 2-4 business days.
                     </p>
                   </div>

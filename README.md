@@ -81,6 +81,69 @@ src/
   - `subscribe.js`: Handles newsletter subscriptions
   - `welcome-email.js`: Sends welcome emails to new subscribers
 
+## Service Dependencies
+
+This project relies on several external services to function properly:
+
+### Core Services
+
+1. **Netlify**
+
+   - Hosts the website and static assets
+   - Provides serverless functions for backend operations
+   - Handles form submissions and redirects
+   - Manages environment variables and build settings
+   - Production URL: https://omnis-lb.netlify.app/
+
+2. **Contentful**
+
+   - Headless CMS for managing product data
+   - Stores product images and serves them through its CDN
+   - Provides Content Delivery API for fetching published content
+   - Provides Content Preview API for testing draft content
+   - Requires Space ID and API keys configured in environment variables
+
+3. **GitHub**
+   - Stores the codebase and enables version control
+   - Manages subscriber data through the GitHub API
+   - Stores subscriber information in a JSON file in the repository
+   - Requires a GitHub Personal Access Token for API operations
+   - Used for continuous deployment through Netlify integration
+
+### Email Services
+
+Currently using **Mailjet** for email delivery:
+
+- Sends welcome emails to new newsletter subscribers
+- Requires API key and Secret key configured in environment variables
+- Sender email must be verified in Mailjet
+
+Planned migration to **Resend** (see TODO.md):
+
+- Will provide React-based email templates
+- Will handle welcome emails and order confirmations
+- Will offer better developer experience and Next.js compatibility
+
+### Environment Variables
+
+The following environment variables must be configured for the project to work:
+
+```
+# GitHub configuration
+GITHUB_TOKEN=your_github_personal_access_token
+GITHUB_OWNER=your_github_username
+GITHUB_REPO=your_github_repository
+
+# Contentful configuration
+CONTENTFUL_SPACE_ID=your_space_id
+CONTENTFUL_ACCESS_TOKEN=your_access_token
+CONTENTFUL_PREVIEW_TOKEN=your_preview_token
+CONTENTFUL_ENVIRONMENT=master
+
+# Netlify site URL
+URL=https://your-netlify-site-name.netlify.app
+```
+
 ## Contentful CMS Integration
 
 The project uses Contentful as a headless CMS to manage product data:
@@ -156,17 +219,16 @@ The project uses Contentful as a headless CMS to manage product data:
    - Continue Lighthouse audit, reach 100s across the board
    - Change og image to OMNIS logo
    - Bag page should be responsive
-   - in internal pages on load the navbar should have a padding of "py-5 md:py-4" on scroll it should change to "py-3 md:py-2"
+   - in internal pages on load the navbar should have a padding of "py-5 md:py-4" on scroll it should change to "py-3 md:py-2" check background too
 
 2. **Contentful CMS Enhancements**
 
    - Organize Contentful content structure
-   - Products and attributes (Size, Variation) should each be in a separate group
+     - Products and attributes (Size, Variation) should each be in a separate group
    - Add more products (at least 6 total - 3 featured, 3 non-featured)
    - Implement rich text renderer for product descriptions using `@contentful/rich-text-react-renderer`
    - Add more variations and sizes for products
    - Implement image galleries for products (multiple images per product)
-   - ✅ Clean up redundant files and code
 
 3. **Email System Migration and Improvements**
    - Migrate from Mailjet to Resend for improved developer experience

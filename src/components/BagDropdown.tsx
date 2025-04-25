@@ -47,8 +47,13 @@ const BagDropdown = ({ onClose }: BagDropdownProps) => {
     <div className="bg-white text-black w-full max-w-md max-h-[80vh] overflow-auto">
       {/* Header */}
       <div className="flex items-center justify-between p-4 border-b border-gray-200">
-        <h2 className="font-bold text-lg uppercase">Added to Shopping Bag</h2>
-        <button onClick={onClose} className="text-black hover:text-gray-600">
+        <h2 className="font-bold text-base sm:text-lg uppercase">
+          Added to Shopping Bag
+        </h2>
+        <button
+          onClick={onClose}
+          className="text-black hover:text-gray-600 p-1"
+        >
           <X size={20} />
         </button>
       </div>
@@ -65,9 +70,12 @@ const BagDropdown = ({ onClose }: BagDropdownProps) => {
                   ?.name || "Default";
 
               return (
-                <div key={`${item.product.id}-${index}`} className="flex gap-4">
+                <div
+                  key={`${item.product.id}-${index}`}
+                  className="flex gap-3 sm:gap-4"
+                >
                   {/* Product image */}
-                  <div className="w-20 h-20 bg-gray-100 flex-shrink-0">
+                  <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gray-100 flex-shrink-0">
                     <img
                       src={item.product.image}
                       alt={item.product.name}
@@ -77,11 +85,11 @@ const BagDropdown = ({ onClose }: BagDropdownProps) => {
                   </div>
 
                   {/* Product details */}
-                  <div className="flex-grow">
-                    <h3 className="font-medium uppercase text-sm">
+                  <div className="flex-grow min-w-0">
+                    <h3 className="font-medium uppercase text-xs sm:text-sm truncate">
                       {item.product.name}
                     </h3>
-                    <p className="text-lg font-bold mt-1">
+                    <p className="text-base sm:text-lg font-bold mt-1">
                       ${item.product.price.toFixed(2)}
                     </p>
                     <div className="text-xs text-gray-600 mt-1">
@@ -113,7 +121,7 @@ const BagDropdown = ({ onClose }: BagDropdownProps) => {
                         item.selectedSize
                       )
                     }
-                    className="text-gray-500 hover:text-black self-start"
+                    className="text-gray-500 hover:text-black self-start p-1"
                     aria-label="Remove item"
                   >
                     <Trash2 size={16} />
@@ -128,21 +136,23 @@ const BagDropdown = ({ onClose }: BagDropdownProps) => {
       {/* Action buttons */}
       {bag.length > 0 && (
         <div className="p-4 border-t border-gray-200">
-          <Button
-            asChild
-            className="w-full bg-black text-white hover:bg-gray-800 mb-3"
-          >
-            <Link to="/checkout">CHECKOUT</Link>
-          </Button>
-          <Button
-            asChild
-            variant="outline"
-            className="w-full bg-white text-black border-black hover:bg-gray-100 hover:text-black"
-          >
-            <Link to="/bag" onClick={onClose}>
-              VIEW SHOPPING BAG
-            </Link>
-          </Button>
+          <div className="flex flex-col sm:flex-row gap-3">
+            <Button
+              asChild
+              className="w-full bg-black text-white hover:bg-gray-800 text-xs sm:text-sm"
+            >
+              <Link to="/checkout">CHECKOUT</Link>
+            </Button>
+            <Button
+              asChild
+              variant="outline"
+              className="w-full bg-white text-black border-black hover:bg-gray-100 hover:text-black text-xs sm:text-sm"
+            >
+              <Link to="/bag" onClick={onClose}>
+                VIEW BAG
+              </Link>
+            </Button>
+          </div>
         </div>
       )}
     </div>
