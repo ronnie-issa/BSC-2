@@ -1,25 +1,32 @@
-import { useRef } from "react";
+import { useEffect, useState } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { motion, useInView } from "@/lib/framer";
-import { LazyImage } from "@/components/ui/lazy-image";
+import SEO from "@/components/SEO";
 
+// Simplified About page without heavy animations
 const About = () => {
-  const contentRef = useRef<HTMLDivElement>(null);
-  const isInView = useInView(contentRef, { once: true, amount: 0.2 });
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  // Set loaded state after component mounts
+  useEffect(() => {
+    setIsLoaded(true);
+  }, []);
 
   return (
     <div className="relative bg-omnis-black text-omnis-white min-h-screen">
+      <SEO
+        title="About | OMNIS"
+        description="Learn about OMNIS, our story, vision, and commitment to quality and sustainability in fashion."
+      />
       <Navbar />
 
-      <main className="pt-32 pb-20" ref={contentRef}>
+      <main
+        className={`pt-32 pb-20 ${
+          isLoaded ? "opacity-100" : "opacity-0"
+        } transition-opacity duration-500`}
+      >
         <div className="container mx-auto relative">
-          <motion.header
-            className="text-center mb-16"
-            initial={{ y: 100, opacity: 0 }}
-            animate={isInView ? { y: 0, opacity: 1 } : { y: 100, opacity: 0 }}
-            transition={{ duration: 1, ease: "easeOut" }}
-          >
+          <header className="text-center mb-16">
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 uppercase tracking-tight">
               ABOUT{" "}
               <span
@@ -34,14 +41,10 @@ const About = () => {
               Redefining the boundaries between high fashion and streetwear
               since 2020.
             </p>
-          </motion.header>
+          </header>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-16 mb-20">
-            <motion.div
-              initial={{ y: 100, opacity: 0 }}
-              animate={isInView ? { y: 0, opacity: 1 } : { y: 100, opacity: 0 }}
-              transition={{ duration: 1, delay: 0.2, ease: "easeOut" }}
-            >
+            <div>
               <h2 className="text-2xl font-bold mb-6 uppercase tracking-tight">
                 OUR STORY
               </h2>
@@ -75,31 +78,21 @@ const About = () => {
                   clothing that can keep pace.
                 </p>
               </div>
-            </motion.div>
+            </div>
 
-            <motion.div
-              className="h-[500px] relative overflow-hidden"
-              initial={{ y: 100, opacity: 0 }}
-              animate={isInView ? { y: 0, opacity: 1 } : { y: 100, opacity: 0 }}
-              transition={{ duration: 1, delay: 0.4, ease: "easeOut" }}
-            >
-              <LazyImage
+            <div className="h-[500px] relative overflow-hidden">
+              <img
                 src="/images/about/studio.jpg"
                 alt="OMNIS Studio"
-                imgClassName="w-full h-full object-cover object-center"
-                wrapperClassName="w-full h-full"
+                className="w-full h-full object-cover object-center"
                 style={{ filter: "grayscale(100%)" }}
+                loading="eager"
               />
-            </motion.div>
+            </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-20">
-            <motion.div
-              className="p-8 border border-omnis-gray/20"
-              initial={{ y: 100, opacity: 0 }}
-              animate={isInView ? { y: 0, opacity: 1 } : { y: 100, opacity: 0 }}
-              transition={{ duration: 1, delay: 0.7, ease: "easeOut" }}
-            >
+            <div className="p-8 border border-omnis-gray/20">
               <h3 className="text-xl font-bold mb-4 uppercase">
                 DESIGN PHILOSOPHY
               </h3>
@@ -109,14 +102,9 @@ const About = () => {
                 We embrace restraint, believing that true luxury lies in what is
                 essential rather than what is excessive.
               </p>
-            </motion.div>
+            </div>
 
-            <motion.div
-              className="p-8 border border-omnis-gray/20"
-              initial={{ y: 100, opacity: 0 }}
-              animate={isInView ? { y: 0, opacity: 1 } : { y: 100, opacity: 0 }}
-              transition={{ duration: 1, delay: 0.8, ease: "easeOut" }}
-            >
+            <div className="p-8 border border-omnis-gray/20">
               <h3 className="text-xl font-bold mb-4 uppercase">
                 CRAFTSMANSHIP
               </h3>
@@ -133,14 +121,9 @@ const About = () => {
                 share our commitment to quality and detail, ensuring that every
                 garment meets our exacting standards.
               </p>
-            </motion.div>
+            </div>
 
-            <motion.div
-              className="p-8 border border-omnis-gray/20"
-              initial={{ y: 100, opacity: 0 }}
-              animate={isInView ? { y: 0, opacity: 1 } : { y: 100, opacity: 0 }}
-              transition={{ duration: 1, delay: 0.9, ease: "easeOut" }}
-            >
+            <div className="p-8 border border-omnis-gray/20">
               <h3 className="text-xl font-bold mb-4 uppercase">
                 SUSTAINABILITY
               </h3>
@@ -150,15 +133,10 @@ const About = () => {
                 sustainability informs every decision we make. Our goal is to
                 create garments that not only look good but do good.
               </p>
-            </motion.div>
+            </div>
           </div>
 
-          <motion.div
-            className="text-center max-w-3xl mx-auto mb-20"
-            initial={{ y: 100, opacity: 0 }}
-            animate={isInView ? { y: 0, opacity: 1 } : { y: 100, opacity: 0 }}
-            transition={{ duration: 1, delay: 0.6, ease: "easeOut" }}
-          >
+          <div className="text-center max-w-3xl mx-auto mb-20">
             <h2 className="text-2xl font-bold mb-6 uppercase tracking-tight">
               OUR VISION
             </h2>
@@ -176,21 +154,16 @@ const About = () => {
               substance in style."
             </p>
             <p className="mt-4 text-omnis-lightgray">— Ronnie Issa, Founder</p>
-          </motion.div>
+          </div>
 
-          <motion.div
-            className="grid grid-cols-1 md:grid-cols-2 gap-16"
-            initial={{ y: 100, opacity: 0 }}
-            animate={isInView ? { y: 0, opacity: 1 } : { y: 100, opacity: 0 }}
-            transition={{ duration: 1, delay: 1.0, ease: "easeOut" }}
-          >
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-16">
             <div className="h-[500px] relative overflow-hidden">
-              <LazyImage
+              <img
                 src="/images/about/team.jpg"
                 alt="OMNIS Team"
-                imgClassName="w-full h-full object-cover object-center"
-                wrapperClassName="w-full h-full"
+                className="w-full h-full object-cover object-center"
                 style={{ filter: "grayscale(100%)" }}
+                loading="eager"
               />
             </div>
 
@@ -235,7 +208,7 @@ const About = () => {
                 </p>
               </div>
             </div>
-          </motion.div>
+          </div>
         </div>
       </main>
 
