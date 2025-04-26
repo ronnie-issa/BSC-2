@@ -317,20 +317,20 @@ const CheckoutPage = () => {
                 className="w-full"
               >
                 <ScrollableTabsList
-                  className="grid w-full grid-cols-2 h-12 mb-6 bg-transparent"
+                  className="grid w-full grid-cols-2 mb-6 bg-transparent"
                   ariaLabel="Checkout method options"
                 >
                   <TabsTrigger
                     value="website"
-                    className="text-base md:text-lg font-medium whitespace-nowrap px-4 py-3 data-[state=active]:bg-omnis-darkgray"
+                    className="text-base md:text-lg font-medium whitespace-nowrap px-2 py-2 flex items-center justify-center h-auto data-[state=active]:bg-omnis-darkgray"
                   >
-                    Order on Website
+                    <span className="px-2">Order on Website</span>
                   </TabsTrigger>
                   <TabsTrigger
                     value="whatsapp"
-                    className="text-base md:text-lg font-medium whitespace-nowrap px-4 py-3 data-[state=active]:bg-omnis-darkgray"
+                    className="text-base md:text-lg font-medium whitespace-nowrap px-2 py-2 flex items-center justify-center h-auto data-[state=active]:bg-omnis-darkgray"
                   >
-                    Order via WhatsApp
+                    <span className="px-2">Via WhatsApp</span>
                   </TabsTrigger>
                 </ScrollableTabsList>
 
