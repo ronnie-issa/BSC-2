@@ -100,49 +100,57 @@ src/
    - ✅ Image management through Contentful CDN
 
 3. **User Experience**
+
    - ✅ Responsive design for all devices
    - ✅ Animated transitions using Framer Motion
    - ✅ Lazy loading for improved performance
    - ✅ Newsletter subscription system
+   - ✅ Optimized logo animation with smooth transitions
+   - ✅ Improved text animations for better reliability
+   - ✅ Enhanced mobile UI with better scrolling behavior
+   - ✅ Consistent spacing and layout across all pages
+   - ✅ Removed toast notifications for cleaner shopping experience
+
+4. **UI Refinements**
+   - ✅ Improved tabs component with horizontal scrolling on mobile
+   - ✅ Consistent styling for legal pages
+   - ✅ Brutalist design implementation with clean lines and minimal styling
+   - ✅ Optimized animation durations for better user experience
 
 ### In Progress
 
-1. **Email Marketing**
+1. **Email System Migration**
 
-   - ✅ Basic newsletter subscription
+   - ✅ Basic newsletter subscription with Mailjet
    - ✅ Welcome email template
+   - ⏳ Migration from Mailjet to Resend (actively in planning)
+   - ⏳ React-based email templates
    - ⏳ Unsubscribe functionality
-   - ⏳ Email template optimization
 
 2. **Performance Optimization**
    - ✅ Image lazy loading
+   - ✅ Animation performance tuning
    - ⏳ React Suspense implementation
    - ⏳ Code splitting
-   - ⏳ Animation performance tuning
 
 ## Roadmap
 
 ### Short-term Goals
 
-1. **General**
+1. **Performance and SEO**
 
    - Continue Lighthouse audit, reach 100s across the board
-   - Change og image to OMNIS logo
-   - Bag page should be responsive
-   - in internal pages on load the navbar should have a padding of "py-5 md:py-4" on scroll it should change to "py-3 md:py-2" check background too
+   - Optimize Core Web Vitals metrics
 
 2. **Contentful CMS Enhancements**
 
-   - Organize Contentful content structure
-     - Products and attributes (Size, Variation) should each be in a separate group
-   - Add more products (at least 6 total - 3 featured, 3 non-featured)
-   - Add more variations and sizes for products
    - Implement image galleries for products (multiple images per product)
+   - Add product sorting functionality that mirrors Contentful admin sorting
 
 3. **Email System Migration and Improvements**
-   - Migrate from Mailjet to Resend for improved developer experience
+   - Complete migration from Mailjet to Resend
    - Implement React-based email templates
-   - Create welcome email and order confirmation templates
+   - Create order confirmation email template
    - Complete unsubscribe functionality
    - Implement email analytics tracking
 
@@ -155,23 +163,26 @@ src/
    - Implement conversion tracking
 
 2. **SEO Enhancements**
-   - Create structured data schema
+   - Create structured data schema for products
    - Optimize meta tags and descriptions
-   - Improve site performance metrics
+   - Implement canonical URLs
+   - Add sitemap.xml generation
 
 ### Long-term Vision
 
 1. **Framework Migration**
 
    - Evaluate migration to Next.js for improved SEO and performance
-   - Consider server-side rendering options
-   - Implement incremental static regeneration for product pages
+   - Implement server-side rendering for product pages
+   - Utilize incremental static regeneration for content updates
+   - Maintain compatibility with current Contentful integration
 
 2. **Advanced Features**
    - User accounts and order history
    - Wishlist functionality
-   - Product filtering
+   - Advanced product filtering and sorting
    - Product reviews and ratings
    - Internationalization support
    - Advanced email marketing flows and automation
    - Personalized product recommendations in emails
+   - Enhanced mobile app-like experience

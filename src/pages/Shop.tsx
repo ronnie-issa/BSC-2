@@ -71,7 +71,7 @@ const Shop = () => {
                 ) : (
                   products.map((product, index) => (
                     <motion.div
-                      key={product.id}
+                      key={`product-${product.id}-${index}`}
                       initial={{ y: 50, opacity: 0 }}
                       animate={
                         isInView ? { y: 0, opacity: 1 } : { y: 50, opacity: 0 }
