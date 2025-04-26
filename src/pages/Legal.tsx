@@ -57,27 +57,27 @@ const Legal = () => {
               >
                 <TabsTrigger
                   value="terms"
-                  className="text-sm md:text-base px-2 py-2 data-[state=active]:text-omnis-white data-[state=active]:border-b-2 data-[state=active]:border-omnis-white text-omnis-lightgray rounded-none transition-colors whitespace-nowrap flex items-center justify-center"
+                  className="text-sm md:text-base px-4 py-3 data-[state=active]:text-omnis-white data-[state=active]:border-b-2 data-[state=active]:border-omnis-white text-omnis-lightgray rounded-none transition-colors whitespace-nowrap flex items-center justify-center"
                 >
-                  <span className="px-2">Terms of Service</span>
+                  Terms of Service
                 </TabsTrigger>
                 <TabsTrigger
                   value="privacy"
-                  className="text-sm md:text-base px-2 py-2 data-[state=active]:text-omnis-white data-[state=active]:border-b-2 data-[state=active]:border-omnis-white text-omnis-lightgray rounded-none transition-colors whitespace-nowrap flex items-center justify-center"
+                  className="text-sm md:text-base px-4 py-3 data-[state=active]:text-omnis-white data-[state=active]:border-b-2 data-[state=active]:border-omnis-white text-omnis-lightgray rounded-none transition-colors whitespace-nowrap flex items-center justify-center"
                 >
-                  <span className="px-2">Privacy Policy</span>
+                  Privacy Policy
                 </TabsTrigger>
                 <TabsTrigger
                   value="returns"
-                  className="text-sm md:text-base px-2 py-2 data-[state=active]:text-omnis-white data-[state=active]:border-b-2 data-[state=active]:border-omnis-white text-omnis-lightgray rounded-none transition-colors whitespace-nowrap flex items-center justify-center"
+                  className="text-sm md:text-base px-4 py-3 data-[state=active]:text-omnis-white data-[state=active]:border-b-2 data-[state=active]:border-omnis-white text-omnis-lightgray rounded-none transition-colors whitespace-nowrap flex items-center justify-center"
                 >
-                  <span className="px-2">Return Policy</span>
+                  Return Policy
                 </TabsTrigger>
                 <TabsTrigger
                   value="accessibility"
-                  className="text-sm md:text-base px-2 py-2 data-[state=active]:text-omnis-white data-[state=active]:border-b-2 data-[state=active]:border-omnis-white text-omnis-lightgray rounded-none transition-colors whitespace-nowrap flex items-center justify-center"
+                  className="text-sm md:text-base px-4 py-3 data-[state=active]:text-omnis-white data-[state=active]:border-b-2 data-[state=active]:border-omnis-white text-omnis-lightgray rounded-none transition-colors whitespace-nowrap flex items-center justify-center"
                 >
-                  <span className="px-2">Accessibility</span>
+                  Accessibility
                 </TabsTrigger>
               </ScrollableTabsList>
 

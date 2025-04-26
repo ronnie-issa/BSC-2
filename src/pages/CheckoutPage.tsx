@@ -314,15 +314,15 @@ const CheckoutPage = () => {
                 <TabsList className="grid w-full grid-cols-2 mb-6 bg-transparent">
                   <TabsTrigger
                     value="website"
-                    className="text-base md:text-lg font-medium whitespace-nowrap px-2 py-2 flex items-center justify-center h-auto data-[state=active]:bg-omnis-darkgray"
+                    className="text-base md:text-lg font-medium whitespace-nowrap px-4 py-3 flex items-center justify-center h-auto data-[state=active]:bg-omnis-darkgray"
                   >
-                    <span className="px-2">Order on Website</span>
+                    Order on Website
                   </TabsTrigger>
                   <TabsTrigger
                     value="whatsapp"
-                    className="text-base md:text-lg font-medium whitespace-nowrap px-2 py-2 flex items-center justify-center h-auto data-[state=active]:bg-omnis-darkgray"
+                    className="text-base md:text-lg font-medium whitespace-nowrap px-4 py-3 flex items-center justify-center h-auto data-[state=active]:bg-omnis-darkgray"
                   >
-                    <span className="px-2">Via WhatsApp</span>
+                    Via WhatsApp
                   </TabsTrigger>
                 </TabsList>
 
