@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { ShoppingBag } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useProductContext } from "@/contexts/ProductContext";
@@ -47,7 +47,17 @@ const Navbar = ({ scrollY = 0, showLogoEffect = false }: NavbarProps) => {
     setShouldOpenFromAddToBag(false);
   }, [location]);
 
-  const toggleMenu = () => setIsOpen(!isOpen);
+  const toggleMenu = () => {
+    const newIsOpen = !isOpen;
+    setIsOpen(newIsOpen);
+
+    // Add or remove a class from the body to track mobile menu state
+    if (newIsOpen) {
+      document.body.classList.add("mobile-menu-open");
+    } else {
+      document.body.classList.remove("mobile-menu-open");
+    }
+  };
 
   // Listen for the addToCart event
   useEffect(() => {
@@ -474,26 +484,22 @@ const MobileNavLink = ({
   onClick: () => void;
   children: React.ReactNode;
 }) => {
-  // Handle click with a small delay to ensure the navigation completes
+  const navigate = useNavigate();
+
+  // Handle click with a small delay to ensure the menu closes before navigation
   const handleClick = (e: React.MouseEvent) => {
     e.preventDefault(); // Prevent default to handle navigation manually
 
     // First close the menu
     onClick();
 
-    // Use a longer delay for the About page to ensure it loads properly
-    const delay = to === "/about" ? 300 : 50;
-
-    // Then navigate after the delay
+    // Use a delay to ensure the menu transition completes before navigation
+    // This prevents the white flash by ensuring the menu fade-out is complete
     setTimeout(() => {
-      // For the About page, use a different approach
-      if (to === "/about") {
-        // Force a clean navigation to the About page
-        window.location.replace(to);
-      } else {
-        window.location.href = to; // Use direct location change for other pages
-      }
-    }, delay);
+      // Use React Router's navigation instead of direct window.location changes
+      // This prevents full page reloads and maintains the SPA experience
+      navigate(to);
+    }, 300); // Use a consistent 300ms delay for all pages to match the menu transition
   };
 
   return (
