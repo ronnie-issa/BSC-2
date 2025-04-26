@@ -30,6 +30,11 @@
     display: none;
     /* Chrome, Safari and Opera */
   }
+
+  /* Custom letter spacing */
+  .tracking-custom {
+    letter-spacing: 0.4em;
+  }
 }
 
 @layer base {
@@ -106,7 +111,7 @@
   }
 
   .section {
-    @apply py-20 md:py-28 px-6 md:px-10 overflow-hidden;
+    @apply py-28 px-10 overflow-hidden;
   }
 
   .reveal {

@@ -61,7 +61,7 @@ const HeroSection = () => {
             initial="hidden"
             animate="visible"
             variants={headingAnimation.containerVariants}
-            className="text-4xl md:text-6xl lg:text-7xl font-black mb-6 leading-tight tracking-tighter"
+            className="text-4xl md:text-6xl lg:text-7xl font-medium mb-6 leading-tight tracking-custom"
           >
             <motion.span
               variants={headingAnimation.childVariants}
@@ -72,10 +72,10 @@ const HeroSection = () => {
           </motion.h1>
 
           <p className="text-omnis-lightgray text-lg md:text-xl max-w-2xl mx-auto mb-10 font-light">
-            A high-end streetwear collection that blends minimalist design with
-            uncompromising quality.
+            A high-end clothing brand
             <br />
-            For those who set their own standards.
+            Minimalist approach, focusing on clean lines, perfect fits, and
+            exceptional materials.
           </p>
 
           <div className="mt-16 flex justify-center">
