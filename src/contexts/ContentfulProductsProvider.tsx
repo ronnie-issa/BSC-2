@@ -75,6 +75,9 @@ export const ContentfulProductsProvider: React.FC<{
   // Function to fetch products from Contentful (wrapped in useCallback to maintain reference stability)
   const refreshProducts = useCallback(
     async (skipDebounce = false) => {
+      // Always set loading state to true immediately
+      setIsLoading(true);
+
       // Prevent multiple simultaneous refreshes
       if (isRefreshing) {
         return;
@@ -102,7 +105,7 @@ export const ContentfulProductsProvider: React.FC<{
       // Update the last refresh time
       lastRefreshRef.current = now;
 
-      // Set loading state
+      // Set loading states
       setIsRefreshing(true);
       setError(null);
 

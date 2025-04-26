@@ -188,8 +188,8 @@ let productsCache: {
   timestamp: 0
 };
 
-// Cache expiration time (5 minutes)
-const CACHE_EXPIRATION = 5 * 60 * 1000;
+// Cache expiration time (2 minutes - reduced for better responsiveness)
+const CACHE_EXPIRATION = 2 * 60 * 1000;
 
 // Function to clear all caches - useful for development and testing
 export function clearContentfulCache() {
@@ -271,7 +271,9 @@ export async function fetchAllProducts(preview = false): Promise<Product[]> {
     return products;
   } catch (error) {
     console.error('Error fetching products from Contentful:', error);
-    return [];
+    // Throw the error instead of returning an empty array
+    // This will allow the ContentfulProductsProvider to properly set the error state
+    throw error;
   }
 }
 

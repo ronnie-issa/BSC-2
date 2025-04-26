@@ -29,7 +29,7 @@ const QuantitySelector = ({
       onValueChange={(value) => onChange(parseInt(value))}
     >
       <SelectTrigger
-        className={`w-24 border-omnis-gray/30 focus:ring-0 focus:ring-offset-0 ${
+        className={`w-24 border-omnis-gray hover:border-white transition-colors focus:ring-0 focus:ring-offset-0 ${
           darkMode ? "text-black bg-white" : ""
         }`}
       >
