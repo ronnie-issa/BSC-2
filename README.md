@@ -145,7 +145,6 @@ src/
 2. **Contentful CMS Enhancements**
 
    - Implement image galleries for products (multiple images per product)
-   - Add product sorting functionality that mirrors Contentful admin sorting
 
 3. **Email System Migration and Improvements**
    - Complete migration from Mailjet to Resend
@@ -186,3 +185,16 @@ src/
    - Advanced email marketing flows and automation
    - Personalized product recommendations in emails
    - Enhanced mobile app-like experience
+
+### Extra
+
+**Contentful: Multiple Images Per Variation**
+
+For a more advanced setup with multiple images per variation:
+
+1. Create a "Variation Gallery" content type with:
+
+   - A reference to a Variation
+   - A media field for multiple images
+
+2. Update your code to handle multiple images per variation, enabling image galleries for each color.

@@ -77,7 +77,6 @@ export const ContentfulProductsProvider: React.FC<{
     async (skipDebounce = false) => {
       // Prevent multiple simultaneous refreshes
       if (isRefreshing) {
-        console.log("Refresh already in progress, skipping...");
         return;
       }
 
@@ -87,8 +86,6 @@ export const ContentfulProductsProvider: React.FC<{
         !skipDebounce &&
         now - lastRefreshRef.current < MIN_REFRESH_INTERVAL
       ) {
-        console.log("Refresh called too frequently, debouncing...");
-
         // Clear any existing timer
         if (debounceTimerRef.current) {
           clearTimeout(debounceTimerRef.current);
@@ -96,7 +93,6 @@ export const ContentfulProductsProvider: React.FC<{
 
         // Set a new timer
         debounceTimerRef.current = setTimeout(() => {
-          console.log("Executing debounced refresh...");
           refreshProducts(true); // Skip debounce on the retry
         }, MIN_REFRESH_INTERVAL);
 
@@ -111,18 +107,12 @@ export const ContentfulProductsProvider: React.FC<{
       setError(null);
 
       try {
-        console.log("Starting to refresh products, preview mode:", previewMode);
-
         // Fetch all products
-        console.log("Calling fetchAllProducts...");
         const allProducts = await fetchAllProducts(previewMode);
-        console.log("All products fetched:", allProducts.length);
         setProducts(allProducts);
 
         // Fetch featured products
-        console.log("Calling fetchFeaturedProducts...");
         const featured = await fetchFeaturedProducts(previewMode);
-        console.log("Featured products fetched:", featured.length);
         setFeaturedProducts(featured);
       } catch (error) {
         console.error("Error refreshing products:", error);
@@ -130,7 +120,6 @@ export const ContentfulProductsProvider: React.FC<{
       } finally {
         setIsRefreshing(false);
         setIsLoading(false);
-        console.log("Finished refreshing products, loading state set to false");
       }
       // We're using isRefreshing inside the function but not including it in the deps array
       // to prevent the function from being recreated when isRefreshing changes
@@ -143,15 +132,12 @@ export const ContentfulProductsProvider: React.FC<{
   useEffect(() => {
     // Initial fetch on mount - using a small timeout to ensure it only happens once
     const initialFetchTimer = setTimeout(() => {
-      console.log("Performing initial fetch...");
       // Retry logic for initial fetch to handle potential network issues
       const attemptFetch = async (retries = 3) => {
         try {
           await refreshProducts(true); // Skip debounce for initial fetch
         } catch (err) {
-          console.error("Error during initial fetch:", err);
           if (retries > 0) {
-            console.log(`Retrying... (${retries} attempts left)`);
             setTimeout(() => attemptFetch(retries - 1), 1000);
           } else {
             setError("Failed to load products. Please refresh the page.");

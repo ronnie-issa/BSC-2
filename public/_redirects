@@ -4,6 +4,7 @@
 # Specific routes for common pages
 /shop        /shop/index.html     200
 /product/*   /product/index.html  200
+/product/*/*   /product/index.html  200
 /bag         /bag/index.html      200
 /checkout    /checkout/index.html 200
 

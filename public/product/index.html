@@ -55,10 +55,12 @@
     }
   </style>
   <script>
-    // Extract the product ID from the URL and redirect to the product page
+    // Extract the product slug or ID from the URL and redirect to the product page
     const path = window.location.pathname;
     const segments = path.split('/');
-    const productId = segments[segments.length - 1];
+
+    // The last segment could be either a slug or an ID
+    const productIdentifier = segments[segments.length - 1];
 
     // Show loading state while redirecting
     document.addEventListener('DOMContentLoaded', function () {
@@ -72,22 +74,22 @@
 
     // Small delay to ensure the loading state is shown
     setTimeout(function () {
-      if (productId && productId !== 'index.html') {
-        // Store the product ID in sessionStorage to help with page refresh
-        sessionStorage.setItem('currentProductId', productId);
+      if (productIdentifier && productIdentifier !== 'index.html') {
+        // Store the product identifier in sessionStorage to help with page refresh
+        // It could be either a slug or an ID
 
-        // Check if we have a contentfulId stored for this product
-        const contentfulId = sessionStorage.getItem('contentfulProductId');
-
-        // If we have a contentfulId, use it in the URL to ensure proper loading
-        if (contentfulId) {
-          // Add a special parameter to indicate we're using a contentful ID
-          window.location.href = '/index.html?path=/product/' + productId + '&contentfulId=' + contentfulId;
+        // Check if it looks like a slug (contains letters or hyphens)
+        if (/[a-zA-Z-]/.test(productIdentifier)) {
+          sessionStorage.setItem('currentProductSlug', productIdentifier);
         } else {
-          window.location.href = '/index.html?path=/product/' + productId;
+          // If it's numeric, treat it as an ID (for backward compatibility)
+          sessionStorage.setItem('currentProductId', productIdentifier);
         }
+
+        // Redirect to the product page
+        window.location.href = '/index.html?path=/product/' + productIdentifier;
       } else {
-        // If no product ID, redirect to shop
+        // If no product identifier, redirect to shop page
         window.location.href = '/index.html?path=/shop';
       }
     }, 300);

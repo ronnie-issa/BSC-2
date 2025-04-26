@@ -142,7 +142,7 @@ const Navbar = ({ scrollY = 0, showLogoEffect = false }: NavbarProps) => {
   const [isFullyScrolled, setIsFullyScrolled] = useState(false);
 
   // Set maxScroll to a very small value to trigger the animation with a single scroll event
-  const maxScroll = 10; // Extremely short scroll distance to trigger with a single wheel event
+  const maxScroll = 1; // Extremely short scroll distance to trigger with a single wheel event
 
   // Update isFullyScrolled state when scroll position changes
   // If logo effect is disabled, always consider it fully scrolled

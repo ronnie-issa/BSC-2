@@ -1,8 +1,9 @@
 import React, { createContext, useContext, useState, ReactNode } from "react";
 
 export interface Product {
-  id: number;
-  contentfulId?: string; // Added to store the original Contentful ID
+  id: string | number; // Changed to accept both string and number IDs
+  contentfulId?: string; // Original Contentful ID (now may be the same as id)
+  slug: string; // URL-friendly version of the product name
   name: string;
   price: number;
   image: string;
@@ -11,10 +12,12 @@ export interface Product {
   variations: {
     name: string;
     value: string;
+    image?: string; // Optional image URL for this variation
   }[];
   colors: {
     name: string;
     value: string;
+    image?: string; // Optional image URL for this color
   }[];
   sizes: {
     name: string;

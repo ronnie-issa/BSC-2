@@ -14,7 +14,7 @@ import Breadcrumbs from "@/components/Breadcrumbs";
 import SEO from "@/components/SEO";
 
 const ProductPage = () => {
-  const { id } = useParams<{ id: string }>();
+  const { id, slug } = useParams<{ id: string; slug?: string }>();
   const navigate = useNavigate();
   const { addToCart } = useProductContext();
   const { products, getProductById, refreshProducts } = useContentfulProducts();
@@ -23,6 +23,7 @@ const ProductPage = () => {
   const [selectedColor, setSelectedColor] = useState("");
   const [selectedSize, setSelectedSize] = useState("");
   const [product, setProduct] = useState<any>(null);
+  const [currentImage, setCurrentImage] = useState<string>("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [showingLoader, setShowingLoader] = useState(true); // State to control loader visibility
@@ -33,10 +34,11 @@ const ProductPage = () => {
       setLoading(true);
       setError(null);
 
-      // Get the product ID from the URL params or from sessionStorage if refreshing
+      // Get the product ID or slug from the URL params or from sessionStorage if refreshing
       const productId = id || sessionStorage.getItem("currentProductId");
+      const productSlug = slug || sessionStorage.getItem("currentProductSlug");
 
-      if (!productId) {
+      if (!productId && !productSlug) {
         setError("Product not found");
         setLoading(false);
         return;
@@ -44,14 +46,24 @@ const ProductPage = () => {
 
       try {
         // First try to find the product in the already loaded products
-        // We need to handle both numeric IDs from the URL and Contentful IDs from sessionStorage
         const foundProduct = products.find((p) => {
-          // Convert both to strings for comparison
-          const pId = p.id.toString();
-          const searchId = productId.toString();
+          // If we have a slug, try to match by slug first (preferred method)
+          if (productSlug && p.slug === productSlug) {
+            return true;
+          }
 
-          // Check if they match directly or if the product has a contentfulId that matches
-          return pId === searchId || (p as any).contentfulId === productId;
+          // Fall back to ID matching for backward compatibility
+          if (productId) {
+            // Convert both to strings for comparison
+            const pId = p.id.toString();
+            const searchId = productId.toString();
+            const contentfulId = p.contentfulId?.toString() || "";
+
+            // Check if they match directly or if the product has a contentfulId that matches
+            return pId === searchId || contentfulId === searchId;
+          }
+
+          return false;
         });
 
         if (foundProduct) {
@@ -117,14 +129,18 @@ const ProductPage = () => {
       }
     };
 
-    // Store the current product ID in sessionStorage for refresh handling
-    if (id) {
-      sessionStorage.setItem("currentProductId", id);
+    // Store the current product ID and slug in sessionStorage for refresh handling
+    if (id || slug) {
+      if (id) sessionStorage.setItem("currentProductId", id);
+      if (slug) sessionStorage.setItem("currentProductSlug", slug);
       getProduct();
-    } else if (sessionStorage.getItem("currentProductId")) {
+    } else if (
+      sessionStorage.getItem("currentProductId") ||
+      sessionStorage.getItem("currentProductSlug")
+    ) {
       getProduct();
     }
-  }, [id, products, getProductById, refreshProducts]);
+  }, [id, slug, products, getProductById, refreshProducts]);
 
   // Set default color and size when product loads
   useEffect(() => {
@@ -135,9 +151,49 @@ const ProductPage = () => {
       if (product.sizes.length > 0) {
         setSelectedSize(product.sizes[0].value);
       }
+      // Set the default image
+      setCurrentImage(product.image);
     }
     // No need to scroll to top here as ScrollToTop component handles it
   }, [product]);
+
+  // Update the current image when the selected color changes
+  useEffect(() => {
+    if (product && selectedColor) {
+      // First, find the color name that corresponds to the selected color value
+      const selectedColorName = product.colors.find(
+        (c) => c.value === selectedColor
+      )?.name;
+
+      if (selectedColorName) {
+        // Then find the variation with that name
+        const variation = product.variations.find(
+          (v) => v.name === selectedColorName
+        );
+
+        // If the variation has an image, use it
+        if (variation && variation.image) {
+          console.log(
+            `Found variation image for ${selectedColorName}:`,
+            variation.image
+          );
+          setCurrentImage(variation.image);
+        } else {
+          // Fall back to the default product image
+          console.log(
+            `No variation image found for ${selectedColorName}, using default`
+          );
+          setCurrentImage(product.image);
+        }
+      } else {
+        // If no color name found, use default image
+        console.log(
+          `No color name found for value ${selectedColor}, using default image`
+        );
+        setCurrentImage(product.image);
+      }
+    }
+  }, [product, selectedColor]);
 
   // Effect to ensure the loading screen appears for at least 1 second
   useEffect(() => {
@@ -316,7 +372,7 @@ const ProductPage = () => {
               { label: "SHOP", path: "/shop" },
               {
                 label: product.name.toUpperCase(),
-                path: `/product/${product.id}`,
+                path: `/product/${product.slug}`,
               },
             ]}
           />
@@ -326,9 +382,9 @@ const ProductPage = () => {
             <div className="aspect-[3/4] bg-omnis-darkgray">
               <img
                 src={
-                  product.image.startsWith("//")
-                    ? `https:${product.image}`
-                    : product.image
+                  currentImage.startsWith("//")
+                    ? `https:${currentImage}`
+                    : currentImage
                 }
                 alt={product.name}
                 className="w-full h-full object-cover"
@@ -337,8 +393,10 @@ const ProductPage = () => {
 
             {/* Product details */}
             <div className="flex flex-col">
-              <h1 className="text-3xl md:text-4xl font-bold">{product.name}</h1>
-              <p className="text-2xl mt-2 mb-6">${product.price.toFixed(2)}</p>
+              <h1 className="text-3xl md:text-4xl font-bold mb-2">
+                {product.name}
+              </h1>
+              <p className="text-2xl mb-6">${product.price.toFixed(2)}</p>
 
               <div className="border-t border-omnis-gray pt-6 mb-6">
                 <div className="text-omnis-lightgray mb-8">

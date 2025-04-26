@@ -46,6 +46,8 @@ const App = () => (
                 <Route path="/sizing" element={<Sizing />} />
                 <Route path="/help" element={<Help />} />
                 <Route path="/legal" element={<Legal />} />
+                <Route path="/product/:slug" element={<ProductPage />} />
+                {/* Keep the old route for backward compatibility */}
                 <Route path="/product/:id" element={<ProductPage />} />
                 <Route path="/bag" element={<BagPage />} />
                 <Route path="/checkout" element={<CheckoutPage />} />

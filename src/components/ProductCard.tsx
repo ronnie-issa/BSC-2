@@ -15,13 +15,13 @@ const ProductCard = ({ product }: ProductCardProps) => {
 
   return (
     <Link
-      to={`/product/${product.id}`}
+      to={`/product/${product.slug}`}
       className="block group"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       aria-label={`View ${product.name}, $${product.price}`}
     >
-      <div className="relative overflow-hidden mb-4">
+      <div className="relative overflow-hidden mb-1 sm:mb-4">
         <motion.div
           animate={{
             scale: isHovered ? 1.1 : 1,
