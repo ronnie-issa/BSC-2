@@ -1,7 +1,7 @@
-import { useRef, useState, useEffect } from "react";
+import { useRef } from "react";
 import { ArrowDown } from "lucide-react";
 import { Link } from "react-router-dom";
-import { motion, useAnimation, useInView } from "@/lib/framer";
+import { motion } from "@/lib/framer";
 import { useSplitTextAnimation } from "@/lib/framer";
 
 const HeroSection = () => {
@@ -13,26 +13,9 @@ const HeroSection = () => {
     duration: 0.8,
   });
 
-  // Subheading animation
-  const subHeadingRef = useRef<HTMLParagraphElement>(null);
-  const subHeadingInView = useInView(subHeadingRef, { once: true });
-  const subHeadingControls = useAnimation();
+  // Removed complex subheading animation
 
-  // Simple state for scroll position
-  const [scrollY, setScrollY] = useState(0);
-
-  // Update scroll position
-  useEffect(() => {
-    const handleScroll = () => {
-      setScrollY(window.scrollY);
-    };
-
-    // Set initial scroll position
-    handleScroll();
-
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  // Removed scroll position tracking
 
   // Arrow animation
   const arrowVariants = {
@@ -46,18 +29,7 @@ const HeroSection = () => {
     },
   };
 
-  // Trigger subheading animation when in view
-  if (subHeadingInView) {
-    subHeadingControls.start({
-      y: 0,
-      opacity: 1,
-      transition: {
-        duration: 0.8,
-        delay: 0.5,
-        ease: "easeOut",
-      },
-    });
-  }
+  // Removed subheading animation trigger
 
   return (
     <section
@@ -99,17 +71,12 @@ const HeroSection = () => {
             </motion.span>
           </motion.h1>
 
-          <motion.p
-            ref={subHeadingRef}
-            initial={{ y: 20, opacity: 0 }}
-            animate={subHeadingControls}
-            className="text-omnis-lightgray text-lg md:text-xl max-w-2xl mx-auto mb-10 font-light"
-          >
+          <p className="text-omnis-lightgray text-lg md:text-xl max-w-2xl mx-auto mb-10 font-light">
             A high-end streetwear collection that blends minimalist design with
             uncompromising quality.
             <br />
             For those who set their own standards.
-          </motion.p>
+          </p>
 
           <div className="mt-16 flex justify-center">
             <Link

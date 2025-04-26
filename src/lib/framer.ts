@@ -13,7 +13,7 @@ import {
 // Common animation variants
 export const fadeIn = (
   delay: number = 0,
-  duration: number = 0.8
+  duration: number = 0.4
 ): Variants => ({
   hidden: {
     opacity: 0,
@@ -46,7 +46,7 @@ export const staggerChildren = (
 
 export const textReveal = (
   delay: number = 0,
-  duration: number = 0.8
+  duration: number = 0.4
 ): Variants => ({
   hidden: {
     clipPath: "inset(0 100% 0 0)",
@@ -63,7 +63,7 @@ export const textReveal = (
 
 export const imageReveal = (
   delay: number = 0,
-  duration: number = 0.8
+  duration: number = 0.4
 ): Variants => ({
   hidden: {
     scale: 1.2,
@@ -100,7 +100,7 @@ export const useRevealAnimation = (
     y: 50,
     x: 0,
     opacity: 0,
-    duration: 0.8,
+    duration: 0.4,
     threshold: 0.2,
     once: true,
   };
@@ -153,7 +153,7 @@ export const useImageRevealAnimation = (
 
   const defaults = {
     delay: 0,
-    duration: 0.8,
+    duration: 0.4,
     threshold: 0.2,
     once: true,
   };
@@ -206,7 +206,7 @@ export const useTextMaskRevealAnimation = (
 
   const defaults = {
     delay: 0,
-    duration: 1,
+    duration: 0.4,
     threshold: 0.2,
     once: true,
   };
@@ -310,7 +310,7 @@ export const useSplitTextAnimation = (
   const defaults = {
     delay: 0,
     stagger: 0.02,
-    duration: 0.8,
+    duration: 0.4,
     threshold: 0.2,
     once: true,
   };

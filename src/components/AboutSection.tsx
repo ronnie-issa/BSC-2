@@ -12,9 +12,8 @@ import { Button } from "@/components/ui/button";
 
 const AboutSection = () => {
   const title = useRevealAnimation({ y: 50 });
-  const text = useRevealAnimation({ y: 50, delay: 0.2 });
   const image = useImageRevealAnimation();
-  const textMask = useTextMaskRevealAnimation();
+  const textMask = useTextMaskRevealAnimation({ duration: 0.8 });
 
   return (
     <section id="about" className="section bg-omnis-black">
@@ -32,12 +31,7 @@ const AboutSection = () => {
               <div className="w-20 h-0.5 bg-omnis-white mb-8"></div>
             </motion.div>
 
-            <motion.div
-              ref={text.ref}
-              initial={text.initial}
-              animate={text.animate}
-              className="space-y-6 text-omnis-lightgray"
-            >
+            <div className="space-y-6 text-omnis-lightgray">
               <p>
                 OMNIS was created with a singular vision in mind: to bridge the
                 gap between high fashion and streetwear without compromise. Our
@@ -50,7 +44,7 @@ const AboutSection = () => {
                 to be a statement piece in itself, requiring no additional
                 embellishment.
               </p>
-            </motion.div>
+            </div>
 
             <motion.div
               ref={textMask.containerRef}
@@ -69,7 +63,7 @@ const AboutSection = () => {
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.8, duration: 0.6 }}
+              transition={{ delay: 0.4, duration: 0.4 }}
             >
               <Link
                 to="/about"
@@ -77,10 +71,10 @@ const AboutSection = () => {
               >
                 <Button
                   variant="outline"
-                  className="mt-4 border-omnis-white text-omnis-white hover:bg-omnis-white hover:text-omnis-black transition-all duration-300 group px-6 py-3"
+                  className="mt-4 border-omnis-white text-omnis-white hover:bg-omnis-white hover:text-omnis-black transition-all duration-200 group px-6 py-3"
                 >
                   LEARN MORE ABOUT US
-                  <ArrowRight className="ml-2 h-4 w-4 transform transition-transform duration-300 group-hover:translate-x-1" />
+                  <ArrowRight className="ml-2 h-4 w-4 transform transition-transform duration-200 group-hover:translate-x-1" />
                 </Button>
               </Link>
             </motion.div>
