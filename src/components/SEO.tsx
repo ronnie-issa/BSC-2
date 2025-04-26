@@ -1,5 +1,5 @@
-import { HelmetProvider, Helmet } from 'react-helmet-async';
-import { ReactNode } from 'react';
+import { HelmetProvider, Helmet } from "react-helmet-async";
+import { ReactNode } from "react";
 
 interface SEOProps {
   title?: string;
@@ -7,22 +7,20 @@ interface SEOProps {
   children?: ReactNode;
 }
 
-export const SEOProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  return (
-    <HelmetProvider>
-      {children}
-    </HelmetProvider>
-  );
+export const SEOProvider: React.FC<{ children: ReactNode }> = ({
+  children,
+}) => {
+  return <HelmetProvider>{children}</HelmetProvider>;
 };
 
-export const SEO: React.FC<SEOProps> = ({ 
-  title = 'OMNIS | True in Form', 
-  description = 'OMNIS - A high-end streetwear brand blending minimalist design with uncompromising quality',
-  children 
+export const SEO: React.FC<SEOProps> = ({
+  title = "OMNIS | True in Form",
+  description = "OMNIS - A high-end streetwear brand blending minimalist design with uncompromising quality",
+  children,
 }) => {
   // Construct full title with brand name if not already included
-  const fullTitle = title.includes('OMNIS') ? title : `${title} | OMNIS`;
-  
+  const fullTitle = title.includes("OMNIS") ? title : `${title} | OMNIS`;
+
   return (
     <Helmet>
       <title>{fullTitle}</title>
