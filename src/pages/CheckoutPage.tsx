@@ -244,13 +244,11 @@ const CheckoutPage = () => {
             ]}
           />
 
-          <h1 className="text-3xl font-bold mb-8">Checkout</h1>
-
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
             {/* Order summary */}
             <div className="lg:col-span-1 order-2 lg:order-1">
               <div className="bg-omnis-darkgray p-6">
-                <h2 className="text-xl font-bold mb-4">Order Summary</h2>
+                <h1 className="text-xl font-bold mb-4">Order Summary</h1>
 
                 <div className="space-y-4 mb-6">
                   {bag.map((item, index) => (
