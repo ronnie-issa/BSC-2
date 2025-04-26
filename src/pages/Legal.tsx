@@ -87,7 +87,7 @@ const Legal = () => {
 
               <TabsContent
                 value="terms"
-                className="text-omnis-lightgray space-y-6 mt-10 md:mt-16"
+                className="text-omnis-lightgray space-y-6 mt-8"
               >
                 <section>
                   <h2 className="text-xl font-bold text-omnis-white mb-4">
