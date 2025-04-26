@@ -141,8 +141,8 @@ const Navbar = ({ scrollY = 0, showLogoEffect = false }: NavbarProps) => {
   // Track if we're fully scrolled for logo height calculations
   const [isFullyScrolled, setIsFullyScrolled] = useState(false);
 
-  // Calculate responsive maxScroll value based on screen size - much shorter for quick transition
-  const maxScroll = windowWidth < 768 ? 50 : 80; // Very short scroll distance for quick transition
+  // Set maxScroll to a very small value to trigger the animation with a single scroll event
+  const maxScroll = 10; // Extremely short scroll distance to trigger with a single wheel event
 
   // Update isFullyScrolled state when scroll position changes
   // If logo effect is disabled, always consider it fully scrolled
@@ -167,8 +167,8 @@ const Navbar = ({ scrollY = 0, showLogoEffect = false }: NavbarProps) => {
 
   // Calculate scale - from initialScale (large) to finalScale (navbar size)
   // If logo effect is disabled, always use the final scale
-  // Use easeOutQuad easing for smoother transition
-  const easeOutQuad = (t: number) => t * (2 - t);
+  // Use easeOutExpo easing for smoother transition with a quick start and gentle finish
+  const easeOutExpo = (t: number) => (t === 1 ? 1 : 1 - Math.pow(2, -10 * t));
 
   // For mobile, once the logo is collapsed, prevent it from scaling back up
   // For desktop, allow normal scaling behavior
@@ -176,7 +176,7 @@ const Navbar = ({ scrollY = 0, showLogoEffect = false }: NavbarProps) => {
   const logoScale = showLogoEffect
     ? windowWidth < 768 && (isFullyScrolled || scrolled)
       ? finalScale // Keep at final scale once fully scrolled or when navbar is in scrolled state
-      : initialScale - easeOutQuad(progress) * (initialScale - finalScale)
+      : initialScale - easeOutExpo(progress) * (initialScale - finalScale)
     : finalScale;
 
   // Calculate Y position - responsive based on screen width
@@ -185,12 +185,12 @@ const Navbar = ({ scrollY = 0, showLogoEffect = false }: NavbarProps) => {
 
   // When fully scrolled (progress = 1), we want the logo to be vertically centered
   // If logo effect is disabled, always use 0 for Y position
-  // Use the same easeOutQuad easing for smoother transition
+  // Use the same easeOutExpo easing for smoother transition
   // For mobile, ensure the logo is vertically centered when collapsed
   const logoY = showLogoEffect
     ? windowWidth < 768 && (isFullyScrolled || scrolled)
       ? 0 // Keep at 0 (vertically centered) once fully scrolled or when navbar is in scrolled state
-      : initialY * (1 - easeOutQuad(progress))
+      : initialY * (1 - easeOutExpo(progress))
     : 0;
 
   // We don't need logoX anymore as we're using CSS centering
@@ -218,7 +218,7 @@ const Navbar = ({ scrollY = 0, showLogoEffect = false }: NavbarProps) => {
                 style={{
                   transform: `translateY(${logoY}px) scale(${logoScale})`,
                   transformOrigin: "center center",
-                  transition: "transform 0.2s cubic-bezier(0.25, 0.1, 0.25, 1)",
+                  transition: "transform 0.3s cubic-bezier(0.16, 1, 0.3, 1)",
                 }}
                 className="relative"
               >
