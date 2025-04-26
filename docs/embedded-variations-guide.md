@@ -5,12 +5,14 @@ This guide explains how to migrate from referenced variations to embedded variat
 ## Why Embedded Variations?
 
 The current approach uses referenced variations, which means:
+
 - Each variation (like "Black" or "White") is a separate entry in Contentful
 - Multiple products link to the same variation entries
 - When you view a variation, it shows links to all products that use it
 - It's difficult to have product-specific variation images
 
 The embedded variations approach solves these issues by:
+
 - Storing variations directly within each product as a JSON object
 - Allowing each product to have its own unique variations with their own images
 - Eliminating the need for separate variation entries
@@ -28,6 +30,7 @@ The embedded variations approach solves these issues by:
 6. Save the changes
 
 The JSON structure should look like this:
+
 ```json
 [
   {
@@ -61,6 +64,7 @@ The JSON structure should look like this:
 #### Option B: Manual Migration
 
 For each product:
+
 1. Edit the product entry
 2. For each linked variation, note its name, value, and image URL
 3. Create a JSON array in the new embeddedVariations field with this data
@@ -71,6 +75,7 @@ For each product:
 The code has been updated to use embedded variations if they exist, and fall back to referenced variations if they don't. This allows for a gradual migration.
 
 To test:
+
 1. Add embedded variations to a few products
 2. View those products on your website
 3. Verify that the variations display correctly
@@ -79,12 +84,14 @@ To test:
 ### 4. Complete the Migration
 
 Once you've verified that everything works correctly:
+
 1. Migrate all remaining products to use embedded variations
 2. You can keep the referenced variations field for backward compatibility, but it's no longer needed
 
 ## Troubleshooting
 
 If you encounter issues:
+
 1. Check the browser console for errors
 2. Verify that your JSON structure matches the expected format
 3. Make sure all image URLs are valid
@@ -96,3 +103,16 @@ If you encounter issues:
 - **Maintainability**: Easier to manage product-specific variations
 - **Performance**: Fewer API calls needed to fetch product data
 - **Flexibility**: Can easily add or modify variations for specific products without affecting others
+
+## Advanced
+
+**Contentful: Multiple Images Per Variation**
+
+For a more advanced setup with multiple images per variation:
+
+1. Create a "Variation Gallery" content type with:
+
+   - A reference to a Variation
+   - A media field for multiple images
+
+2. Update your code to handle multiple images per variation, enabling image galleries for each color.
