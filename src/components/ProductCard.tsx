@@ -21,7 +21,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
       onMouseLeave={() => setIsHovered(false)}
       aria-label={`View ${product.name}, $${product.price}`}
     >
-      <div className="relative overflow-hidden mb-1 sm:mb-4">
+      <div className="relative overflow-hidden mb-0 sm:mb-2">
         <motion.div
           animate={{
             scale: isHovered ? 1.1 : 1,

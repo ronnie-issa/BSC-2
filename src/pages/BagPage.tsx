@@ -36,7 +36,7 @@ const BagPage = () => {
     removeFromCart: removeFromBag,
     updateCartItemQuantity: updateBagItemQuantity,
     getCartTotal: getBagTotal,
-    addToCart,
+    setCart, // Use setCart to directly update the cart state
   } = useProductContext();
 
   const [helpOpen, setHelpOpen] = useState(true);
@@ -44,7 +44,7 @@ const BagPage = () => {
   const [shippingOpen, setShippingOpen] = useState(false);
 
   const handleQuantityChange = (
-    productId: number,
+    productId: string | number,
     selectedColor: string,
     selectedSize: string,
     newQuantity: number
@@ -78,7 +78,7 @@ const BagPage = () => {
   };
 
   const handleRemoveItem = (
-    productId: number,
+    productId: string | number,
     selectedColor: string,
     selectedSize: string
   ) => {
@@ -175,18 +175,36 @@ const BagPage = () => {
                                   value={item.selectedColor}
                                   onValueChange={(newColor) => {
                                     if (newColor !== item.selectedColor) {
-                                      // Remove the old item
-                                      removeFromBag(
-                                        item.product.id,
-                                        item.selectedColor
+                                      // Create a new cart with the updated item
+                                      const updatedCart = bag.map(
+                                        (cartItem) => {
+                                          if (
+                                            cartItem.product.id ===
+                                              item.product.id &&
+                                            cartItem.selectedColor ===
+                                              item.selectedColor &&
+                                            cartItem.selectedSize ===
+                                              item.selectedSize
+                                          ) {
+                                            // Return the updated item
+                                            return {
+                                              ...cartItem,
+                                              selectedColor: newColor,
+                                            };
+                                          }
+                                          return cartItem;
+                                        }
                                       );
-                                      // Add a new item with the new color
-                                      addToCart(
-                                        item.product,
-                                        item.quantity,
-                                        newColor,
-                                        item.selectedSize
+
+                                      // Update localStorage directly
+                                      localStorage.setItem(
+                                        "omnisCart",
+                                        JSON.stringify(updatedCart)
                                       );
+
+                                      // Update the cart state without triggering addToCartEvent
+                                      setCart(updatedCart);
+
                                       toast({
                                         title: "Color Updated",
                                         description: `${item.product.name} color has been updated`,
@@ -218,19 +236,36 @@ const BagPage = () => {
                                   value={item.selectedSize || ""}
                                   onValueChange={(newSize) => {
                                     if (newSize !== item.selectedSize) {
-                                      // Remove the old item
-                                      removeFromBag(
-                                        item.product.id,
-                                        item.selectedColor,
-                                        item.selectedSize
+                                      // Create a new cart with the updated item
+                                      const updatedCart = bag.map(
+                                        (cartItem) => {
+                                          if (
+                                            cartItem.product.id ===
+                                              item.product.id &&
+                                            cartItem.selectedColor ===
+                                              item.selectedColor &&
+                                            cartItem.selectedSize ===
+                                              item.selectedSize
+                                          ) {
+                                            // Return the updated item
+                                            return {
+                                              ...cartItem,
+                                              selectedSize: newSize,
+                                            };
+                                          }
+                                          return cartItem;
+                                        }
                                       );
-                                      // Add a new item with the new size
-                                      addToCart(
-                                        item.product,
-                                        item.quantity,
-                                        item.selectedColor,
-                                        newSize
+
+                                      // Update localStorage directly
+                                      localStorage.setItem(
+                                        "omnisCart",
+                                        JSON.stringify(updatedCart)
                                       );
+
+                                      // Update the cart state without triggering addToCartEvent
+                                      setCart(updatedCart);
+
                                       toast({
                                         title: "Size Updated",
                                         description: `${item.product.name} size has been updated`,

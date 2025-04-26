@@ -444,7 +444,7 @@ const Navbar = ({ scrollY = 0, showLogoEffect = false }: NavbarProps) => {
                 >
                   BAG{" "}
                   {bagItemCount > 0 && (
-                    <span className="inline-flex items-center justify-center ml-2 bg-red-600 text-white rounded-full h-6 w-6 text-xs">
+                    <span className="inline-flex items-center justify-center ml-2 bg-red-600 text-white rounded-full h-6 w-6 text-xs tracking-normal">
                       {bagItemCount}
                     </span>
                   )}

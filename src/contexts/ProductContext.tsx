@@ -34,6 +34,7 @@ export interface BagItem {
 
 interface ProductContextType {
   cart: BagItem[];
+  setCart: React.Dispatch<React.SetStateAction<BagItem[]>>; // Add setCart to allow direct cart updates
   addToCart: (
     product: Product,
     quantity: number,
@@ -41,12 +42,12 @@ interface ProductContextType {
     selectedSize: string
   ) => void;
   removeFromCart: (
-    productId: number,
+    productId: string | number,
     selectedColor?: string,
     selectedSize?: string
   ) => void;
   updateCartItemQuantity: (
-    productId: number,
+    productId: string | number,
     selectedColor: string,
     selectedSize: string,
     newQuantity: number
@@ -129,7 +130,7 @@ export const ProductProvider: React.FC<{ children: ReactNode }> = ({
   };
 
   const removeFromCart = (
-    productId: number,
+    productId: string | number,
     selectedColor?: string,
     selectedSize?: string
   ) => {
@@ -167,7 +168,7 @@ export const ProductProvider: React.FC<{ children: ReactNode }> = ({
   };
 
   const updateCartItemQuantity = (
-    productId: number,
+    productId: string | number,
     selectedColor: string,
     selectedSize: string,
     newQuantity: number
@@ -206,6 +207,7 @@ export const ProductProvider: React.FC<{ children: ReactNode }> = ({
     <ProductContext.Provider
       value={{
         cart,
+        setCart, // Add setCart to the context
         addToCart,
         removeFromCart,
         updateCartItemQuantity,

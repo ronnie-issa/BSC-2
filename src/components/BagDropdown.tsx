@@ -18,7 +18,7 @@ const BagDropdown = ({ onClose }: BagDropdownProps) => {
   } = useProductContext();
 
   const handleRemoveItem = (
-    productId: number,
+    productId: string | number,
     selectedColor: string,
     selectedSize: string
   ) => {
@@ -26,7 +26,7 @@ const BagDropdown = ({ onClose }: BagDropdownProps) => {
   };
 
   const handleQuantityChange = (
-    productId: number,
+    productId: string | number,
     selectedColor: string,
     selectedSize: string,
     newQuantity: number
