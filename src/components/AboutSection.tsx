@@ -71,7 +71,7 @@ const AboutSection = () => {
               >
                 <Button
                   variant="outline"
-                  className="mt-4 border-omnis-white text-omnis-white hover:bg-omnis-white hover:text-omnis-black transition-all duration-200 group px-6 py-3"
+                  className="mt-4 border-omnis-white text-omnis-white hover:bg-omnis-white hover:text-omnis-black transition-all duration-200 group h-12 px-6 py-3"
                 >
                   LEARN MORE ABOUT US
                   <ArrowRight className="ml-2 h-4 w-4 transform transition-transform duration-200 group-hover:translate-x-1" />

@@ -30,10 +30,12 @@ const buttonVariants = cva(
           "text-omnis-black underline-offset-4 hover:underline p-0 h-auto", // Black text with underline on hover
       },
       size: {
-        default: "h-10 px-4 py-2",
-        sm: "h-9 px-3",
-        lg: "h-11 px-8",
-        icon: "h-10 w-10",
+        default: "h-10 px-4 py-2", // 40px height - Standard button
+        sm: "h-8 px-3 py-1.5 text-xs", // 32px height - Small button
+        md: "h-10 px-4 py-2", // 40px height - Same as default, for explicit naming
+        lg: "h-12 px-6 py-3", // 48px height - Large button
+        xl: "h-14 px-8 py-4", // 56px height - Extra large button
+        icon: "h-10 w-10 p-2", // 40px square - Icon button
       },
     },
     defaultVariants: {
@@ -47,6 +49,16 @@ export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>,
     VariantProps<typeof buttonVariants> {
   asChild?: boolean;
+  // Add documentation for size options
+  /**
+   * Button size variants:
+   * - sm: 32px height - Small button
+   * - default/md: 40px height - Standard button
+   * - lg: 48px height - Large button
+   * - xl: 56px height - Extra large button
+   * - icon: 40px square - Icon button
+   */
+  size?: "default" | "sm" | "md" | "lg" | "xl" | "icon";
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(

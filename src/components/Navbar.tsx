@@ -162,7 +162,7 @@ const Navbar = ({ scrollY = 0, showLogoEffect = false }: NavbarProps) => {
 
   // Calculate responsive scale based on screen width
   // On mobile, use a smaller initial scale (4x instead of 8x)
-  const initialScale = windowWidth < 768 ? 3 : 8;
+  const initialScale = windowWidth < 768 ? 2.5 : 8;
   const finalScale = 1;
 
   // Calculate scale - from initialScale (large) to finalScale (navbar size)

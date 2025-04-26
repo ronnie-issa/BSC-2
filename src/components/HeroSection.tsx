@@ -81,7 +81,7 @@ const HeroSection = () => {
           <div className="mt-16 flex justify-center">
             <Link
               to="/shop"
-              className="inline-block border border-omnis-white px-8 py-4 text-sm font-medium tracking-widest hover:bg-omnis-white hover:text-omnis-black transition-all duration-300"
+              className="inline-block border border-omnis-white h-12 px-6 py-3 text-sm font-medium tracking-widest hover:bg-omnis-white hover:text-omnis-black transition-all duration-300"
               aria-label="Explore our collection of premium streetwear"
             >
               EXPLORE COLLECTION
