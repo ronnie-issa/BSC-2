@@ -18,7 +18,7 @@ const Footer = () => {
             <Link to="/">
               <h3
                 className="text-2xl font-logo font-medium mb-6 inline-block transition-all duration-300 hover:text-white hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.7)]"
-                style={{ letterSpacing: "-0.5px" }}
+                style={{ letterSpacing: "-1.8px" }}
               >
                 OMNIS
               </h3>
@@ -141,7 +141,7 @@ const Footer = () => {
             <Link to="/" className="inline-block">
               <span
                 className="font-logo font-medium transition-all duration-300 hover:text-white hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.7)]"
-                style={{ letterSpacing: "-0.5px" }}
+                style={{ letterSpacing: "-1.1px" }}
               >
                 OMNIS
               </span>

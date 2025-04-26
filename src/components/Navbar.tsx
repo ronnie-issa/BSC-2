@@ -161,8 +161,8 @@ const Navbar = ({ scrollY = 0, showLogoEffect = false }: NavbarProps) => {
   // Otherwise, use fixed values for the navbar logo
 
   // Calculate responsive scale based on screen width
-  // On mobile, use a smaller initial scale (4x instead of 8x)
-  const initialScale = windowWidth < 768 ? 2.5 : 8;
+  // On mobile, use a smaller initial scale (2x instead of 8x)
+  const initialScale = windowWidth < 768 ? 2.8 : 8;
   const finalScale = 1;
 
   // Calculate scale - from initialScale (large) to finalScale (navbar size)
@@ -178,6 +178,27 @@ const Navbar = ({ scrollY = 0, showLogoEffect = false }: NavbarProps) => {
       ? finalScale // Keep at final scale once fully scrolled or when navbar is in scrolled state
       : initialScale - easeOutExpo(progress) * (initialScale - finalScale)
     : finalScale;
+
+  // Simplified letter spacing calculation
+  // At initialScale (large logo): -3.4px
+  // At finalScale (small logo): -3.4px
+  const initialSpacing = -3.4;
+  const finalSpacing = -3.4;
+
+  // If logo is at initialScale or near it, use initialSpacing
+  // If logo is at finalScale, use finalSpacing
+  // Otherwise interpolate between the values based on current scale
+  const letterSpacing = showLogoEffect
+    ? logoScale === finalScale
+      ? `${finalSpacing}px`
+      : logoScale === initialScale || logoScale > initialScale * 0.9
+      ? `${initialSpacing}px`
+      : `${
+          finalSpacing +
+          ((logoScale - finalScale) / (initialScale - finalScale)) *
+            (initialSpacing - finalSpacing)
+        }px`
+    : `${finalSpacing}px`;
 
   // Calculate Y position - responsive based on screen width
   // Use a smaller initial Y offset on mobile to keep it in view
@@ -230,7 +251,7 @@ const Navbar = ({ scrollY = 0, showLogoEffect = false }: NavbarProps) => {
                       : "cursor-default"
                   }`}
                   style={{
-                    letterSpacing: "-0.5px",
+                    letterSpacing: letterSpacing,
                     whiteSpace: "nowrap",
                     maxHeight: isFullyScrolled
                       ? windowWidth < 768
@@ -262,7 +283,7 @@ const Navbar = ({ scrollY = 0, showLogoEffect = false }: NavbarProps) => {
                 to="/"
                 className="text-2xl sm:text-3xl md:text-5xl font-logo font-medium hover:text-white hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.7)]"
                 style={{
-                  letterSpacing: "-0.5px",
+                  letterSpacing,
                   whiteSpace: "nowrap",
                   maxHeight: windowWidth < 768 ? "40px" : "64px",
                   display: "block",

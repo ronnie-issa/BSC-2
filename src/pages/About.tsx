@@ -38,7 +38,7 @@ const About = () => {
                   Founded in 2020,{" "}
                   <span
                     className="font-logo font-medium"
-                    style={{ letterSpacing: "-0.5px" }}
+                    style={{ letterSpacing: "-1.1px" }}
                   >
                     OMNIS
                   </span>{" "}
@@ -52,7 +52,7 @@ const About = () => {
                   The name{" "}
                   <span
                     className="font-logo font-medium"
-                    style={{ letterSpacing: "-0.5px" }}
+                    style={{ letterSpacing: "-1.1px" }}
                   >
                     OMNIS
                   </span>
@@ -96,7 +96,7 @@ const About = () => {
                 Each{" "}
                 <span
                   className="font-logo font-medium"
-                  style={{ letterSpacing: "-0.5px" }}
+                  style={{ letterSpacing: "-1.1px" }}
                 >
                   OMNIS
                 </span>{" "}
@@ -128,7 +128,7 @@ const About = () => {
               "At{" "}
               <span
                 className="font-logo font-medium"
-                style={{ letterSpacing: "-0.5px" }}
+                style={{ letterSpacing: "-1.5px" }}
               >
                 OMNIS
               </span>
@@ -159,7 +159,7 @@ const About = () => {
                   Behind{" "}
                   <span
                     className="font-logo font-medium"
-                    style={{ letterSpacing: "-0.5px" }}
+                    style={{ letterSpacing: "-1.1px" }}
                   >
                     OMNIS
                   </span>{" "}
@@ -183,7 +183,7 @@ const About = () => {
                   the{" "}
                   <span
                     className="font-logo font-medium"
-                    style={{ letterSpacing: "-0.5px" }}
+                    style={{ letterSpacing: "-1.1px" }}
                   >
                     OMNIS
                   </span>{" "}
