@@ -23,7 +23,12 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  Tabs,
+  TabsContent,
+  TabsTrigger,
+  ScrollableTabsList,
+} from "@/components/ui/scrollable-tabs";
 
 const formSchema = z.object({
   fullName: z
@@ -311,14 +316,23 @@ const CheckoutPage = () => {
                 onValueChange={setCheckoutMethod}
                 className="w-full"
               >
-                <TabsList className="grid w-full grid-cols-2 h-12 mb-6">
-                  <TabsTrigger value="website" className="text-lg font-medium">
+                <ScrollableTabsList
+                  className="grid w-full grid-cols-2 h-12 mb-6 bg-transparent"
+                  ariaLabel="Checkout method options"
+                >
+                  <TabsTrigger
+                    value="website"
+                    className="text-base md:text-lg font-medium whitespace-nowrap px-4 py-3 data-[state=active]:bg-omnis-darkgray"
+                  >
                     Order on Website
                   </TabsTrigger>
-                  <TabsTrigger value="whatsapp" className="text-lg font-medium">
+                  <TabsTrigger
+                    value="whatsapp"
+                    className="text-base md:text-lg font-medium whitespace-nowrap px-4 py-3 data-[state=active]:bg-omnis-darkgray"
+                  >
                     Order via WhatsApp
                   </TabsTrigger>
-                </TabsList>
+                </ScrollableTabsList>
 
                 <TabsContent value="website" className="mt-6">
                   <Form {...form}>

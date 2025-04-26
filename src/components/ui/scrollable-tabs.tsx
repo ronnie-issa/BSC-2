@@ -3,7 +3,8 @@ import { useRef, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 
-interface ScrollableTabsListProps extends React.ComponentPropsWithoutRef<typeof TabsList> {
+interface ScrollableTabsListProps
+  extends React.ComponentPropsWithoutRef<typeof TabsList> {
   children: React.ReactNode;
   ariaLabel?: string;
 }
@@ -29,13 +30,13 @@ const ScrollableTabsList = React.forwardRef<
     // Only handle left/right arrow keys
     if (e.key === "ArrowLeft" || e.key === "ArrowRight") {
       e.preventDefault();
-      
+
       const scrollAmount = 150; // Adjust scroll amount as needed
       const direction = e.key === "ArrowLeft" ? -1 : 1;
-      
+
       container.scrollBy({
         left: scrollAmount * direction,
-        behavior: "smooth"
+        behavior: "smooth",
       });
     }
   };
@@ -43,7 +44,7 @@ const ScrollableTabsList = React.forwardRef<
   // Mouse/touch event handlers for drag scrolling
   const handleMouseDown = (e: React.MouseEvent) => {
     if (!scrollContainerRef.current) return;
-    
+
     isDragging.current = true;
     startX.current = e.pageX - scrollContainerRef.current.offsetLeft;
     scrollLeft.current = scrollContainerRef.current.scrollLeft;
@@ -51,7 +52,7 @@ const ScrollableTabsList = React.forwardRef<
 
   const handleTouchStart = (e: React.TouchEvent) => {
     if (!scrollContainerRef.current || e.touches.length !== 1) return;
-    
+
     isDragging.current = true;
     startX.current = e.touches[0].pageX - scrollContainerRef.current.offsetLeft;
     scrollLeft.current = scrollContainerRef.current.scrollLeft;
@@ -59,15 +60,20 @@ const ScrollableTabsList = React.forwardRef<
 
   const handleMouseMove = (e: MouseEvent) => {
     if (!isDragging.current || !scrollContainerRef.current) return;
-    
+
     const x = e.pageX - scrollContainerRef.current.offsetLeft;
     const walk = (x - startX.current) * 1.5; // Scroll speed multiplier
     scrollContainerRef.current.scrollLeft = scrollLeft.current - walk;
   };
 
   const handleTouchMove = (e: TouchEvent) => {
-    if (!isDragging.current || !scrollContainerRef.current || e.touches.length !== 1) return;
-    
+    if (
+      !isDragging.current ||
+      !scrollContainerRef.current ||
+      e.touches.length !== 1
+    )
+      return;
+
     const x = e.touches[0].pageX - scrollContainerRef.current.offsetLeft;
     const walk = (x - startX.current) * 1.5; // Scroll speed multiplier
     scrollContainerRef.current.scrollLeft = scrollLeft.current - walk;
@@ -106,7 +112,7 @@ const ScrollableTabsList = React.forwardRef<
   }, []);
 
   return (
-    <div 
+    <div
       className="relative overflow-hidden w-full"
       role="region"
       aria-label={ariaLabel}
@@ -114,7 +120,7 @@ const ScrollableTabsList = React.forwardRef<
       {/* Scroll indicators - optional visual cue that content is scrollable */}
       <div className="absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-omnis-black to-transparent z-10 pointer-events-none md:hidden" />
       <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-omnis-black to-transparent z-10 pointer-events-none md:hidden" />
-      
+
       {/* Scrollable container */}
       <div
         ref={scrollContainerRef}
@@ -128,8 +134,11 @@ const ScrollableTabsList = React.forwardRef<
         <TabsList
           ref={ref}
           className={cn(
-            "w-max min-w-full flex-nowrap",
-            className
+            // If grid is specified in className, preserve it but add min-width
+            // Otherwise use flex layout
+            className?.includes("grid")
+              ? `${className} min-w-full`
+              : "w-max min-w-full flex-nowrap"
           )}
           {...props}
         >
