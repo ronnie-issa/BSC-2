@@ -2,7 +2,12 @@ import { useRef } from "react";
 import { motion, useInView } from "@/lib/framer";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  Tabs,
+  TabsContent,
+  TabsTrigger,
+  ScrollableTabsList,
+} from "@/components/ui/scrollable-tabs";
 
 const Legal = () => {
   const headerRef = useRef<HTMLDivElement>(null);
@@ -46,32 +51,35 @@ const Legal = () => {
             transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
           >
             <Tabs defaultValue="terms" className="w-full">
-              <TabsList className="w-full justify-center mb-12 bg-transparent border-b border-omnis-gray/20">
+              <ScrollableTabsList
+                className="w-full justify-start md:justify-center mb-12 bg-transparent border-b border-omnis-gray/20"
+                ariaLabel="Legal and policy navigation"
+              >
                 <TabsTrigger
                   value="terms"
-                  className="text-sm md:text-base px-6 py-3 data-[state=active]:text-omnis-white data-[state=active]:border-b-2 data-[state=active]:border-omnis-white text-omnis-lightgray rounded-none transition-colors"
+                  className="text-sm md:text-base px-6 py-3 data-[state=active]:text-omnis-white data-[state=active]:border-b-2 data-[state=active]:border-omnis-white text-omnis-lightgray rounded-none transition-colors whitespace-nowrap"
                 >
                   Terms of Service
                 </TabsTrigger>
                 <TabsTrigger
                   value="privacy"
-                  className="text-sm md:text-base px-6 py-3 data-[state=active]:text-omnis-white data-[state=active]:border-b-2 data-[state=active]:border-omnis-white text-omnis-lightgray rounded-none transition-colors"
+                  className="text-sm md:text-base px-6 py-3 data-[state=active]:text-omnis-white data-[state=active]:border-b-2 data-[state=active]:border-omnis-white text-omnis-lightgray rounded-none transition-colors whitespace-nowrap"
                 >
                   Privacy Policy
                 </TabsTrigger>
                 <TabsTrigger
                   value="returns"
-                  className="text-sm md:text-base px-6 py-3 data-[state=active]:text-omnis-white data-[state=active]:border-b-2 data-[state=active]:border-omnis-white text-omnis-lightgray rounded-none transition-colors"
+                  className="text-sm md:text-base px-6 py-3 data-[state=active]:text-omnis-white data-[state=active]:border-b-2 data-[state=active]:border-omnis-white text-omnis-lightgray rounded-none transition-colors whitespace-nowrap"
                 >
                   Return Policy
                 </TabsTrigger>
                 <TabsTrigger
                   value="accessibility"
-                  className="text-sm md:text-base px-6 py-3 data-[state=active]:text-omnis-white data-[state=active]:border-b-2 data-[state=active]:border-omnis-white text-omnis-lightgray rounded-none transition-colors"
+                  className="text-sm md:text-base px-6 py-3 data-[state=active]:text-omnis-white data-[state=active]:border-b-2 data-[state=active]:border-omnis-white text-omnis-lightgray rounded-none transition-colors whitespace-nowrap"
                 >
                   Accessibility
                 </TabsTrigger>
-              </TabsList>
+              </ScrollableTabsList>
 
               <TabsContent
                 value="terms"
