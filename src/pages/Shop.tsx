@@ -37,22 +37,6 @@ const Shop = () => {
       <main className="pt-32 pb-20">
         <div className="container mx-auto relative">
           <Breadcrumbs items={[{ label: "SHOP", path: "/shop" }]} />
-          <motion.header
-            className="text-center mb-16"
-            initial={{ y: 30, opacity: 0 }}
-            animate={isInView ? { y: 0, opacity: 1 } : { y: 30, opacity: 0 }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
-          >
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 uppercase tracking-tight">
-              SHOP
-            </h1>
-            <div className="w-20 h-0.5 bg-omnis-white mx-auto mb-8"></div>
-            <p className="text-omnis-lightgray max-w-2xl mx-auto">
-              Browse our collection of premium streetwear essentials. Each piece
-              is crafted with meticulous attention to detail, ensuring
-              unparalleled quality and distinctive style.
-            </p>
-          </motion.header>
 
           {/* Mobile filter button removed */}
 

@@ -65,7 +65,7 @@ const HeroSection = () => {
       ref={heroRef}
     >
       {/* Background Image with Parallax */}
-      <motion.div
+      {/* <motion.div
         className="absolute inset-0 z-0 opacity-60"
         initial={{ opacity: 0 }}
         animate={{ opacity: 0.6 }}
@@ -77,7 +77,7 @@ const HeroSection = () => {
           backgroundPosition: "center",
           filter: "grayscale(100%) contrast(120%)",
         }}
-      />
+      /> */}
 
       {/* Gradient Overlay */}
       <div className="absolute inset-0 bg-gradient-to-b from-omnis-black via-omnis-black/70 to-omnis-black z-10" />
@@ -106,7 +106,9 @@ const HeroSection = () => {
             className="text-omnis-lightgray text-lg md:text-xl max-w-2xl mx-auto mb-10 font-light"
           >
             A high-end streetwear collection that blends minimalist design with
-            uncompromising quality. For those who set their own standards.
+            uncompromising quality.
+            <br />
+            For those who set their own standards.
           </motion.p>
 
           <div className="mt-16 flex justify-center">

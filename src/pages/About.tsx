@@ -28,28 +28,11 @@ const About = () => {
       >
         <div className="container mx-auto relative">
           <Breadcrumbs items={[{ label: "ABOUT", path: "/about" }]} />
-          <header className="text-center mb-16">
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 uppercase tracking-tight">
-              ABOUT{" "}
-              <span
-                className="font-logo font-medium"
-                style={{ letterSpacing: "-0.5px" }}
-              >
-                OMNIS
-              </span>
-            </h1>
-            <div className="w-20 h-0.5 bg-omnis-white mx-auto mb-8"></div>
-            <p className="text-omnis-lightgray max-w-2xl mx-auto">
-              Redefining the boundaries between high fashion and streetwear
-              since 2020.
-            </p>
-          </header>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-16 mb-20">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-16 my-20">
             <div>
-              <h2 className="text-2xl font-bold mb-6 uppercase tracking-tight">
+              <h1 className="text-2xl font-bold mb-6 uppercase tracking-tight">
                 OUR STORY
-              </h2>
+              </h1>
               <div className="space-y-4 text-omnis-lightgray">
                 <p>
                   Founded in 2020,{" "}

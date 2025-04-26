@@ -246,7 +246,7 @@ const Navbar = ({ scrollY = 0, showLogoEffect = false }: NavbarProps) => {
 
         {/* Regular centered navbar logo - only shown when effect is disabled */}
         {!showLogoEffect && (
-          <div className="absolute left-0 right-0 flex justify-center z-50 w-full pointer-events-none">
+          <div className="absolute left-0 right-0 flex justify-center items-center z-50 w-full h-full pointer-events-none">
             <div className="pointer-events-auto">
               <Link
                 to="/"
@@ -267,7 +267,7 @@ const Navbar = ({ scrollY = 0, showLogoEffect = false }: NavbarProps) => {
         )}
 
         {/* Flex container for navigation items */}
-        <div className="flex justify-between items-center py-2 md:py-2">
+        <div className="flex justify-between items-center h-full py-2 md:py-2">
           {/* Left side navigation */}
           <nav className="hidden md:flex items-center space-x-10">
             <NavLink to="/about">ABOUT</NavLink>
@@ -329,7 +329,7 @@ const Navbar = ({ scrollY = 0, showLogoEffect = false }: NavbarProps) => {
           >
             <PopoverTrigger asChild>
               <button
-                className="md:hidden text-omnis-white z-50 p-2 hover:bg-omnis-darkgray/20 rounded-md transition-colors relative mr-12"
+                className="md:hidden text-omnis-white z-50 p-2 hover:bg-omnis-darkgray/20 rounded-md transition-colors relative mr-12 flex items-center"
                 aria-label={`Shopping bag with ${bagItemCount} items`}
                 onClick={() => {
                   // Toggle the dropdown with a slight delay to ensure it stays open
@@ -372,7 +372,7 @@ const Navbar = ({ scrollY = 0, showLogoEffect = false }: NavbarProps) => {
           <HamburgerMenu
             isOpen={isOpen}
             onClick={toggleMenu}
-            className="md:hidden z-[101] ml-auto p-2 hover:bg-omnis-darkgray/20 rounded-md transition-colors"
+            className="md:hidden z-[101] ml-auto p-2 hover:bg-omnis-darkgray/20 rounded-md transition-colors flex items-center"
           />
 
           {/* Mobile Navigation Overlay */}
