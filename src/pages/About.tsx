@@ -28,7 +28,7 @@ const About = () => {
       >
         <div className="container mx-auto relative">
           <Breadcrumbs items={[{ label: "ABOUT", path: "/about" }]} />
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-16 my-20">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-16 my-8 sm:my-20">
             <div>
               <h1 className="text-2xl font-bold mb-6 uppercase tracking-tight">
                 OUR STORY
@@ -70,7 +70,6 @@ const About = () => {
                 src="/images/about/studio.jpg"
                 alt="OMNIS Studio"
                 className="w-full h-full object-cover object-center"
-                style={{ filter: "grayscale(100%)" }}
                 loading="eager"
               />
             </div>
@@ -147,7 +146,6 @@ const About = () => {
                 src="/images/about/team.jpg"
                 alt="OMNIS Team"
                 className="w-full h-full object-cover object-center"
-                style={{ filter: "grayscale(100%)" }}
                 loading="eager"
               />
             </div>

@@ -26,6 +26,7 @@ const ProductPage = () => {
   const [product, setProduct] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [showingLoader, setShowingLoader] = useState(true); // State to control loader visibility
 
   // Fetch product from Contentful
   useEffect(() => {
@@ -139,7 +140,27 @@ const ProductPage = () => {
     // No need to scroll to top here as ScrollToTop component handles it
   }, [product]);
 
-  if (loading) {
+  // Effect to ensure the loading screen appears for at least 1 second
+  useEffect(() => {
+    let loaderTimer: NodeJS.Timeout;
+
+    if (!loading && product) {
+      // When data is loaded, don't immediately hide the loader
+      // Keep the loader visible for a minimum of 0.6 seconds
+      loaderTimer = setTimeout(() => {
+        setShowingLoader(false);
+      }, 600); // 0.6 seconds minimum loading time
+    } else {
+      // When loading starts, show the loader
+      setShowingLoader(true);
+    }
+
+    return () => {
+      clearTimeout(loaderTimer);
+    };
+  }, [loading, product]);
+
+  if (loading || showingLoader) {
     return (
       <>
         <Navbar />
@@ -321,7 +342,6 @@ const ProductPage = () => {
                 }
                 alt={product.name}
                 className="w-full h-full object-cover"
-                style={{ filter: "grayscale(80%)" }}
               />
             </div>
 

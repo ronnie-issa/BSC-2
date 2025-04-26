@@ -48,7 +48,7 @@ const BagDropdown = ({ onClose }: BagDropdownProps) => {
       {/* Header */}
       <div className="flex items-center justify-between p-4 border-b border-gray-200">
         <h2 className="font-bold text-base sm:text-lg uppercase">
-          Added to Shopping Bag
+          Shopping Bag
         </h2>
         <button
           onClick={onClose}
@@ -80,7 +80,6 @@ const BagDropdown = ({ onClose }: BagDropdownProps) => {
                       src={item.product.image}
                       alt={item.product.name}
                       className="w-full h-full object-cover"
-                      style={{ filter: "grayscale(80%)" }}
                     />
                   </div>
 

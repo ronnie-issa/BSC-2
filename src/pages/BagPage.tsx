@@ -151,7 +151,6 @@ const BagPage = () => {
                             src={item.product.image}
                             alt={item.product.name}
                             className="w-full h-full object-cover"
-                            style={{ filter: "grayscale(80%)" }}
                           />
                         </div>
 

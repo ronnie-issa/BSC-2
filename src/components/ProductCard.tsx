@@ -33,7 +33,6 @@ const ProductCard = ({ product }: ProductCardProps) => {
             alt={product.name}
             imgClassName="w-full h-full object-cover"
             wrapperClassName="w-full h-full"
-            style={{ filter: "grayscale(100%)" }}
           />
         </motion.div>
         <div className="absolute inset-0 bg-omnis-black/30 transition-all duration-300">
