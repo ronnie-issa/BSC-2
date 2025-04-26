@@ -52,30 +52,34 @@ const Legal = () => {
           >
             <Tabs defaultValue="terms" className="w-full">
               <ScrollableTabsList
-                className="w-full justify-start md:justify-center mb-12 bg-transparent border-b border-omnis-gray/20"
+                className="w-full justify-start md:justify-center mb-8 border-b border-omnis-gray/20"
                 ariaLabel="Legal and policy navigation"
               >
                 <TabsTrigger
                   value="terms"
-                  className="text-sm md:text-base px-4 py-3 data-[state=active]:text-omnis-white data-[state=active]:border-b-2 data-[state=active]:border-omnis-white text-omnis-lightgray rounded-none transition-colors whitespace-nowrap flex items-center justify-center"
+                  className="text-sm md:text-base px-4 py-3 data-[state=active]:text-omnis-white data-[state=active]:border-b-2 data-[state=active]:border-omnis-white text-omnis-lightgray rounded-none transition-colors whitespace-nowrap flex items-center justify-center scroll-snap-align-center"
+                  style={{ scrollSnapAlign: "center" }}
                 >
                   Terms of Service
                 </TabsTrigger>
                 <TabsTrigger
                   value="privacy"
-                  className="text-sm md:text-base px-4 py-3 data-[state=active]:text-omnis-white data-[state=active]:border-b-2 data-[state=active]:border-omnis-white text-omnis-lightgray rounded-none transition-colors whitespace-nowrap flex items-center justify-center"
+                  className="text-sm md:text-base px-4 py-3 data-[state=active]:text-omnis-white data-[state=active]:border-b-2 data-[state=active]:border-omnis-white text-omnis-lightgray rounded-none transition-colors whitespace-nowrap flex items-center justify-center scroll-snap-align-center"
+                  style={{ scrollSnapAlign: "center" }}
                 >
                   Privacy Policy
                 </TabsTrigger>
                 <TabsTrigger
                   value="returns"
-                  className="text-sm md:text-base px-4 py-3 data-[state=active]:text-omnis-white data-[state=active]:border-b-2 data-[state=active]:border-omnis-white text-omnis-lightgray rounded-none transition-colors whitespace-nowrap flex items-center justify-center"
+                  className="text-sm md:text-base px-4 py-3 data-[state=active]:text-omnis-white data-[state=active]:border-b-2 data-[state=active]:border-omnis-white text-omnis-lightgray rounded-none transition-colors whitespace-nowrap flex items-center justify-center scroll-snap-align-center"
+                  style={{ scrollSnapAlign: "center" }}
                 >
                   Return Policy
                 </TabsTrigger>
                 <TabsTrigger
                   value="accessibility"
-                  className="text-sm md:text-base px-4 py-3 data-[state=active]:text-omnis-white data-[state=active]:border-b-2 data-[state=active]:border-omnis-white text-omnis-lightgray rounded-none transition-colors whitespace-nowrap flex items-center justify-center"
+                  className="text-sm md:text-base px-4 py-3 data-[state=active]:text-omnis-white data-[state=active]:border-b-2 data-[state=active]:border-omnis-white text-omnis-lightgray rounded-none transition-colors whitespace-nowrap flex items-center justify-center scroll-snap-align-center"
+                  style={{ scrollSnapAlign: "center" }}
                 >
                   Accessibility
                 </TabsTrigger>
@@ -83,7 +87,7 @@ const Legal = () => {
 
               <TabsContent
                 value="terms"
-                className="text-omnis-lightgray space-y-6"
+                className="text-omnis-lightgray space-y-6 mt-10 md:mt-16"
               >
                 <section>
                   <h2 className="text-xl font-bold text-omnis-white mb-4">
@@ -187,7 +191,7 @@ const Legal = () => {
 
               <TabsContent
                 value="privacy"
-                className="text-omnis-lightgray space-y-6"
+                className="text-omnis-lightgray space-y-6 mt-8"
               >
                 <section>
                   <h2 className="text-xl font-bold text-omnis-white mb-4">
@@ -314,7 +318,7 @@ const Legal = () => {
 
               <TabsContent
                 value="returns"
-                className="text-omnis-lightgray space-y-6"
+                className="text-omnis-lightgray space-y-6 mt-8"
               >
                 <section>
                   <h2 className="text-xl font-bold text-omnis-white mb-4">
@@ -396,7 +400,7 @@ const Legal = () => {
 
               <TabsContent
                 value="accessibility"
-                className="text-omnis-lightgray space-y-6"
+                className="text-omnis-lightgray space-y-6 mt-8"
               >
                 <section>
                   <h2 className="text-xl font-bold text-omnis-white mb-4">

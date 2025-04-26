@@ -74,6 +74,9 @@ const ScrollableTabsList = React.forwardRef<
     )
       return;
 
+    // Prevent default to avoid page scrolling while swiping tabs
+    e.preventDefault();
+
     const x = e.touches[0].pageX - scrollContainerRef.current.offsetLeft;
     const walk = (x - startX.current) * 1.5; // Scroll speed multiplier
     scrollContainerRef.current.scrollLeft = scrollLeft.current - walk;
@@ -98,7 +101,7 @@ const ScrollableTabsList = React.forwardRef<
 
     document.addEventListener("mousemove", handleMouseMove);
     document.addEventListener("mouseup", handleMouseUpEvent);
-    document.addEventListener("touchmove", handleTouchMove, { passive: true });
+    document.addEventListener("touchmove", handleTouchMove, { passive: false });
     document.addEventListener("touchend", handleMouseUpEvent);
     scrollContainer.addEventListener("mouseleave", handleMouseLeave);
 
@@ -124,7 +127,11 @@ const ScrollableTabsList = React.forwardRef<
       {/* Scrollable container */}
       <div
         ref={scrollContainerRef}
-        className="overflow-x-auto scrollbar-hide pb-3 -mb-3"
+        className="overflow-x-auto scrollbar-hide pb-3 -mb-3 scroll-smooth"
+        style={{
+          scrollSnapType: "x mandatory",
+          WebkitOverflowScrolling: "touch", // For better iOS scrolling
+        }}
         onMouseDown={handleMouseDown}
         onTouchStart={handleTouchStart}
         onKeyDown={handleKeyDown}
