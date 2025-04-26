@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
-  ArrowLeft,
   Printer,
   ChevronUp,
   ChevronDown,
@@ -213,7 +212,7 @@ const BagPage = () => {
                                     }
                                   }}
                                 >
-                                  <SelectTrigger className="w-[120px] sm:w-[140px] h-8 text-xs border-omnis-gray/30 focus:ring-0 focus:ring-offset-0 bg-transparent text-omnis-white">
+                                  <SelectTrigger className="w-[120px] sm:w-[140px] h-8 text-xs border-omnis-gray hover:border-white transition-colors focus:ring-0 focus:ring-offset-0 bg-transparent text-omnis-white">
                                     <SelectValue placeholder="Select color">
                                       {colorName}
                                     </SelectValue>
@@ -274,7 +273,7 @@ const BagPage = () => {
                                     }
                                   }}
                                 >
-                                  <SelectTrigger className="w-[120px] sm:w-[140px] h-8 text-xs border-omnis-gray/30 focus:ring-0 focus:ring-offset-0 bg-transparent text-omnis-white">
+                                  <SelectTrigger className="w-[120px] sm:w-[140px] h-8 text-xs border-omnis-gray hover:border-white transition-colors focus:ring-0 focus:ring-offset-0 bg-transparent text-omnis-white">
                                     <SelectValue placeholder="Select size">
                                       {item.selectedSize
                                         ? item.selectedSize.toUpperCase()

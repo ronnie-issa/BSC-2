@@ -17,14 +17,18 @@
 
 /* Custom utility classes */
 @layer utilities {
+
   /* Hide scrollbar but keep functionality */
   .scrollbar-hide {
-    -ms-overflow-style: none;  /* IE and Edge */
-    scrollbar-width: none;  /* Firefox */
+    -ms-overflow-style: none;
+    /* IE and Edge */
+    scrollbar-width: none;
+    /* Firefox */
   }
-  
+
   .scrollbar-hide::-webkit-scrollbar {
-    display: none;  /* Chrome, Safari and Opera */
+    display: none;
+    /* Chrome, Safari and Opera */
   }
 }
 
@@ -73,6 +77,28 @@
   body {
     @apply bg-omnis-black text-omnis-white font-sans antialiased;
     overflow-x: hidden;
+  }
+
+  /* Placeholder text color */
+  ::placeholder {
+    @apply text-omnis-lightgray;
+  }
+
+  ::-webkit-input-placeholder {
+    @apply text-omnis-lightgray;
+  }
+
+  ::-moz-placeholder {
+    @apply text-omnis-lightgray;
+    opacity: 1;
+  }
+
+  :-ms-input-placeholder {
+    @apply text-omnis-lightgray;
+  }
+
+  ::-ms-input-placeholder {
+    @apply text-omnis-lightgray;
   }
 
   h1, h2, h3, h4, h5, h6 {
