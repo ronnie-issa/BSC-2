@@ -4,6 +4,7 @@ import { motion } from "@/lib/framer";
 import { LazyImage } from "@/components/ui/lazy-image";
 import { Product } from "@/contexts/ProductContext";
 import { VisuallyHidden } from "@/components/ui/visually-hidden";
+import { Button } from "@/components/ui/button";
 
 interface ProductCardProps {
   product: Product;
@@ -14,36 +15,69 @@ const ProductCard = ({ product }: ProductCardProps) => {
   const [isHovered, setIsHovered] = useState(false);
 
   return (
-    <Link
-      to={`/product/${product.slug}`}
-      className="block group"
+    <div
+      className="block group relative"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      aria-label={`View ${product.name}, $${product.price}`}
     >
-      <div className="relative overflow-hidden mb-0 sm:mb-2">
-        <motion.div
-          animate={{
-            scale: isHovered ? 1.1 : 1,
-          }}
-          transition={{ duration: 1.2, ease: "easeOut" }}
+      <div className="relative">
+        <Link
+          to={`/product/${product.slug}`}
+          aria-label={`View ${product.name}, $${product.price}`}
+          className="block"
         >
-          <LazyImage
-            src={product.image}
-            alt={product.name}
-            imgClassName="w-full h-full object-cover"
-            wrapperClassName="w-full h-full"
-          />
+          <div className="relative overflow-hidden mb-0 sm:mb-2">
+            <motion.div
+              animate={{
+                scale: isHovered ? 1.1 : 1,
+              }}
+              transition={{ duration: 1.2, ease: "easeOut" }}
+            >
+              <LazyImage
+                src={product.image}
+                alt={product.name}
+                imgClassName="w-full h-full object-cover"
+                wrapperClassName="w-full h-full"
+              />
+            </motion.div>
+            <div className="absolute inset-0 bg-omnis-black/30 transition-all duration-300">
+              <VisuallyHidden>View {product.name} details</VisuallyHidden>
+            </div>
+          </div>
+        </Link>
+
+        {/* View button that appears on hover - positioned at the bottom of the photo */}
+        <motion.div
+          className="absolute bottom-4 left-0 right-0 flex justify-center"
+          initial={{ opacity: 0, y: 10 }}
+          animate={{
+            opacity: isHovered ? 1 : 0,
+            y: isHovered ? 0 : 10,
+          }}
+          transition={{ duration: 0.3 }}
+        >
+          <Link
+            to={`/product/${product.slug}`}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <Button
+              variant="outline"
+              size="sm"
+              className="bg-omnis-black/80 hover:bg-omnis-black border-white text-white hover:text-white tracking-widest font-bold"
+            >
+              VIEW
+            </Button>
+          </Link>
         </motion.div>
-        <div className="absolute inset-0 bg-omnis-black/30 transition-all duration-300">
-          <VisuallyHidden>View {product.name} details</VisuallyHidden>
-        </div>
       </div>
-      <h3 className="text-lg font-medium">{product.name}</h3>
-      {product.price && (
-        <p className="text-omnis-lightgray">${product.price}</p>
-      )}
-    </Link>
+
+      <Link to={`/product/${product.slug}`} className="block mt-2">
+        <h3 className="text-lg font-bold">{product.name}</h3>
+        {product.price && (
+          <p className="text-omnis-lightgray">${product.price}</p>
+        )}
+      </Link>
+    </div>
   );
 };
 

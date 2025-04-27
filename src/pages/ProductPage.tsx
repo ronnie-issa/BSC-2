@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { MessageSquare, ShoppingBag } from "lucide-react";
+import { MessageSquare, ShoppingBag, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useProductContext } from "@/contexts/ProductContext";
 import { useContentfulProducts } from "@/contexts/ContentfulProductsProvider";
@@ -27,9 +27,15 @@ const ProductPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [showingLoader, setShowingLoader] = useState(true); // State to control loader visibility
+  const [isAddingToBag, setIsAddingToBag] = useState(false); // State for Add to Bag button loading
+  const [isWhatsAppLoading, setIsWhatsAppLoading] = useState(false); // State for WhatsApp button loading
 
-  // Fetch product from Contentful
+  // Fetch product from Contentful and handle cleanup
   useEffect(() => {
+    // Reset loading states when component mounts or unmounts
+    setIsWhatsAppLoading(false);
+    setIsAddingToBag(false);
+
     const getProduct = async () => {
       setLoading(true);
       setError(null);
@@ -140,6 +146,12 @@ const ProductPage = () => {
     ) {
       getProduct();
     }
+
+    // Return cleanup function to reset loading states when component unmounts
+    return () => {
+      setIsWhatsAppLoading(false);
+      setIsAddingToBag(false);
+    };
   }, [id, slug, products, getProductById, refreshProducts]);
 
   // Set default color and size when product loads
@@ -195,16 +207,16 @@ const ProductPage = () => {
     }
   }, [product, selectedColor]);
 
-  // Effect to ensure the loading screen appears for at least 1 second
+  // Effect to ensure the loading screen appears for a minimum time
   useEffect(() => {
     let loaderTimer: NodeJS.Timeout;
 
     if (!loading && product) {
       // When data is loaded, don't immediately hide the loader
-      // Keep the loader visible for a minimum of 0.6 seconds
+      // Keep the loader visible for a minimum of 0.5 seconds
       loaderTimer = setTimeout(() => {
         setShowingLoader(false);
-      }, 600); // 0.6 seconds minimum loading time
+      }, 500); // 0.5 seconds minimum loading time
     } else {
       // When loading starts, show the loader
       setShowingLoader(true);
@@ -268,8 +280,17 @@ const ProductPage = () => {
       return;
     }
 
-    // Add to cart - the dropdown will automatically open due to the useEffect in Navbar
-    addToCart(product, quantity, selectedColor, selectedSize);
+    // Set loading state
+    setIsAddingToBag(true);
+
+    // Simulate a slight delay for better UX (users expect some processing time)
+    setTimeout(() => {
+      // Add to cart - the dropdown will automatically open due to the useEffect in Navbar
+      addToCart(product, quantity, selectedColor, selectedSize);
+
+      // Reset loading state after adding to cart
+      setIsAddingToBag(false);
+    }, 800); // 800ms delay for the animation
   };
 
   const handleBuyViaWhatsApp = () => {
@@ -281,6 +302,9 @@ const ProductPage = () => {
       });
       return;
     }
+
+    // Set loading state
+    setIsWhatsAppLoading(true);
 
     // Get the color name from the selected color value
     const colorName =
@@ -315,40 +339,58 @@ const ProductPage = () => {
       message
     )}`;
 
-    // Try to open WhatsApp in a new tab
-    const newWindow = window.open(whatsappUrl, "_blank");
+    // Add a delay to show the loading animation before opening WhatsApp
+    setTimeout(() => {
+      // Try to open WhatsApp in a new tab
+      const newWindow = window.open(whatsappUrl, "_blank");
 
-    // Check if the window was successfully opened
-    if (newWindow) {
-      toast({
-        title: "Opening WhatsApp",
-        description: "Redirecting you to WhatsApp to complete your purchase.",
-        duration: 7000, // 7 seconds
-      });
-    } else {
-      // If the window didn't open (possibly blocked or URL issues), provide alternative
-      toast({
-        title: "WhatsApp Link Issue",
-        description: `Please contact us directly on WhatsApp at +961 81 386 697 and mention ${product.name}.`,
-        variant: "destructive",
-        duration: 7000, // 7 seconds
-      });
-
-      // Copy product details to clipboard as a fallback
-      navigator.clipboard
-        .writeText(message)
-        .then(() => {
-          toast({
-            title: "Product details copied",
-            description:
-              "Product details copied to clipboard for easy sharing.",
-            duration: 7000, // 7 seconds
-          });
-        })
-        .catch(() => {
-          // If clipboard copy fails, do nothing
+      // Check if the window was successfully opened
+      if (newWindow) {
+        toast({
+          title: "Opening WhatsApp",
+          description: "Redirecting you to WhatsApp to complete your purchase.",
+          duration: 7000, // 7 seconds
         });
-    }
+
+        // Reset the loading state when the user returns to this page
+        window.addEventListener("focus", function onFocus() {
+          setIsWhatsAppLoading(false);
+          window.removeEventListener("focus", onFocus);
+        });
+
+        // Safety timeout to ensure the loading state is reset after a certain period
+        // even if the user doesn't return to the page
+        setTimeout(() => {
+          setIsWhatsAppLoading(false);
+        }, 30000); // 30 seconds timeout
+      } else {
+        // If the window didn't open (possibly blocked or URL issues), provide alternative
+        toast({
+          title: "WhatsApp Link Issue",
+          description: `Please contact us directly on WhatsApp at +961 81 386 697 and mention ${product.name}.`,
+          variant: "destructive",
+          duration: 7000, // 7 seconds
+        });
+
+        // Copy product details to clipboard as a fallback
+        navigator.clipboard
+          .writeText(message)
+          .then(() => {
+            toast({
+              title: "Product details copied",
+              description:
+                "Product details copied to clipboard for easy sharing.",
+              duration: 7000, // 7 seconds
+            });
+          })
+          .catch(() => {
+            // If clipboard copy fails, do nothing
+          });
+
+        // Reset loading state if WhatsApp didn't open
+        setIsWhatsAppLoading(false);
+      }
+    }, 800); // 800ms delay to match other buttons
   };
 
   return (
@@ -481,19 +523,39 @@ const ProductPage = () => {
                   variant="outline"
                   size="lg"
                   onClick={handleAddToBag}
+                  disabled={isAddingToBag}
                   className="border-omnis-white text-white hover:bg-omnis-white hover:text-omnis-black transition-all duration-300 flex items-center justify-center"
                 >
-                  <ShoppingBag className="mr-2 h-4 w-4" />
-                  <span className="inline-block">Add to Bag</span>
+                  {isAddingToBag ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      <span className="inline-block">Adding...</span>
+                    </>
+                  ) : (
+                    <>
+                      <ShoppingBag className="mr-2 h-4 w-4" />
+                      <span className="inline-block">Add to Bag</span>
+                    </>
+                  )}
                 </Button>
                 <Button
                   variant="secondary"
                   size="lg"
                   onClick={handleBuyViaWhatsApp}
+                  disabled={isAddingToBag || isWhatsAppLoading}
                   className="font-medium tracking-wide transition-all duration-300 flex items-center justify-center"
                 >
-                  <MessageSquare className="mr-2 h-4 w-4" />
-                  <span className="inline-block">Buy via WhatsApp</span>
+                  {isWhatsAppLoading ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      <span className="inline-block">Processing...</span>
+                    </>
+                  ) : (
+                    <>
+                      <MessageSquare className="mr-2 h-4 w-4" />
+                      <span className="inline-block">Buy via WhatsApp</span>
+                    </>
+                  )}
                 </Button>
               </div>
             </div>

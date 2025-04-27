@@ -84,26 +84,26 @@
     overflow-x: hidden;
   }
 
-  /* Placeholder text color */
+  /* Placeholder text styling */
   ::placeholder {
-    @apply text-omnis-lightgray;
+    @apply text-omnis-lightgray font-normal;
   }
 
   ::-webkit-input-placeholder {
-    @apply text-omnis-lightgray;
+    @apply text-omnis-lightgray font-normal;
   }
 
   ::-moz-placeholder {
-    @apply text-omnis-lightgray;
+    @apply text-omnis-lightgray font-normal;
     opacity: 1;
   }
 
   :-ms-input-placeholder {
-    @apply text-omnis-lightgray;
+    @apply text-omnis-lightgray font-normal;
   }
 
   ::-ms-input-placeholder {
-    @apply text-omnis-lightgray;
+    @apply text-omnis-lightgray font-normal;
   }
 
   h1, h2, h3, h4, h5, h6 {

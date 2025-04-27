@@ -93,9 +93,12 @@ const NewsletterSection = () => {
             <button
               type="submit"
               disabled={isSubmitting}
-              className="px-6 py-3 bg-omnis-white text-omnis-black font-medium hover:bg-omnis-lightgray transition-colors disabled:opacity-70 disabled:cursor-not-allowed"
+              className="relative px-6 py-3 bg-omnis-white text-omnis-black font-medium transition-transform hover:scale-[1.02] overflow-hidden group disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:scale-100"
             >
-              {isSubmitting ? "SUBMITTING..." : "SUBSCRIBE"}
+              <span className="relative z-10">
+                {isSubmitting ? "SUBMITTING..." : "SUBSCRIBE"}
+              </span>
+              <div className="absolute inset-0 bg-omnis-lightgray transform -translate-x-full group-hover:translate-x-0 transition-transform duration-300 ease-in-out" />
             </button>
           </motion.form>
 

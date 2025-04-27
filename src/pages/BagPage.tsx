@@ -6,6 +6,7 @@ import {
   ChevronDown,
   CreditCard,
   Truck,
+  Loader2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useProductContext } from "@/contexts/ProductContext";
@@ -41,6 +42,7 @@ const BagPage = () => {
   const [helpOpen, setHelpOpen] = useState(true);
   const [paymentOpen, setPaymentOpen] = useState(false);
   const [shippingOpen, setShippingOpen] = useState(false);
+  const [isCheckingOut, setIsCheckingOut] = useState(false);
 
   const handleQuantityChange = (
     productId: string | number,
@@ -411,10 +413,24 @@ const BagPage = () => {
                 <Button
                   className="w-full font-bold text-sm sm:text-base"
                   size="lg"
-                  onClick={() => navigate("/checkout")}
-                  disabled={bag.length === 0}
+                  onClick={() => {
+                    setIsCheckingOut(true);
+                    // Simulate a slight delay for better UX
+                    setTimeout(() => {
+                      navigate("/checkout");
+                      // No need to reset the loading state as we're navigating away
+                    }, 800); // 800ms delay for the animation
+                  }}
+                  disabled={bag.length === 0 || isCheckingOut}
                 >
-                  CHECKOUT
+                  {isCheckingOut ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      <span className="inline-block">Processing...</span>
+                    </>
+                  ) : (
+                    "CHECKOUT"
+                  )}
                 </Button>
 
                 {/* Add extra spacing */}

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Check, MessageSquare, ArrowLeft } from "lucide-react";
+import { Check, MessageSquare, ArrowLeft, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Input } from "@/components/ui/input";
@@ -127,6 +127,7 @@ const CheckoutPage = () => {
       return;
     }
 
+    // Set loading state
     setIsProcessing(true);
 
     // Format customer information
@@ -172,46 +173,53 @@ const CheckoutPage = () => {
       message
     )}`;
 
-    // Try to open WhatsApp in a new tab
-    const newWindow = window.open(whatsappUrl, "_blank");
+    // Add a delay to show the loading animation before opening WhatsApp
+    setTimeout(() => {
+      // Try to open WhatsApp in a new tab
+      const newWindow = window.open(whatsappUrl, "_blank");
 
-    // Check if the window was successfully opened
-    if (newWindow) {
-      toast({
-        title: "Opening WhatsApp",
-        description: "Redirecting you to WhatsApp to complete your purchase.",
-        duration: 7000, // 7 seconds
-      });
-
-      // Clear the cart and navigate to confirmation
-      clearBag();
-      navigate("/order-confirmation");
-    } else {
-      // If the window didn't open (possibly blocked or URL issues), provide alternative
-      toast({
-        title: "WhatsApp Link Issue",
-        description:
-          "Please contact us directly on WhatsApp at +961 81 386 697 with your order details.",
-        variant: "destructive",
-        duration: 7000, // 7 seconds
-      });
-
-      // Copy order details to clipboard as a fallback
-      navigator.clipboard
-        .writeText(message)
-        .then(() => {
-          toast({
-            title: "Order details copied",
-            description: "Order details copied to clipboard for easy sharing.",
-            duration: 7000, // 7 seconds
-          });
-        })
-        .catch(() => {
-          // If clipboard copy fails, do nothing
+      // Check if the window was successfully opened
+      if (newWindow) {
+        toast({
+          title: "Opening WhatsApp",
+          description: "Redirecting you to WhatsApp to complete your purchase.",
+          duration: 7000, // 7 seconds
         });
-    }
 
-    setIsProcessing(false);
+        // Clear the cart and navigate to confirmation
+        clearBag();
+        navigate("/order-confirmation");
+      } else {
+        // If the window didn't open (possibly blocked or URL issues), provide alternative
+        toast({
+          title: "WhatsApp Link Issue",
+          description:
+            "Please contact us directly on WhatsApp at +961 81 386 697 with your order details.",
+          variant: "destructive",
+          duration: 7000, // 7 seconds
+        });
+
+        // Copy order details to clipboard as a fallback
+        navigator.clipboard
+          .writeText(message)
+          .then(() => {
+            toast({
+              title: "Order details copied",
+              description:
+                "Order details copied to clipboard for easy sharing.",
+              duration: 7000, // 7 seconds
+            });
+          })
+          .catch(() => {
+            // If clipboard copy fails, do nothing
+          });
+
+        // Reset loading state if WhatsApp didn't open
+        setIsProcessing(false);
+      }
+      // Note: We don't reset isProcessing here because we're navigating away
+      // The state will be reset when the component unmounts
+    }, 800); // 800ms delay to match other buttons
   };
 
   const handleSubmit = (values: z.infer<typeof formSchema>) => {
@@ -224,11 +232,15 @@ const CheckoutPage = () => {
       return;
     }
 
+    // Set loading state
+    setIsProcessing(true);
+
     // Process the order
     // In a real app, we would send this data to a backend API
     setTimeout(() => {
       clearBag();
       navigate("/order-confirmation");
+      // No need to reset loading state as we're navigating away
     }, 1000);
   };
 
@@ -528,8 +540,16 @@ const CheckoutPage = () => {
                         type="submit"
                         className="w-full font-bold"
                         size="lg"
+                        disabled={isProcessing}
                       >
-                        Place Order
+                        {isProcessing ? (
+                          <>
+                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                            <span className="inline-block">Processing...</span>
+                          </>
+                        ) : (
+                          "Place Order"
+                        )}
                       </Button>
                     </form>
                   </Form>
@@ -541,6 +561,9 @@ const CheckoutPage = () => {
                       <form
                         onSubmit={(e) => {
                           e.preventDefault();
+                          // Prevent multiple submissions
+                          if (isProcessing) return;
+
                           const isValid = form.formState.isValid;
                           if (isValid) {
                             const values = form.getValues();
@@ -739,8 +762,21 @@ const CheckoutPage = () => {
                           size="lg"
                           disabled={isProcessing}
                         >
-                          <MessageSquare className="mr-2 h-4 w-4" />
-                          Checkout via WhatsApp
+                          {isProcessing ? (
+                            <>
+                              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                              <span className="inline-block">
+                                Processing...
+                              </span>
+                            </>
+                          ) : (
+                            <>
+                              <MessageSquare className="mr-2 h-4 w-4" />
+                              <span className="inline-block">
+                                Checkout via WhatsApp
+                              </span>
+                            </>
+                          )}
                         </Button>
                       </form>
                     </Form>

@@ -137,8 +137,9 @@ src/
 
 ### Short-term Goals
 
-1. **Performance and SEO**
+1. **Performance, SEO and Accessibility**
 
+   - Axe-core errors fix them
    - Continue Lighthouse audit, reach 100s across the board
    - Optimize Core Web Vitals metrics
 
@@ -185,3 +186,18 @@ src/
    - Advanced email marketing flows and automation
    - Personalized product recommendations in emails
    - Enhanced mobile app-like experience
+
+- SIZE GUIDE chart link on product page, or not link, chart on product page?
+- Stock item availability
+- Moving text on nav bar
+- Priced usd, lbp
+- View button on hovver product card
+- Choose artwork placement?
+- Toast slides from under the navbar
+- Add to bag button has a loading animation on click!!!!
+- About and shop buttons need to have their undeline animation fixed (closer to the text to be consistent with design system)
+- If i click subscribe and i dont have an email, it shows a please fillout this field bubble which has an ornge icon, i want this icon to be black
+- White variation product image preview not reflecting in dropdown, bagpage, and checkout, confirmation
+- View button on product card needs to be quick view feature
+- Change placeholder image
+- Add number formating on contentful for prices ($1,000)

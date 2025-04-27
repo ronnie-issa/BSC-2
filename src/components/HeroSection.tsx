@@ -33,7 +33,7 @@ const HeroSection = () => {
 
   return (
     <section
-      className="relative min-h-screen overflow-hidden flex items-center pt-24 md:pt-60"
+      className="relative min-h-screen overflow-hidden flex items-center pt-52 md:pt-60"
       ref={heroRef}
     >
       {/* Background Image with Parallax */}
@@ -63,12 +63,26 @@ const HeroSection = () => {
             variants={headingAnimation.containerVariants}
             className="text-4xl md:text-6xl lg:text-7xl font-medium mb-6 leading-tight tracking-custom"
           >
-            <motion.span
-              variants={headingAnimation.childVariants}
-              className="block"
-            >
-              TRUE IN FORM
-            </motion.span>
+            <div className="flex flex-col md:flex-row justify-center items-center space-y-4 md:space-y-0 md:space-x-4">
+              <motion.span
+                variants={headingAnimation.childVariants}
+                className="block"
+              >
+                TRUE
+              </motion.span>
+              <motion.span
+                variants={headingAnimation.childVariants}
+                className="block"
+              >
+                IN
+              </motion.span>
+              <motion.span
+                variants={headingAnimation.childVariants}
+                className="block"
+              >
+                FORM
+              </motion.span>
+            </div>
           </motion.h1>
 
           <p className="text-omnis-lightgray text-lg md:text-xl max-w-2xl mx-auto mb-10 font-light">
@@ -87,14 +101,42 @@ const HeroSection = () => {
               EXPLORE COLLECTION
             </Link>
           </div>
+
+          {/* Scroll Down Indicator - Shown in content flow on mobile */}
+          <div className="mt-8 mb-20 flex justify-center md:hidden">
+            <motion.div
+              variants={arrowVariants}
+              animate="animate"
+              className="flex flex-col items-center relative z-30"
+              role="button"
+              aria-label="Scroll down to see more content"
+              tabIndex={0}
+              onClick={() =>
+                window.scrollBy({ top: window.innerHeight, behavior: "smooth" })
+              }
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  window.scrollBy({
+                    top: window.innerHeight,
+                    behavior: "smooth",
+                  });
+                }
+              }}
+            >
+              <span className="text-xs font-light tracking-widest mb-2">
+                SCROLL
+              </span>
+              <ArrowDown size={20} className="text-omnis-white" />
+            </motion.div>
+          </div>
         </div>
       </div>
 
-      {/* Scroll Down Indicator */}
+      {/* Scroll Down Indicator - Only shown at bottom on desktop */}
       <motion.div
         variants={arrowVariants}
         animate="animate"
-        className="absolute bottom-10 left-1/2 transform -translate-x-1/2 z-20 flex flex-col items-center -ml-7"
+        className="absolute bottom-10 left-1/2 transform -translate-x-1/2 z-20 hidden md:flex flex-col items-center -ml-7"
         role="button"
         aria-label="Scroll down to see more content"
         tabIndex={0}

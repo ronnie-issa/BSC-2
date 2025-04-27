@@ -453,23 +453,14 @@ const Navbar = ({ scrollY = 0, showLogoEffect = false }: NavbarProps) => {
                 transition={{ delay: 0.2, duration: 0.2 }}
                 className="pointer-events-auto z-[100]"
               >
-                <button
-                  className="text-omnis-white flex items-center tracking-widest font-medium relative z-[100] py-4 px-6 after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2 after:w-0 after:h-[1px] after:bg-omnis-white hover:after:w-full after:transition-all after:duration-200"
-                  onClick={() => {
-                    toggleMenu(); // Close the menu
-                    // Open the mobile bag dropdown after a short delay
-                    setTimeout(() => {
-                      setMobileBagDropdownOpen(true);
-                    }, 300); // Longer delay to ensure menu is fully closed
-                  }}
-                >
+                <MobileNavLink to="/bag" onClick={toggleMenu}>
                   BAG{" "}
                   {bagItemCount > 0 && (
                     <span className="inline-flex items-center justify-center ml-2 bg-red-600 text-white rounded-full h-6 w-6 text-xs tracking-normal">
                       {bagItemCount}
                     </span>
                   )}
-                </button>
+                </MobileNavLink>
               </motion.div>
             </nav>
           </div>
@@ -489,7 +480,7 @@ const NavLink = ({
   return (
     <Link
       to={to}
-      className="text-omnis-white text-sm tracking-wider font-medium hover:text-gray-300 transition-colors relative after:absolute after:bottom-0 after:left-0 after:w-full after:h-[1px] after:bg-omnis-white after:origin-bottom-right after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-200 hover:after:origin-bottom-left py-3"
+      className="text-omnis-white text-sm tracking-wider font-medium hover:text-gray-300 transition-colors relative after:absolute after:bottom-[10px] after:left-0 after:w-full after:h-[1px] after:bg-omnis-white after:origin-bottom-right after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-200 hover:after:origin-bottom-left py-3"
     >
       {children}
     </Link>
