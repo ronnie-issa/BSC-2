@@ -22,7 +22,7 @@ const NewsletterSection = () => {
     const email = new FormData(form).get("email") as string;
 
     try {
-      const response = await fetch("/.netlify/functions/subscribe-simple", {
+      const response = await fetch("/.netlify/functions/subscribe", {
         method: "POST",
         body: JSON.stringify({ email }),
         headers: { "Content-Type": "application/json" },

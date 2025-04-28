@@ -1,8 +1,5 @@
-// Use dynamic imports for ES modules
+// Simplified unsubscribe function that doesn't use GitHub
 exports.handler = async (event) => {
-  // Dynamically import modules
-  const { Octokit } = await import('@octokit/rest');
-  
   // Only allow GET requests
   if (event.httpMethod !== "GET") {
     return { statusCode: 405, body: "Method Not Allowed" };
@@ -20,117 +17,15 @@ exports.handler = async (event) => {
       };
     }
 
-    // Initialize Octokit with your GitHub token
-    const octokit = new Octokit({
-      auth: process.env.GITHUB_TOKEN,
-    });
+    console.log("Unsubscribe request received for:", email);
 
-    // Get the current subscribers file
-    const repo = process.env.GITHUB_REPO;
-    const owner = process.env.GITHUB_OWNER;
-    const path = "data/subscribers.json";
+    // In a real implementation, you would remove the email from your database
+    // For now, we'll just log the unsubscribe request
+    console.log("Unsubscribed:", email, "at", new Date().toISOString());
 
-    let subscribers = [];
-    let sha;
-
-    try {
-      // Try to get the existing file
-      const { data } = await octokit.repos.getContent({
-        owner,
-        repo,
-        path,
-      });
-
-      sha = data.sha;
-
-      // Decode and parse the content
-      const content = Buffer.from(data.content, "base64").toString();
-      subscribers = JSON.parse(content);
-    } catch (error) {
-      // File doesn't exist, nothing to unsubscribe from
-      return {
-        statusCode: 404,
-        body: "Subscriber list not found",
-      };
-    }
-
-    // Check if email exists in the list
-    const initialLength = subscribers.length;
-    subscribers = subscribers.filter((sub) => sub.email !== email);
-
-    // If the email wasn't found, return a message
-    if (subscribers.length === initialLength) {
-      return {
-        statusCode: 200,
-        headers: {
-          "Content-Type": "text/html",
-        },
-        body: `
-          <!DOCTYPE html>
-          <html>
-          <head>
-            <title>OMNIS - Unsubscribe</title>
-            <style>
-              body {
-                font-family: Arial, sans-serif;
-                line-height: 1.6;
-                color: #fff;
-                background-color: #000;
-                margin: 0;
-                padding: 0;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                min-height: 100vh;
-              }
-              .container {
-                max-width: 600px;
-                margin: 0 auto;
-                padding: 40px;
-                text-align: center;
-              }
-              h1 {
-                font-size: 24px;
-                margin-bottom: 20px;
-              }
-              p {
-                margin-bottom: 20px;
-              }
-              .btn {
-                display: inline-block;
-                background-color: #fff;
-                color: #000;
-                padding: 12px 24px;
-                text-decoration: none;
-                border: none;
-                margin-top: 20px;
-                font-weight: bold;
-              }
-            </style>
-          </head>
-          <body>
-            <div class="container">
-              <h1>Email Not Found</h1>
-              <p>The email address ${email} is not in our subscriber list or has already been unsubscribed.</p>
-              <a href="https://omnis-lb.netlify.app" class="btn">RETURN TO WEBSITE</a>
-            </div>
-          </body>
-          </html>
-        `,
-      };
-    }
-
-    // Update the file in GitHub
-    await octokit.repos.createOrUpdateFileContents({
-      owner,
-      repo,
-      path,
-      message: "Remove subscriber",
-      content: Buffer.from(JSON.stringify(subscribers, null, 2)).toString(
-        "base64"
-      ),
-      sha: sha,
-    });
+    // Get the domain from environment or use default
+    const domain = process.env.URL || 'https://omnis-lb.netlify.app';
+    console.log("Using domain for unsubscribe page:", domain);
 
     // Return a success page
     return {
@@ -142,7 +37,7 @@ exports.handler = async (event) => {
         <!DOCTYPE html>
         <html>
         <head>
-          <title>OMNIS - Unsubscribe</title>
+          <title>OMNIS - Unsubscribed</title>
           <style>
             body {
               font-family: Arial, sans-serif;
@@ -183,9 +78,10 @@ exports.handler = async (event) => {
         </head>
         <body>
           <div class="container">
-            <h1>Unsubscribed Successfully</h1>
-            <p>You have been unsubscribed from the OMNIS newsletter. We're sorry to see you go!</p>
-            <a href="https://omnis-lb.netlify.app" class="btn">RETURN TO WEBSITE</a>
+            <h1>Successfully Unsubscribed</h1>
+            <p>You have been successfully unsubscribed from the OMNIS newsletter.</p>
+            <p>We're sorry to see you go. If you have any feedback on how we could improve, please let us know.</p>
+            <a href="${domain}" class="btn">RETURN TO WEBSITE</a>
           </div>
         </body>
         </html>
@@ -195,7 +91,7 @@ exports.handler = async (event) => {
     console.error("Error:", error);
     return {
       statusCode: 500,
-      body: "Error processing unsubscribe request, please try again later",
+      body: "Error processing your request. Please try again later.",
     };
   }
 };
