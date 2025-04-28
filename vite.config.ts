@@ -28,6 +28,7 @@ export default defineConfig(({ mode }) => {
       'import.meta.env.CONTENTFUL_ACCESS_TOKEN': JSON.stringify(env.CONTENTFUL_ACCESS_TOKEN),
       'import.meta.env.CONTENTFUL_PREVIEW_TOKEN': JSON.stringify(env.CONTENTFUL_PREVIEW_TOKEN),
       'import.meta.env.CONTENTFUL_ENVIRONMENT': JSON.stringify(env.CONTENTFUL_ENVIRONMENT || 'master'),
+      'import.meta.env.RESEND_API_KEY': JSON.stringify(env.RESEND_API_KEY),
     },
   };
 });

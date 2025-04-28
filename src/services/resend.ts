@@ -2,7 +2,7 @@ import { Resend } from 'resend';
 import type { Product } from '@/contexts/ProductContext';
 
 // Initialize Resend with API key from environment variables
-const resend = new Resend(process.env.RESEND_API_KEY);
+const resend = new Resend(import.meta.env.RESEND_API_KEY);
 
 /**
  * Send a welcome email to a new subscriber
