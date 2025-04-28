@@ -1,8 +1,8 @@
-// Use dynamic imports for ES modules
+// Simplified subscribe function that doesn't use GitHub
+// Simple in-memory cache for subscribers (will reset on function cold start)
+const subscribers = new Set();
+
 exports.handler = async (event) => {
-  // Dynamically import modules
-  const { Octokit } = await import('@octokit/rest');
-  const crypto = await import('crypto');
   // Only allow POST requests
   if (event.httpMethod !== "POST") {
     return { statusCode: 405, body: "Method Not Allowed" };
@@ -20,75 +20,151 @@ exports.handler = async (event) => {
       };
     }
 
-    // Initialize Octokit with your GitHub token
-    const octokit = new Octokit({
-      auth: process.env.GITHUB_TOKEN,
-    });
+    console.log("Subscription request received for:", email);
 
-    // Get the current subscribers file
-    const repo = process.env.GITHUB_REPO;
-    const owner = process.env.GITHUB_OWNER;
-    const path = "data/subscribers.json";
-
-    let subscribers = [];
-    let sha;
-
-    try {
-      // Try to get the existing file
-      const { data } = await octokit.repos.getContent({
-        owner,
-        repo,
-        path,
-      });
-
-      sha = data.sha;
-
-      // Decode and parse the content
-      const content = Buffer.from(data.content, "base64").toString();
-      subscribers = JSON.parse(content);
-    } catch (error) {
-      // File doesn't exist yet, that's okay
-      console.log("Creating new subscribers file");
-    }
-
-    // Check if email already exists
-    if (subscribers.some((sub) => sub.email === email)) {
+    // Check if email is already subscribed
+    if (subscribers.has(email)) {
+      console.log("Email already subscribed:", email);
       return {
         statusCode: 200,
         body: JSON.stringify({ message: "You're already subscribed!" }),
       };
     }
 
-    // Add the new subscriber with timestamp
-    subscribers.push({
-      id: crypto.randomUUID ? crypto.randomUUID() : crypto.default.randomUUID(),
-      email,
-      subscribedAt: new Date().toISOString(),
-    });
+    // Add email to subscribers set
+    subscribers.add(email);
+    console.log("New subscriber:", email, "at", new Date().toISOString());
+    console.log("Current subscribers:", Array.from(subscribers));
 
-    // Update the file in GitHub
-    await octokit.repos.createOrUpdateFileContents({
-      owner,
-      repo,
-      path,
-      message: "Add new subscriber",
-      content: Buffer.from(JSON.stringify(subscribers, null, 2)).toString(
-        "base64"
-      ),
-      sha: sha,
-    });
-
-    // Send welcome email by calling the welcome-email function
+    // Send welcome email directly (without calling another function)
     try {
-      // Make a POST request to the welcome-email function
-      const fetch = (await import('node-fetch')).default;
-      const domain = process.env.URL || 'https://omnis-lb.netlify.app';
+      // Dynamically import Resend
+      const { Resend } = await import('resend');
 
-      await fetch(`${domain}/.netlify/functions/welcome-email`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email }),
-      });
+      // Initialize Resend client
+      const resend = new Resend(process.env.RESEND_API_KEY);
+
+      // Get the domain from environment or use default
+      const domain = process.env.URL || 'https://omnis-lb.netlify.app';
+      console.log("Using domain for email links:", domain);
+
+      // Simple HTML template
+      const html = `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <style>
+            body {
+              font-family: Arial, sans-serif;
+              line-height: 1.6;
+              color: #333;
+              margin: 0;
+              padding: 0;
+            }
+            .container {
+              max-width: 600px;
+              margin: 0 auto;
+              padding: 20px;
+            }
+            .header {
+              background-color: #000;
+              color: #fff;
+              padding: 20px;
+              text-align: center;
+            }
+            .content {
+              padding: 20px;
+              background-color: #f9f9f9;
+            }
+            .footer {
+              font-size: 12px;
+              color: #777;
+              text-align: center;
+              padding: 20px;
+              border-top: 1px solid #eee;
+            }
+            h1 {
+              margin: 0;
+              font-size: 24px;
+              font-weight: bold;
+            }
+            .btn {
+              display: inline-block;
+              background-color: #000;
+              color: #fff;
+              padding: 12px 24px;
+              text-decoration: none;
+              border-radius: 0;
+              margin-top: 20px;
+            }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <div class="header">
+              <h1>OMNIS</h1>
+            </div>
+            <div class="content">
+              <h2>Welcome to Our Community!</h2>
+              <p>Thank you for subscribing to the OMNIS newsletter. We're excited to have you join our community of fashion enthusiasts.</p>
+              <p>As a subscriber, you'll be the first to know about:</p>
+              <ul>
+                <li>New collection releases</li>
+                <li>Exclusive offers and promotions</li>
+                <li>Behind-the-scenes content</li>
+                <li>Style tips and inspiration</li>
+              </ul>
+              <p>Stay tuned for our upcoming releases and special offers!</p>
+              <a href="${domain}/shop" class="btn">EXPLORE OUR COLLECTION</a>
+            </div>
+            <div class="footer">
+              <p>© ${new Date().getFullYear()} OMNIS. All rights reserved.</p>
+              <p>You're receiving this email because you subscribed to our newsletter.</p>
+              <p>
+                <a href="${domain}/legal">Privacy Policy</a> |
+                <a href="${domain}/.netlify/functions/unsubscribe?email=${email}">Unsubscribe</a>
+              </p>
+            </div>
+          </div>
+        </body>
+        </html>
+      `;
+
+      console.log("Sending welcome email to:", email);
+
+      // Send email using Resend
+      console.log("Attempting to send email with Resend...");
+      try {
+        const data = await resend.emails.send({
+          from: 'OMNIS <onboarding@resend.dev>',
+          to: email,
+          subject: 'Welcome to OMNIS Newsletter',
+          html: html,
+        });
+
+        console.log("Welcome email sent successfully:", data);
+
+        // Check if there was an error in the response
+        if (data.error) {
+          console.error("Resend API returned an error:", data.error);
+          return {
+            statusCode: 200, // Still return 200 to the user
+            body: JSON.stringify({
+              message: "Successfully subscribed! However, there was an issue sending the welcome email. Please check your spam folder or try again later.",
+              error: data.error
+            }),
+          };
+        }
+      } catch (sendError) {
+        console.error("Error sending email with Resend:", sendError);
+        return {
+          statusCode: 200, // Still return 200 to the user
+          body: JSON.stringify({
+            message: "Successfully subscribed! However, there was an issue sending the welcome email. Please check your spam folder or try again later.",
+            error: sendError.message
+          }),
+        };
+      }
 
       return {
         statusCode: 200,
@@ -101,7 +177,10 @@ exports.handler = async (event) => {
       // Still return success for subscription even if email fails
       return {
         statusCode: 200,
-        body: JSON.stringify({ message: "Successfully subscribed!" }),
+        body: JSON.stringify({
+          message: "Successfully subscribed!",
+          emailError: emailError.message
+        }),
       };
     }
   } catch (error) {
@@ -110,6 +189,7 @@ exports.handler = async (event) => {
       statusCode: 500,
       body: JSON.stringify({
         message: "Error subscribing, please try again later",
+        error: error.message
       }),
     };
   }
