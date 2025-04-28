@@ -22,14 +22,26 @@ const OrderConfirmationPage = () => {
   const sampleProducts = [
     {
       id: "sample_1",
+      slug: "omnis-x-t-shirt",
       name: "OMNIS X T-Shirt",
       price: 120,
+      image: "/images/products/omnis-x-tshirt.jpg",
+      description: "Classic OMNIS X T-Shirt",
+      variations: [{ name: "Black", value: "#000000" }],
+      colors: [{ name: "Black", value: "#000000" }],
+      sizes: [{ name: "M", value: "m" }],
       selectedColor: "Black",
     },
     {
       id: "sample_2",
+      slug: "omnis-classic-hoodie",
       name: "OMNIS Classic Hoodie",
       price: 79.99,
+      image: "/images/products/omnis-classic-hoodie.jpg",
+      description: "Classic OMNIS Hoodie",
+      variations: [{ name: "White", value: "#FFFFFF" }],
+      colors: [{ name: "White", value: "#FFFFFF" }],
+      sizes: [{ name: "M", value: "m" }],
       selectedColor: "White",
     },
   ];
