@@ -1,6 +1,4 @@
 import { Resend } from 'resend';
-import WelcomeEmail from '../emails/WelcomeEmail';
-import OrderConfirmationEmail from '../emails/OrderConfirmationEmail';
 import type { Product } from '@/contexts/ProductContext';
 
 // Initialize Resend with API key from environment variables
@@ -14,12 +12,16 @@ const resend = new Resend(process.env.RESEND_API_KEY);
  */
 export async function sendWelcomeEmail(email: string, name?: string) {
   try {
-    const data = await resend.emails.send({
-      from: 'OMNIS <hello@omnis-lb.com>',
-      to: email,
-      subject: 'Welcome to OMNIS',
-      react: WelcomeEmail({ name: name || 'there' }),
-    });
+    // Note: This function is now deprecated.
+    // Please use the Netlify function directly: /.netlify/functions/subscribe
+    console.warn('sendWelcomeEmail is deprecated. Use the Netlify function instead.');
+
+    const data = await fetch('/.netlify/functions/subscribe', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, name }),
+    }).then(res => res.json());
+
     return { success: true, data };
   } catch (error) {
     console.error('Failed to send welcome email:', error);
@@ -37,26 +39,28 @@ export async function sendWelcomeEmail(email: string, name?: string) {
  * @returns Object with success status and data or error
  */
 export async function sendOrderConfirmationEmail(
-  email: string, 
-  name: string, 
-  orderNumber: string, 
-  products: Product[], 
+  email: string,
+  name: string,
+  orderNumber: string,
+  products: Product[],
   total: number,
   shippingAddress?: string
 ) {
   try {
-    const data = await resend.emails.send({
-      from: 'OMNIS <orders@omnis-lb.com>',
-      to: email,
-      subject: `OMNIS Order Confirmation #${orderNumber}`,
-      react: OrderConfirmationEmail({ 
-        name, 
-        orderNumber, 
-        products, 
+    // Call the Netlify function to send the order confirmation email
+    const data = await fetch('/.netlify/functions/order-confirmation', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        email,
+        name,
+        orderNumber,
+        products,
         total,
         shippingAddress
       }),
-    });
+    }).then(res => res.json());
+
     return { success: true, data };
   } catch (error) {
     console.error('Failed to send order confirmation email:', error);
