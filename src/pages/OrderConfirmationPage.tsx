@@ -4,15 +4,88 @@ import { Button } from "@/components/ui/button";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { motion } from "@/lib/framer";
+import { useEffect, useState } from "react";
+import { sendOrderConfirmationEmail } from "@/services/resend";
+import { toast } from "@/hooks/use-toast";
 
 const OrderConfirmationPage = () => {
   const navigate = useNavigate();
+  const [emailSent, setEmailSent] = useState(false);
   const orderNumber = `ORD-${Math.floor(100000 + Math.random() * 900000)}`; // Generate random order number
   const orderDate = new Date().toLocaleDateString("en-US", {
     year: "numeric",
     month: "long",
     day: "numeric",
   });
+
+  // Sample products for the order confirmation email
+  const sampleProducts = [
+    {
+      id: "sample_1",
+      name: "OMNIS X T-Shirt",
+      price: 120,
+      selectedColor: "Black",
+    },
+    {
+      id: "sample_2",
+      name: "OMNIS Classic Hoodie",
+      price: 79.99,
+      selectedColor: "White",
+    },
+  ];
+
+  // Get customer information from localStorage if available
+  const getCustomerInfo = () => {
+    try {
+      const storedInfo = localStorage.getItem("customerInfo");
+      return storedInfo ? JSON.parse(storedInfo) : null;
+    } catch (error) {
+      console.error("Error retrieving customer info:", error);
+      return null;
+    }
+  };
+
+  const customerInfo = getCustomerInfo();
+
+  // Send order confirmation email when the page loads
+  useEffect(() => {
+    if (!emailSent) {
+      const sendEmail = async () => {
+        try {
+          // Use customer info if available, otherwise use default values
+          const email = customerInfo?.email || "customer@example.com";
+          const name = customerInfo?.fullName || "Valued Customer";
+          const shippingAddress = customerInfo
+            ? `${customerInfo.fullName}\n${customerInfo.address}\n${customerInfo.city}, ${customerInfo.state} ${customerInfo.zipCode}\n${customerInfo.phone}`
+            : "John Doe\n123 Fashion Street\nBeirut, Lebanon\n+961 81 386 697";
+
+          const result = await sendOrderConfirmationEmail(
+            email,
+            name,
+            orderNumber,
+            sampleProducts,
+            199.99,
+            shippingAddress
+          );
+
+          setEmailSent(true);
+
+          if (result.success) {
+            console.log("Order confirmation email sent successfully");
+          } else {
+            console.error(
+              "Failed to send order confirmation email:",
+              result.error
+            );
+          }
+        } catch (error) {
+          console.error("Error sending order confirmation email:", error);
+        }
+      };
+
+      sendEmail();
+    }
+  }, [emailSent, orderNumber]);
 
   return (
     <>
@@ -169,10 +242,24 @@ const OrderConfirmationPage = () => {
                 Shipping Address
               </h3>
               <div className="text-omnis-lightgray text-sm">
-                <p className="text-white">John Doe</p>
-                <p>123 Fashion Street</p>
-                <p>Beirut, Lebanon</p>
-                <p>+961 81 386 697</p>
+                {customerInfo ? (
+                  <>
+                    <p className="text-white">{customerInfo.fullName}</p>
+                    <p>{customerInfo.address}</p>
+                    <p>
+                      {customerInfo.city}, {customerInfo.state}{" "}
+                      {customerInfo.zipCode}
+                    </p>
+                    <p>{customerInfo.phone}</p>
+                  </>
+                ) : (
+                  <>
+                    <p className="text-white">John Doe</p>
+                    <p>123 Fashion Street</p>
+                    <p>Beirut, Lebanon</p>
+                    <p>+961 81 386 697</p>
+                  </>
+                )}
               </div>
             </div>
           </div>

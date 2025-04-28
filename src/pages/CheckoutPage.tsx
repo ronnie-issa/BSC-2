@@ -130,6 +130,13 @@ const CheckoutPage = () => {
     // Set loading state
     setIsProcessing(true);
 
+    // Store customer information in localStorage for the order confirmation page
+    try {
+      localStorage.setItem("customerInfo", JSON.stringify(values));
+    } catch (error) {
+      console.error("Error storing customer info:", error);
+    }
+
     // Format customer information
     let message =
       "Hello, I'd like to place an order with the following details:\n\n";
@@ -234,6 +241,13 @@ const CheckoutPage = () => {
 
     // Set loading state
     setIsProcessing(true);
+
+    // Store customer information in localStorage for the order confirmation page
+    try {
+      localStorage.setItem("customerInfo", JSON.stringify(values));
+    } catch (error) {
+      console.error("Error storing customer info:", error);
+    }
 
     // Process the order
     // In a real app, we would send this data to a backend API
