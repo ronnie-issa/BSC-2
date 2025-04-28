@@ -148,11 +148,17 @@ src/
    - Implement image galleries for products (multiple images per product)
 
 3. **Email System Migration and Improvements**
+
    - Complete migration from Mailjet to Resend
    - Implement React-based email templates
    - Create order confirmation email template
    - Complete unsubscribe functionality
    - Implement email analytics tracking
+
+4. **Design System Setup**
+   - Establish a design system for consistent UI components
+   - Implement component library for reusability
+   - Create a design system documentation site
 
 ### Medium-term Goals
 
@@ -172,7 +178,7 @@ src/
 
 1. **Framework Migration**
 
-   - Evaluate migration to Next.js for improved SEO and performance
+   - Evaluate migration to Astro for improved SEO and performance
    - Implement server-side rendering for product pages
    - Utilize incremental static regeneration for content updates
    - Maintain compatibility with current Contentful integration
@@ -187,17 +193,17 @@ src/
    - Personalized product recommendations in emails
    - Enhanced mobile app-like experience
 
+### Misc Mini Tasks
+
+- Change placeholder image
+- White variation product image preview not reflecting in dropdown, bagpage, and checkout, confirmation
+- Add number formating on contentful for prices ($1,000)
 - SIZE GUIDE chart link on product page, or not link, chart on product page?
-- Stock item availability
 - Moving text on nav bar
 - Priced usd, lbp
-- View button on hovver product card
-- Choose artwork placement?
-- Toast slides from under the navbar
-- Add to bag button has a loading animation on click!!!!
-- About and shop buttons need to have their undeline animation fixed (closer to the text to be consistent with design system)
-- If i click subscribe and i dont have an email, it shows a please fillout this field bubble which has an ornge icon, i want this icon to be black
-- White variation product image preview not reflecting in dropdown, bagpage, and checkout, confirmation
 - View button on product card needs to be quick view feature
-- Change placeholder image
-- Add number formating on contentful for prices ($1,000)
+  - Quick View button on hover product card
+- Choose artwork placement?
+- Stock item availability
+- Toast slides from under the navbar
+- If i click subscribe and i dont have an email, it shows a please fillout this field bubble which has an ornge icon, i want this icon to be black (custom validation, not a priority now)
