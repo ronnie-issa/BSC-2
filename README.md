@@ -154,6 +154,7 @@ src/
    - Create order confirmation email template
    - Complete unsubscribe functionality
    - Implement email analytics tracking
+   - For a production site, you would want to store subscribers in a database
 
 4. **Design System Setup**
    - Establish a design system for consistent UI components

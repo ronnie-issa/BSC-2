@@ -45,8 +45,17 @@ exports.handler = async (event) => {
       const resend = new Resend(process.env.RESEND_API_KEY);
 
       // Get the domain from environment or use default
-      const domain = process.env.URL || 'https://omnis-lb.netlify.app';
+      // For branch deployment, we need to use the branch URL
+      let domain = process.env.URL || 'https://omnis-lb.netlify.app';
+
+      // Check if this is the branch deployment
+      if (process.env.CONTEXT === 'deploy-preview' || process.env.BRANCH === 'feature/resend-migration') {
+        domain = 'https://feature-resend-migration--omnis-lb.netlify.app';
+      }
+
       console.log("Using domain for email links:", domain);
+      console.log("Environment context:", process.env.CONTEXT);
+      console.log("Branch:", process.env.BRANCH);
 
       // Simple HTML template
       const html = `

@@ -24,8 +24,17 @@ exports.handler = async (event) => {
     console.log("Unsubscribed:", email, "at", new Date().toISOString());
 
     // Get the domain from environment or use default
-    const domain = process.env.URL || 'https://omnis-lb.netlify.app';
+    // For branch deployment, we need to use the branch URL
+    let domain = process.env.URL || 'https://omnis-lb.netlify.app';
+
+    // Check if this is the branch deployment
+    if (process.env.CONTEXT === 'deploy-preview' || process.env.BRANCH === 'feature/resend-migration') {
+      domain = 'https://feature-resend-migration--omnis-lb.netlify.app';
+    }
+
     console.log("Using domain for unsubscribe page:", domain);
+    console.log("Environment context:", process.env.CONTEXT);
+    console.log("Branch:", process.env.BRANCH);
 
     // Return a success page
     return {
