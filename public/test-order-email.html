@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Test Order Confirmation Email</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #000;
+      color: #fff;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    .form-group {
+      margin-bottom: 20px;
+    }
+    label {
+      display: block;
+      margin-bottom: 5px;
+    }
+    input, textarea {
+      width: 100%;
+      padding: 10px;
+      font-size: 16px;
+      border: 1px solid #333;
+      background-color: #111;
+      color: #fff;
+      margin-bottom: 10px;
+    }
+    button {
+      background-color: #fff;
+      color: #000;
+      border: none;
+      padding: 12px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      width: 100%;
+      font-weight: bold;
+    }
+    button:hover {
+      background-color: #eee;
+    }
+    .result {
+      margin-top: 20px;
+      padding: 15px;
+      border: 1px solid #333;
+      background-color: #111;
+      white-space: pre-wrap;
+      overflow-x: auto;
+    }
+    .success {
+      border-color: #4CAF50;
+    }
+    .error {
+      border-color: #F44336;
+    }
+    .links {
+      margin-top: 30px;
+      text-align: center;
+    }
+    .links a {
+      color: #fff;
+      text-decoration: underline;
+      margin: 0 10px;
+    }
+    .note {
+      font-size: 12px;
+      color: #999;
+      margin-top: 5px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Test Order Confirmation Email</h1>
+  
+  <div class="form-group">
+    <label for="email">Email Address:</label>
+    <input type="email" id="email" placeholder="Enter your email">
+  </div>
+  
+  <div class="form-group">
+    <label for="name">Customer Name:</label>
+    <input type="text" id="name" placeholder="Enter customer name">
+  </div>
+  
+  <div class="form-group">
+    <label for="orderNumber">Order Number:</label>
+    <input type="text" id="orderNumber" value="ORD-123456" placeholder="Enter order number">
+    <p class="note">Will be auto-generated if left empty</p>
+  </div>
+  
+  <div class="form-group">
+    <label for="total">Order Total:</label>
+    <input type="number" id="total" value="199.99" placeholder="Enter order total">
+  </div>
+  
+  <div class="form-group">
+    <label for="shippingAddress">Shipping Address:</label>
+    <textarea id="shippingAddress" rows="3" placeholder="Enter shipping address">John Doe
+123 Fashion Street
+Beirut, Lebanon
++961 81 386 697</textarea>
+  </div>
+  
+  <button id="sendButton">Send Test Order Confirmation</button>
+  
+  <div id="result" class="result" style="display: none;"></div>
+  
+  <div class="links">
+    <a href="/">Back to Home</a>
+  </div>
+  
+  <script>
+    document.getElementById('sendButton').addEventListener('click', async function() {
+      const email = document.getElementById('email').value.trim();
+      const name = document.getElementById('name').value.trim();
+      let orderNumber = document.getElementById('orderNumber').value.trim();
+      const total = parseFloat(document.getElementById('total').value) || 199.99;
+      const shippingAddress = document.getElementById('shippingAddress').value.trim();
+      const resultDiv = document.getElementById('result');
+      
+      if (!email || !email.includes('@')) {
+        resultDiv.textContent = 'Please enter a valid email address.';
+        resultDiv.className = 'result error';
+        resultDiv.style.display = 'block';
+        return;
+      }
+      
+      // Generate random order number if not provided
+      if (!orderNumber) {
+        orderNumber = `ORD-${Math.floor(100000 + Math.random() * 900000)}`;
+      }
+      
+      // Sample products
+      const products = [
+        {
+          id: 'prod_1',
+          name: 'OMNIS X T-Shirt',
+          price: 120,
+          selectedColor: 'Black'
+        },
+        {
+          id: 'prod_2',
+          name: 'OMNIS Classic Hoodie',
+          price: 79.99,
+          selectedColor: 'White'
+        }
+      ];
+      
+      resultDiv.textContent = 'Sending order confirmation email...';
+      resultDiv.className = 'result';
+      resultDiv.style.display = 'block';
+      
+      try {
+        const response = await fetch('/.netlify/functions/order-confirmation', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            email,
+            name,
+            orderNumber,
+            products,
+            total,
+            shippingAddress
+          }),
+        });
+        
+        const data = await response.json();
+        
+        if (response.ok) {
+          resultDiv.textContent = 'Success! Order confirmation email sent.\n\nResponse: ' + JSON.stringify(data, null, 2);
+          resultDiv.className = 'result success';
+        } else {
+          resultDiv.textContent = 'Error: ' + data.message + '\n\nDetails: ' + JSON.stringify(data, null, 2);
+          resultDiv.className = 'result error';
+        }
+      } catch (error) {
+        resultDiv.textContent = 'Error: ' + error.message;
+        resultDiv.className = 'result error';
+      }
+    });
+  </script>
+</body>
+</html>
