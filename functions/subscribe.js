@@ -84,11 +84,17 @@ exports.handler = async (event) => {
       const fetch = (await import('node-fetch')).default;
       const domain = process.env.URL || 'https://omnis-lb.netlify.app';
 
-      await fetch(`${domain}/.netlify/functions/welcome-email`, {
+      console.log("Attempting to send welcome email to:", email);
+      console.log("Using domain:", domain);
+
+      const response = await fetch(`${domain}/.netlify/functions/welcome-email-simple`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email }),
       });
+
+      const responseData = await response.text();
+      console.log("Welcome email response:", response.status, responseData);
 
       return {
         statusCode: 200,
