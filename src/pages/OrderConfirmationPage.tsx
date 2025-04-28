@@ -7,6 +7,7 @@ import { motion } from "@/lib/framer";
 import { useEffect, useState } from "react";
 import { sendOrderConfirmationEmail } from "@/services/resend";
 import { toast } from "@/hooks/use-toast";
+import { Product } from "@/contexts/ProductContext";
 
 const OrderConfirmationPage = () => {
   const navigate = useNavigate();
@@ -18,34 +19,6 @@ const OrderConfirmationPage = () => {
     day: "numeric",
   });
 
-  // Sample products for the order confirmation email
-  const sampleProducts = [
-    {
-      id: "sample_1",
-      slug: "omnis-x-t-shirt",
-      name: "OMNIS X T-Shirt",
-      price: 120,
-      image: "/images/products/omnis-x-tshirt.jpg",
-      description: "Classic OMNIS X T-Shirt",
-      variations: [{ name: "Black", value: "#000000" }],
-      colors: [{ name: "Black", value: "#000000" }],
-      sizes: [{ name: "M", value: "m" }],
-      selectedColor: "Black",
-    },
-    {
-      id: "sample_2",
-      slug: "omnis-classic-hoodie",
-      name: "OMNIS Classic Hoodie",
-      price: 79.99,
-      image: "/images/products/omnis-classic-hoodie.jpg",
-      description: "Classic OMNIS Hoodie",
-      variations: [{ name: "White", value: "#FFFFFF" }],
-      colors: [{ name: "White", value: "#FFFFFF" }],
-      sizes: [{ name: "M", value: "m" }],
-      selectedColor: "White",
-    },
-  ];
-
   // Get customer information from localStorage if available
   const getCustomerInfo = () => {
     try {
@@ -54,6 +27,39 @@ const OrderConfirmationPage = () => {
     } catch (error) {
       console.error("Error retrieving customer info:", error);
       return null;
+    }
+  };
+
+  // Get ordered products from localStorage
+  const getOrderedProducts = (): (Product & {
+    selectedColor: string;
+    selectedSize: string;
+    quantity: number;
+  })[] => {
+    try {
+      const storedCart = localStorage.getItem("omnisCart");
+      if (storedCart) {
+        const cartItems = JSON.parse(storedCart);
+        // Transform cart items to the format expected by the email function
+        return cartItems.map((item: any) => ({
+          id: item.product.id,
+          slug: item.product.slug,
+          name: item.product.name,
+          price: item.product.price,
+          image: item.product.image,
+          description: item.product.description,
+          variations: item.product.variations,
+          colors: item.product.colors,
+          sizes: item.product.sizes,
+          selectedColor: item.selectedColor,
+          selectedSize: item.selectedSize,
+          quantity: item.quantity,
+        }));
+      }
+      return [];
+    } catch (error) {
+      console.error("Error retrieving ordered products:", error);
+      return [];
     }
   };
 
@@ -71,12 +77,22 @@ const OrderConfirmationPage = () => {
             ? `${customerInfo.fullName}\n${customerInfo.address}\n${customerInfo.city}, ${customerInfo.state} ${customerInfo.zipCode}\n${customerInfo.phone}`
             : "John Doe\n123 Fashion Street\nBeirut, Lebanon\n+961 81 386 697";
 
+          // Get ordered products
+          const products = getOrderedProducts();
+
+          // Calculate total from actual products
+          const total = products.reduce(
+            (sum: number, product: Product & { quantity?: number }) =>
+              sum + product.price * (product.quantity || 1),
+            0
+          );
+
           const result = await sendOrderConfirmationEmail(
             email,
             name,
             orderNumber,
-            sampleProducts,
-            199.99,
+            products,
+            total,
             shippingAddress
           );
 
@@ -216,37 +232,59 @@ const OrderConfirmationPage = () => {
                 Items Purchased
               </h3>
               <div className="space-y-2 mb-4 text-sm">
-                <div className="flex border-b border-white/10 pb-2">
-                  <div className="w-10 h-10 bg-omnis-darkgray flex-shrink-0 mr-3">
-                    {/* Product image would go here */}
-                  </div>
-                  <div className="flex-grow">
-                    <p className="text-white">OMNIS X T-Shirt</p>
-                    <p className="text-omnis-lightgray text-xs">
-                      Black · Size M · Qty: 1
-                    </p>
-                    <p className="text-white text-xs mt-1">$120.00</p>
-                  </div>
-                </div>
+                {getOrderedProducts().map((item, index) => {
+                  const colorName =
+                    item.colors.find((c) => c.value === item.selectedColor)
+                      ?.name || "Default";
+                  return (
+                    <div
+                      key={`${item.id}-${index}`}
+                      className="flex border-b border-white/10 pb-2"
+                    >
+                      <div className="w-10 h-10 bg-omnis-darkgray flex-shrink-0 mr-3">
+                        {item.image && (
+                          <img
+                            src={item.image}
+                            alt={item.name}
+                            className="w-full h-full object-cover"
+                          />
+                        )}
+                      </div>
+                      <div className="flex-grow">
+                        <p className="text-white">{item.name}</p>
+                        <p className="text-omnis-lightgray text-xs">
+                          {colorName} · Size {item.selectedSize.toUpperCase()} ·
+                          Qty: {item.quantity}
+                        </p>
+                        <p className="text-white text-xs mt-1">
+                          ${(item.price * item.quantity).toFixed(2)}
+                        </p>
+                      </div>
+                    </div>
+                  );
+                })}
 
-                <div className="flex border-b border-white/10 pb-2">
-                  <div className="w-10 h-10 bg-omnis-darkgray flex-shrink-0 mr-3">
-                    {/* Product image would go here */}
+                {getOrderedProducts().length === 0 && (
+                  <div className="text-omnis-lightgray">
+                    No items in order. This may be a test or there was an issue
+                    retrieving your order.
                   </div>
-                  <div className="flex-grow">
-                    <p className="text-white">OMNIS Hoodie</p>
-                    <p className="text-omnis-lightgray text-xs">
-                      White · Size L · Qty: 1
-                    </p>
-                    <p className="text-white text-xs mt-1">$120.00</p>
-                  </div>
-                </div>
+                )}
               </div>
 
               {/* Total */}
               <div className="flex justify-between pb-3 mt-2 mb-6 text-sm border-b border-white/20">
                 <span className="font-bold text-white">Total</span>
-                <span className="text-white font-bold">$240.00</span>
+                <span className="text-white font-bold">
+                  $
+                  {getOrderedProducts()
+                    .reduce(
+                      (sum: number, product: Product & { quantity?: number }) =>
+                        sum + product.price * (product.quantity || 1),
+                      0
+                    )
+                    .toFixed(2)}
+                </span>
               </div>
 
               {/* Shipping Address */}
