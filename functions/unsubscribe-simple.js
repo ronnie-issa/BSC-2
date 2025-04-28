@@ -23,6 +23,10 @@ exports.handler = async (event) => {
     // For now, we'll just log the unsubscribe request
     console.log("Unsubscribed:", email, "at", new Date().toISOString());
 
+    // Get the domain from environment or use default
+    const domain = process.env.URL || 'https://omnis-lb.netlify.app';
+    console.log("Using domain for unsubscribe page:", domain);
+
     // Return a success page
     return {
       statusCode: 200,
@@ -77,7 +81,7 @@ exports.handler = async (event) => {
             <h1>Successfully Unsubscribed</h1>
             <p>You have been successfully unsubscribed from the OMNIS newsletter.</p>
             <p>We're sorry to see you go. If you have any feedback on how we could improve, please let us know.</p>
-            <a href="${process.env.URL || 'https://omnis-lb.netlify.app'}" class="btn">RETURN TO WEBSITE</a>
+            <a href="${domain}" class="btn">RETURN TO WEBSITE</a>
           </div>
         </body>
         </html>

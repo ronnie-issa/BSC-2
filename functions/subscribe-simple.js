@@ -31,6 +31,10 @@ exports.handler = async (event) => {
       // Initialize Resend client
       const resend = new Resend(process.env.RESEND_API_KEY);
 
+      // Get the domain from environment or use default
+      const domain = process.env.URL || 'https://omnis-lb.netlify.app';
+      console.log("Using domain for email links:", domain);
+
       // Simple HTML template
       const html = `
         <!DOCTYPE html>
@@ -98,14 +102,14 @@ exports.handler = async (event) => {
                 <li>Style tips and inspiration</li>
               </ul>
               <p>Stay tuned for our upcoming releases and special offers!</p>
-              <a href="${process.env.URL || 'https://omnis-lb.netlify.app'}/shop" class="btn">EXPLORE OUR COLLECTION</a>
+              <a href="${domain}/shop" class="btn">EXPLORE OUR COLLECTION</a>
             </div>
             <div class="footer">
               <p>© ${new Date().getFullYear()} OMNIS. All rights reserved.</p>
               <p>You're receiving this email because you subscribed to our newsletter.</p>
               <p>
-                <a href="${process.env.URL || 'https://omnis-lb.netlify.app'}/legal">Privacy Policy</a> |
-                <a href="${process.env.URL || 'https://omnis-lb.netlify.app'}/.netlify/functions/unsubscribe-simple?email=${email}">Unsubscribe</a>
+                <a href="${domain}/legal">Privacy Policy</a> |
+                <a href="${domain}/.netlify/functions/unsubscribe-simple?email=${email}">Unsubscribe</a>
               </p>
             </div>
           </div>
@@ -116,14 +120,38 @@ exports.handler = async (event) => {
       console.log("Sending welcome email to:", email);
 
       // Send email using Resend
-      const data = await resend.emails.send({
-        from: 'OMNIS <onboarding@resend.dev>',
-        to: email,
-        subject: 'Welcome to OMNIS Newsletter',
-        html: html,
-      });
+      console.log("Attempting to send email with Resend...");
+      try {
+        const data = await resend.emails.send({
+          from: 'OMNIS <onboarding@resend.dev>',
+          to: email,
+          subject: 'Welcome to OMNIS Newsletter',
+          html: html,
+        });
 
-      console.log("Welcome email sent:", data);
+        console.log("Welcome email sent successfully:", data);
+
+        // Check if there was an error in the response
+        if (data.error) {
+          console.error("Resend API returned an error:", data.error);
+          return {
+            statusCode: 200, // Still return 200 to the user
+            body: JSON.stringify({
+              message: "Successfully subscribed! However, there was an issue sending the welcome email. Please check your spam folder or try again later.",
+              error: data.error
+            }),
+          };
+        }
+      } catch (sendError) {
+        console.error("Error sending email with Resend:", sendError);
+        return {
+          statusCode: 200, // Still return 200 to the user
+          body: JSON.stringify({
+            message: "Successfully subscribed! However, there was an issue sending the welcome email. Please check your spam folder or try again later.",
+            error: sendError.message
+          }),
+        };
+      }
 
       return {
         statusCode: 200,
