@@ -152,6 +152,7 @@ docs/
    - ✅ Order confirmation email template
    - ✅ Unsubscribe functionality
    - ✅ Centralized email template system
+   - ⏳ Email template UI bugs and testing
    - ⏳ Email analytics tracking
 
 2. **Performance Optimization**

@@ -22,17 +22,21 @@ export function Toaster() {
         ...props
       }) {
         return (
-          <Toast key={id} {...props}>
-            <div className="flex gap-3">
-              {icon && <div className="mt-1">{icon}</div>}
-              <div className="grid gap-1 flex-1">
-                {title && <ToastTitle>{title}</ToastTitle>}
-                {description && (
-                  <ToastDescription>{description}</ToastDescription>
+          <Toast key={id} {...props} className="w-full">
+            <div className="container mx-auto text-center px-4">
+              {icon && <span className="inline-block mr-2">{icon}</span>}
+              <span className="inline-flex flex-col items-center justify-center">
+                {title && (
+                  <ToastTitle className="font-bold text-sm">{title}</ToastTitle>
                 )}
-              </div>
+                {description && (
+                  <ToastDescription className="text-black/80 text-sm">
+                    {description}
+                  </ToastDescription>
+                )}
+              </span>
+              {action && <span className="ml-2">{action}</span>}
             </div>
-            {action}
             <ToastClose />
           </Toast>
         );

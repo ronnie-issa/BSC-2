@@ -205,12 +205,6 @@ const BagPage = () => {
 
                                       // Update the cart state without triggering addToCartEvent
                                       setCart(updatedCart);
-
-                                      toast({
-                                        title: "Color Updated",
-                                        description: `${item.product.name} color has been updated`,
-                                        duration: 3000,
-                                      });
                                     }
                                   }}
                                 >
@@ -266,12 +260,6 @@ const BagPage = () => {
 
                                       // Update the cart state without triggering addToCartEvent
                                       setCart(updatedCart);
-
-                                      toast({
-                                        title: "Size Updated",
-                                        description: `${item.product.name} size has been updated`,
-                                        duration: 3000,
-                                      });
                                     }
                                   }}
                                 >
