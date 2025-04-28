@@ -33,11 +33,9 @@ exports.handler = async (event) => {
     const html = await renderAsync(WelcomeEmail({ name: email.split('@')[0] }));
 
     // Send email using Resend
-    const fromEmail = process.env.FROM_EMAIL || 'kevin@abouhanna.com';
-    console.log("Sending email from:", fromEmail);
-
+    // Using Resend's onboarding email which doesn't require domain verification
     const data = await resend.emails.send({
-      from: `OMNIS <${fromEmail}>`,
+      from: 'OMNIS <onboarding@resend.dev>',
       to: email,
       subject: 'Welcome to OMNIS Newsletter',
       html: html,

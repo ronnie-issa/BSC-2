@@ -27,7 +27,7 @@ exports.handler = async (event) => {
 
     // Dynamically import Resend
     const { Resend } = await import('resend');
-    
+
     // Initialize Resend client with API key
     const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -48,7 +48,7 @@ exports.handler = async (event) => {
 
     // Send email using Resend
     const data = await resend.emails.send({
-      from: 'OMNIS <kevin@abouhanna.com>',
+      from: 'OMNIS <onboarding@resend.dev>',
       to: email,
       subject: 'OMNIS Test Email',
       html: html,
@@ -56,7 +56,7 @@ exports.handler = async (event) => {
 
     return {
       statusCode: 200,
-      body: JSON.stringify({ 
+      body: JSON.stringify({
         message: "Test email sent successfully!",
         data: data
       }),
