@@ -121,11 +121,11 @@ src/
 
 1. **Email System Migration**
 
-   - ✅ Basic newsletter subscription with Mailjet
-   - ✅ Welcome email template
-   - ⏳ Migration from Mailjet to Resend (actively in planning)
-   - ⏳ React-based email templates
-   - ⏳ Unsubscribe functionality
+   - ✅ Basic newsletter subscription with Resend
+   - ✅ Welcome email template with React Email
+   - ✅ Order confirmation email template with React Email
+   - ✅ Unsubscribe functionality
+   - ⏳ Email analytics tracking
 
 2. **Performance Optimization**
    - ✅ Image lazy loading
