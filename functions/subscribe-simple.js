@@ -1,4 +1,7 @@
 // Simplified subscribe function that doesn't use GitHub
+// Simple in-memory cache for subscribers (will reset on function cold start)
+const subscribers = new Set();
+
 exports.handler = async (event) => {
   // Only allow POST requests
   if (event.httpMethod !== "POST") {
@@ -19,9 +22,19 @@ exports.handler = async (event) => {
 
     console.log("Subscription request received for:", email);
 
-    // Instead of storing in GitHub, we'll just log the subscription
-    // In a real implementation, you would store this in a database
+    // Check if email is already subscribed
+    if (subscribers.has(email)) {
+      console.log("Email already subscribed:", email);
+      return {
+        statusCode: 200,
+        body: JSON.stringify({ message: "You're already subscribed!" }),
+      };
+    }
+
+    // Add email to subscribers set
+    subscribers.add(email);
     console.log("New subscriber:", email, "at", new Date().toISOString());
+    console.log("Current subscribers:", Array.from(subscribers));
 
     // Send welcome email directly (without calling another function)
     try {
