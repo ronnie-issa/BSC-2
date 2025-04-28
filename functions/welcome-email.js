@@ -33,8 +33,11 @@ exports.handler = async (event) => {
     const html = await renderAsync(WelcomeEmail({ name: email.split('@')[0] }));
 
     // Send email using Resend
+    const fromEmail = process.env.FROM_EMAIL || 'kevin@abouhanna.com';
+    console.log("Sending email from:", fromEmail);
+
     const data = await resend.emails.send({
-      from: process.env.FROM_EMAIL || 'OMNIS <hello@omnis-lb.com>',
+      from: `OMNIS <${fromEmail}>`,
       to: email,
       subject: 'Welcome to OMNIS Newsletter',
       html: html,
