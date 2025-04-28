@@ -133,8 +133,21 @@ const CheckoutPage = () => {
     // Store customer information in localStorage for the order confirmation page
     try {
       localStorage.setItem("customerInfo", JSON.stringify(values));
+
+      // Save the current cart items to localStorage before clearing the cart
+      localStorage.setItem(
+        "orderedProducts",
+        JSON.stringify(
+          bag.map((item) => ({
+            ...item.product,
+            quantity: item.quantity,
+            selectedColor: item.selectedColor,
+            selectedSize: item.selectedSize,
+          }))
+        )
+      );
     } catch (error) {
-      console.error("Error storing customer info:", error);
+      console.error("Error storing order info:", error);
     }
 
     // Format customer information
@@ -245,8 +258,21 @@ const CheckoutPage = () => {
     // Store customer information in localStorage for the order confirmation page
     try {
       localStorage.setItem("customerInfo", JSON.stringify(values));
+
+      // Save the current cart items to localStorage before clearing the cart
+      localStorage.setItem(
+        "orderedProducts",
+        JSON.stringify(
+          bag.map((item) => ({
+            ...item.product,
+            quantity: item.quantity,
+            selectedColor: item.selectedColor,
+            selectedSize: item.selectedSize,
+          }))
+        )
+      );
     } catch (error) {
-      console.error("Error storing customer info:", error);
+      console.error("Error storing order info:", error);
     }
 
     // Process the order

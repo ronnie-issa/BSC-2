@@ -37,6 +37,13 @@ const OrderConfirmationPage = () => {
     quantity: number;
   })[] => {
     try {
+      // First try to get from the new orderedProducts key
+      const storedOrderedProducts = localStorage.getItem("orderedProducts");
+      if (storedOrderedProducts) {
+        return JSON.parse(storedOrderedProducts);
+      }
+
+      // Fallback to the cart if orderedProducts is not available
       const storedCart = localStorage.getItem("omnisCart");
       if (storedCart) {
         const cartItems = JSON.parse(storedCart);
