@@ -77,7 +77,7 @@ exports.handler = async (event) => {
             <h1>Successfully Unsubscribed</h1>
             <p>You have been successfully unsubscribed from the OMNIS newsletter.</p>
             <p>We're sorry to see you go. If you have any feedback on how we could improve, please let us know.</p>
-            <a href="https://omnis-lb.netlify.app" class="btn">RETURN TO WEBSITE</a>
+            <a href="${process.env.URL || 'https://omnis-lb.netlify.app'}" class="btn">RETURN TO WEBSITE</a>
           </div>
         </body>
         </html>

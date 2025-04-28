@@ -98,14 +98,14 @@ exports.handler = async (event) => {
                 <li>Style tips and inspiration</li>
               </ul>
               <p>Stay tuned for our upcoming releases and special offers!</p>
-              <a href="https://omnis-lb.netlify.app/shop" class="btn">EXPLORE OUR COLLECTION</a>
+              <a href="${process.env.URL || 'https://omnis-lb.netlify.app'}/shop" class="btn">EXPLORE OUR COLLECTION</a>
             </div>
             <div class="footer">
               <p>© ${new Date().getFullYear()} OMNIS. All rights reserved.</p>
               <p>You're receiving this email because you subscribed to our newsletter.</p>
               <p>
-                <a href="https://omnis-lb.netlify.app/legal">Privacy Policy</a> |
-                <a href="https://omnis-lb.netlify.app/.netlify/functions/unsubscribe-simple?email=${email}">Unsubscribe</a>
+                <a href="${process.env.URL || 'https://omnis-lb.netlify.app'}/legal">Privacy Policy</a> |
+                <a href="${process.env.URL || 'https://omnis-lb.netlify.app'}/.netlify/functions/unsubscribe-simple?email=${email}">Unsubscribe</a>
               </p>
             </div>
           </div>
