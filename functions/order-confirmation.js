@@ -1,5 +1,6 @@
 // Netlify function to send order confirmation emails
 const emailTemplates = require('./email-templates');
+const constants = require('./constants');
 
 exports.handler = async (event) => {
   // Only allow POST requests
@@ -31,7 +32,7 @@ exports.handler = async (event) => {
     const resend = new Resend(process.env.RESEND_API_KEY);
 
     // Get the domain from environment or use default
-    const domain = process.env.URL || 'https://omnis-lb.netlify.app';
+    const domain = process.env.URL || constants.DEFAULT_DOMAIN;
     console.log("Using domain for email links:", domain);
 
     // Generate the email HTML using the template
@@ -51,9 +52,9 @@ exports.handler = async (event) => {
 
     try {
       const data = await resend.emails.send({
-        from: 'OMNIS <onboarding@resend.dev>', // Using onboarding email for testing
+        from: process.env.FROM_EMAIL || constants.DEFAULT_SENDER,
         to: email,
-        subject: `OMNIS Order Confirmation #${orderNumber}`,
+        subject: `${constants.EMAIL_SUBJECTS.ORDER_CONFIRMATION} #${orderNumber}`,
         html: html,
       });
 
@@ -76,7 +77,7 @@ exports.handler = async (event) => {
       return {
         statusCode: 200,
         body: JSON.stringify({
-          message: "Order confirmation email sent successfully!",
+          message: constants.SUCCESS_MESSAGES.ORDER_CONFIRMATION,
           orderNumber: orderNumber
         }),
       };
@@ -84,7 +85,7 @@ exports.handler = async (event) => {
       return {
         statusCode: 200, // Still return 200 to the user
         body: JSON.stringify({
-          message: "Order processed successfully, but there was an issue sending the confirmation email. Please check your spam folder or contact support.",
+          message: constants.ERROR_MESSAGES.ORDER_EMAIL_ERROR,
           error: emailError,
           orderNumber: orderNumber
         }),
@@ -95,7 +96,7 @@ exports.handler = async (event) => {
     return {
       statusCode: 500,
       body: JSON.stringify({
-        message: "Error processing order confirmation, please try again later",
+        message: constants.ERROR_MESSAGES.ORDER_PROCESSING_ERROR,
         error: error.message
       }),
     };

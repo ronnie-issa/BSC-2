@@ -2,6 +2,7 @@
 // Simple in-memory cache for subscribers (will reset on function cold start)
 const subscribers = new Set();
 const emailTemplates = require('./email-templates');
+const constants = require('./constants');
 
 exports.handler = async (event) => {
   // Only allow POST requests
@@ -28,7 +29,7 @@ exports.handler = async (event) => {
       console.log("Email already subscribed:", email);
       return {
         statusCode: 200,
-        body: JSON.stringify({ message: "You're already subscribed!" }),
+        body: JSON.stringify({ message: constants.SUCCESS_MESSAGES.ALREADY_SUBSCRIBED }),
       };
     }
 
@@ -46,7 +47,7 @@ exports.handler = async (event) => {
       const resend = new Resend(process.env.RESEND_API_KEY);
 
       // Get the domain from environment or use default
-      const domain = process.env.URL || 'https://omnis-lb.netlify.app';
+      const domain = process.env.URL || constants.DEFAULT_DOMAIN;
       console.log("Using domain for email links:", domain);
 
       // Generate the email HTML using the template
@@ -61,9 +62,9 @@ exports.handler = async (event) => {
       console.log("Attempting to send email with Resend...");
       try {
         const data = await resend.emails.send({
-          from: 'OMNIS <onboarding@resend.dev>',
+          from: process.env.FROM_EMAIL || constants.DEFAULT_SENDER,
           to: email,
-          subject: 'Welcome to OMNIS Newsletter',
+          subject: constants.EMAIL_SUBJECTS.WELCOME,
           html: html,
         });
 
@@ -75,7 +76,7 @@ exports.handler = async (event) => {
           return {
             statusCode: 200, // Still return 200 to the user
             body: JSON.stringify({
-              message: "Successfully subscribed! However, there was an issue sending the welcome email. Please check your spam folder or try again later.",
+              message: constants.ERROR_MESSAGES.EMAIL_SEND_ERROR,
               error: data.error
             }),
           };
@@ -85,7 +86,7 @@ exports.handler = async (event) => {
         return {
           statusCode: 200, // Still return 200 to the user
           body: JSON.stringify({
-            message: "Successfully subscribed! However, there was an issue sending the welcome email. Please check your spam folder or try again later.",
+            message: constants.ERROR_MESSAGES.EMAIL_SEND_ERROR,
             error: sendError.message
           }),
         };
@@ -94,7 +95,7 @@ exports.handler = async (event) => {
       return {
         statusCode: 200,
         body: JSON.stringify({
-          message: "Successfully subscribed! Check your email for a welcome message."
+          message: constants.SUCCESS_MESSAGES.SUBSCRIPTION
         }),
       };
     } catch (emailError) {
@@ -113,7 +114,7 @@ exports.handler = async (event) => {
     return {
       statusCode: 500,
       body: JSON.stringify({
-        message: "Error subscribing, please try again later",
+        message: constants.ERROR_MESSAGES.SUBSCRIPTION_ERROR,
         error: error.message
       }),
     };
