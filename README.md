@@ -57,6 +57,29 @@ All images use lazy loading for improved performance:
 - A placeholder is shown until the image loads
 - Smooth fade-in transition when images appear
 
+## Email System
+
+OMNIS uses a centralized email template system for all transactional emails:
+
+### Email Templates
+
+All email templates are defined in `functions/email-templates.js`:
+
+- **Welcome Email**: Sent when a user subscribes to the newsletter
+- **Order Confirmation Email**: Sent when a customer places an order
+
+### Email Customization
+
+For detailed instructions on customizing email templates, see the [Email Customization Guide](docs/email-customization-guide.md).
+
+Key features of the email system:
+
+- Centralized template management
+- HTML/CSS-based templates for maximum compatibility
+- Resend integration for reliable delivery
+- Unsubscribe functionality for newsletter emails
+- Responsive design for mobile and desktop
+
 ## Project Structure
 
 ```
@@ -67,6 +90,8 @@ src/
 ├── contexts/          # React context providers
 ├── services/          # API services and external integrations
 └── styles/            # Global styles and Tailwind config
+docs/
+└── email-customization-guide.md  # Guide for customizing email templates
 ```
 
 ### Key Directories and Files
@@ -78,8 +103,9 @@ src/
 - `src/services/`: External API integrations
   - `contentful.ts`: Handles fetching product data from Contentful
 - `functions/`: Netlify serverless functions
-  - `subscribe.js`: Handles newsletter subscriptions
-  - `welcome-email.js`: Sends welcome emails to new subscribers
+  - `subscribe.js`: Handles newsletter subscriptions and sends welcome emails
+  - `order-confirmation.js`: Sends order confirmation emails
+  - `email-templates.js`: Contains all email templates
 
 ## Project Status
 
@@ -119,12 +145,13 @@ src/
 
 ### In Progress
 
-1. **Email System Migration**
+1. **Email System**
 
-   - ✅ Basic newsletter subscription with Resend
-   - ✅ Welcome email template with React Email
-   - ✅ Order confirmation email template with React Email
+   - ✅ Newsletter subscription with Resend
+   - ✅ Welcome email template
+   - ✅ Order confirmation email template
    - ✅ Unsubscribe functionality
+   - ✅ Centralized email template system
    - ⏳ Email analytics tracking
 
 2. **Performance Optimization**
@@ -147,14 +174,13 @@ src/
 
    - Implement image galleries for products (multiple images per product)
 
-3. **Email System Migration and Improvements**
+3. **Email System Improvements**
 
-   - Complete migration from Mailjet to Resend
-   - Implement React-based email templates
-   - Create order confirmation email template
-   - Complete unsubscribe functionality
-   - Implement email analytics tracking
-   - For a production site, you would want to store subscribers in a database
+   - ✅ Complete migration from Mailjet to Resend
+   - ✅ Create order confirmation email template
+   - ✅ Complete unsubscribe functionality
+   - ⏳ Implement email analytics tracking
+   - ⏳ For a production site, you would want to store subscribers in a database
 
 4. **Design System Setup**
    - Establish a design system for consistent UI components
