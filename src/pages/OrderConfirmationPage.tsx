@@ -6,7 +6,6 @@ import Footer from "@/components/Footer";
 import { motion } from "@/lib/framer";
 import { useEffect, useState } from "react";
 import { sendOrderConfirmationEmail } from "@/services/resend";
-import { toast } from "@/hooks/use-toast";
 import { Product } from "@/contexts/ProductContext";
 
 const OrderConfirmationPage = () => {
@@ -135,8 +134,8 @@ const OrderConfirmationPage = () => {
           {/* Top section with order confirmation */}
           <div className="border-b border-white/10 pb-12 mb-12">
             <div className="flex items-center justify-center mb-8">
-              <div className="h-16 w-16 bg-white border border-omnis-black flex items-center justify-center">
-                <Check className="h-8 w-8 text-omnis-black" strokeWidth={1.5} />
+              <div className="h-16 w-16 bg-omnis-black border border-white rounded-full flex items-center justify-center">
+                <Check className="h-8 w-8 text-white" strokeWidth={1.5} />
               </div>
             </div>
 
@@ -162,8 +161,8 @@ const OrderConfirmationPage = () => {
               </h2>
               <div className="space-y-6">
                 <div className="flex items-start">
-                  <div className="flex-shrink-0 mr-4 bg-white border border-omnis-black h-8 w-8 flex items-center justify-center">
-                    <span className="text-sm text-omnis-black">01</span>
+                  <div className="flex-shrink-0 mr-4 bg-omnis-black border border-white h-8 w-8 flex items-center justify-center">
+                    <span className="text-sm text-white">01</span>
                   </div>
                   <div>
                     <p className="text-white">Email Confirmation</p>
@@ -174,8 +173,8 @@ const OrderConfirmationPage = () => {
                 </div>
 
                 <div className="flex items-start">
-                  <div className="flex-shrink-0 mr-4 bg-white border border-omnis-black h-8 w-8 flex items-center justify-center">
-                    <span className="text-sm text-omnis-black">02</span>
+                  <div className="flex-shrink-0 mr-4 bg-omnis-black border border-white h-8 w-8 flex items-center justify-center">
+                    <span className="text-sm text-white">02</span>
                   </div>
                   <div>
                     <p className="text-white">Order Processing</p>
@@ -186,8 +185,8 @@ const OrderConfirmationPage = () => {
                 </div>
 
                 <div className="flex items-start">
-                  <div className="flex-shrink-0 mr-4 bg-white border border-omnis-black h-8 w-8 flex items-center justify-center">
-                    <span className="text-sm text-omnis-black">03</span>
+                  <div className="flex-shrink-0 mr-4 bg-omnis-black border border-white h-8 w-8 flex items-center justify-center">
+                    <span className="text-sm text-white">03</span>
                   </div>
                   <div>
                     <p className="text-white">Shipping Confirmation</p>
@@ -198,8 +197,8 @@ const OrderConfirmationPage = () => {
                 </div>
 
                 <div className="flex items-start">
-                  <div className="flex-shrink-0 mr-4 bg-white border border-omnis-black h-8 w-8 flex items-center justify-center">
-                    <span className="text-sm text-omnis-black">04</span>
+                  <div className="flex-shrink-0 mr-4 bg-omnis-black border border-white h-8 w-8 flex items-center justify-center">
+                    <span className="text-sm text-white">04</span>
                   </div>
                   <div>
                     <p className="text-white">Delivery</p>
@@ -322,11 +321,10 @@ const OrderConfirmationPage = () => {
           </div>
 
           {/* Continue shopping button */}
-          <div className="text-center">
+          <div className="text-center mt-8">
             <Button
-              variant="outline"
+              variant="default"
               size="lg"
-              className="bg-white border-omnis-black text-omnis-black hover:bg-omnis-black hover:text-white transition-all duration-300"
               onClick={() => navigate("/shop")}
             >
               <span className="mr-2">CONTINUE SHOPPING</span>

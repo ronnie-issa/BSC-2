@@ -6,6 +6,16 @@ import { Product } from "@/contexts/ProductContext";
 import { VisuallyHidden } from "@/components/ui/visually-hidden";
 import { Button } from "@/components/ui/button";
 
+/**
+ * ProductCard Component
+ *
+ * Note: The VIEW button is currently hidden. In the future, this will be
+ * implemented as a quick view feature that shows product details in a modal
+ * without navigating away from the current page.
+ *
+ * TODO: Implement quick view functionality when clicking the VIEW button.
+ */
+
 interface ProductCardProps {
   product: Product;
   index: number; // Kept for consistency with other components that might use it
@@ -46,7 +56,8 @@ const ProductCard = ({ product }: ProductCardProps) => {
           </div>
         </Link>
 
-        {/* View button that appears on hover - positioned at the bottom of the photo */}
+        {/* View button is hidden for now - will be used for quick view feature in the future */}
+        {/*
         <motion.div
           className="absolute bottom-4 left-0 right-0 flex justify-center"
           initial={{ opacity: 0, y: 10 }}
@@ -69,6 +80,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
             </Button>
           </Link>
         </motion.div>
+        */}
       </div>
 
       <Link to={`/product/${product.slug}`} className="block mt-2">

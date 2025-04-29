@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
 import { motion, useInView } from "@/lib/framer";
 import { useToast } from "@/components/ui/use-toast";
+import { Button } from "@/components/ui/button";
 
 const NewsletterSection = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
@@ -88,18 +89,16 @@ const NewsletterSection = () => {
               placeholder="Your email address"
               required
               autoComplete="email"
-              className="flex-grow px-4 py-3 bg-transparent border border-omnis-white/80 hover:border-omnis-white focus:border-omnis-white focus:outline-none transition-colors text-omnis-white placeholder:text-omnis-lightgray"
+              className="flex-grow px-4 py-3 bg-transparent border border-omnis-white/80 hover:border-omnis-white focus:border-omnis-white focus:outline-none transition-colors text-omnis-white placeholder:text-omnis-lightgray h-[46px]"
             />
-            <button
+            <Button
               type="submit"
               disabled={isSubmitting}
-              className="relative px-6 py-3 bg-omnis-white text-omnis-black font-medium transition-transform hover:scale-[1.02] overflow-hidden group disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:scale-100"
+              variant="default"
+              className="h-[46px] px-6"
             >
-              <span className="relative z-10">
-                {isSubmitting ? "SUBMITTING..." : "SUBSCRIBE"}
-              </span>
-              <div className="absolute inset-0 bg-omnis-lightgray transform -translate-x-full group-hover:translate-x-0 transition-transform duration-300 ease-in-out" />
-            </button>
+              {isSubmitting ? "SUBMITTING..." : "SUBSCRIBE"}
+            </Button>
           </motion.form>
 
           <motion.p

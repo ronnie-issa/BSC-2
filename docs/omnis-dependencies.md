@@ -29,17 +29,14 @@ This project relies on several external services to function properly:
 
 ### Email Services
 
-Currently using **Mailjet** for email delivery:
+Using **Resend** for email delivery:
 
 - Sends welcome emails to new newsletter subscribers
-- Requires API key and Secret key configured in environment variables
-- Sender email must be verified in Mailjet
-
-Planned migration to **Resend** (see TODO.md):
-
-- Will provide React-based email templates
-- Will handle welcome emails and order confirmations
-- Will offer better developer experience and Next.js compatibility
+- Sends order confirmation emails to customers
+- Uses HTML email templates for consistent styling
+- Requires Resend API key configured in environment variables
+- Sender email can be customized through environment variables
+- Provides excellent deliverability and tracking capabilities
 
 ### Environment Variables
 
@@ -59,6 +56,10 @@ CONTENTFUL_ENVIRONMENT=master
 
 # Netlify site URL
 URL=https://your-netlify-site-name.netlify.app
+
+# Email configuration
+RESEND_API_KEY=your_resend_api_key
+FROM_EMAIL=your_sender_email@example.com
 ```
 
 ## Contentful CMS Integration
@@ -87,3 +88,49 @@ The project uses Contentful as a headless CMS to manage product data:
 - Changes can be previewed before publishing using the preview mode
 - Content can be scheduled for future publishing
 - Multiple users can collaborate on content creation and management
+
+## API Usage and Optimization
+
+The project is optimized to minimize API calls while maintaining a responsive user experience:
+
+### Contentful API Usage
+
+- API requests are cached for 2 minutes to reduce the number of calls
+- A typical user journey (browsing to checkout) uses only 1-3 Contentful API requests
+- Featured products are filtered from cached data when possible
+- Individual product data is cached separately for efficient retrieval
+- Rich text content is properly rendered with the Contentful Rich Text Renderer
+
+### Resend API Usage
+
+- Email sending is handled through Netlify serverless functions
+- Order confirmation emails include detailed order information
+- Welcome emails are sent to new newsletter subscribers
+- Email templates use responsive HTML for optimal viewing on all devices
+- Error handling ensures users are notified of any issues with email delivery
+
+## Future Considerations
+
+### Potential Framework Migration
+
+The project is currently considering a migration to one of the following frameworks:
+
+- **Astro**: Offers excellent performance with partial hydration, strong SEO capabilities, and lower server costs
+- **Next.js**: Provides robust SSR/SSG capabilities with a mature ecosystem, but higher server costs
+- **SvelteKit**: Delivers excellent performance with smaller bundle sizes and intuitive syntax
+- **React (current)**: Maintains the existing codebase with its large ecosystem and flexibility
+
+Key considerations for the migration include:
+
+- SEO performance
+- Page load speed and Core Web Vitals
+- Accessibility compliance
+- Contentful integration capabilities
+- Development experience and maintainability
+- Hosting costs and scalability
+
+### Subscriber Management
+
+- Current implementation stores subscribers in a JSON file via GitHub
+- Future implementation may use a dedicated database for better scalability
+- Potential integration with email marketing platforms for campaign management
