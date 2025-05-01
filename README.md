@@ -223,15 +223,22 @@ docs/
 
 ### Misc Mini Tasks
 
+- Favicon
 - Change placeholder image
 - White variation product image preview not reflecting in dropdown, bagpage, and checkout, confirmation
 - Add number formating on contentful for prices ($1,000)
 - SIZE GUIDE chart link on product page, or not link, chart on product page?
-- Moving text on nav bar
+- Moving text on nav bar (https://trikkobrand.com/collections/basics)
 - Priced usd, lbp
 - View button on product card needs to be quick view feature
-  - Quick View button on hover product card
+   - Quick View button on hover product card
 - Choose artwork placement?
 - Stock item availability
 - Toast slides from under the navbar
 - If i click subscribe and i dont have an email, it shows a please fillout this field bubble which has an ornge icon, i want this icon to be black (custom validation, not a priority now)
+- Handle subscribe newsletter locally
+   - A dedicated email marketing platform that handles subscriber management (hubspot)
+- Document Toast Comp in design system
+- Red Hat Display font replace with Noto Sans Display
+- Make Large Omnis Logo Responsive (Use SVG)
+- Email spam protection plan
