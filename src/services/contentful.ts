@@ -1,5 +1,5 @@
 import { createClient } from 'contentful';
-import type { EntryCollection } from 'contentful';
+import type { EntryCollection, EntrySkeletonType, Entry } from 'contentful';
 import type { Product } from '../contexts/ProductContext';
 
 // Contentful delivery client (for published content)
@@ -50,9 +50,9 @@ const generateSlug = (name: string): string => {
 
 // Helper function to create a consistent product object from Contentful data
 const createProductFromContentful = (
-  item: { sys: { id: string }, fields: ContentfulProduct['fields'] }
+  item: Entry<ContentfulProduct>
 ): Product => {
-  const fields = item.fields;
+  const fields = item.fields as ContentfulProductFields;
 
   // Ensure image URL has https:// prefix if it starts with //
   let imageUrl = fields.image?.fields?.file?.url || '';
@@ -60,12 +60,15 @@ const createProductFromContentful = (
     imageUrl = 'https:' + imageUrl;
   }
 
-  // Keep the rich text description as is for the rich text renderer
+  // Handle description which could be rich text or string
   let description = fields.description;
   // If it's not a rich text object, convert it to a string for backward compatibility
   if (description && typeof description === 'string') {
-    description = description;
-  } else if (!description || !description.nodeType) {
+    // Keep as is
+  } else if (!description) {
+    console.warn('Description is missing');
+    description = 'Product description unavailable';
+  } else if (typeof description === 'object' && !description.nodeType) {
     console.warn('Description is not in expected format:', description);
     description = 'Product description unavailable';
   }
@@ -96,7 +99,7 @@ const createProductFromContentful = (
 };
 
 // Helper function to process variations from a product
-const processVariations = (fields: ContentfulProduct['fields']) => {
+const processVariations = (fields: ContentfulProductFields) => {
   // Use embeddedVariations if available, otherwise use referenced variations
   if (fields.embeddedVariations && fields.embeddedVariations.length > 0) {
     // Use embedded variations
@@ -132,48 +135,56 @@ const processVariations = (fields: ContentfulProduct['fields']) => {
 };
 
 // Interface for Contentful product entry
-interface ContentfulProduct {
-  sys: {
-    id: string;
-  };
-  fields: {
-    name: string;
-    price: number;
-    description: string;
-    image: {
-      fields: {
-        file: {
-          url: string;
-        };
+interface ContentfulProductFields {
+  name: string;
+  price: number;
+  description: any; // Using 'any' to handle both string and rich text
+  image: {
+    fields: {
+      file: {
+        url: string;
       };
     };
-    featured: boolean;
-    variations: {
-      fields: {
-        name: string;
-        value: string;
-        image?: {
-          fields: {
-            file: {
-              url: string;
-            };
-          };
-        };
-      };
-    }[];
-    embeddedVariations?: {
+  };
+  featured: boolean;
+  variations: {
+    fields: {
       name: string;
       value: string;
       image?: {
-        url: string;
+        fields: {
+          file: {
+            url: string;
+          };
+        };
       };
-    }[];
-    sizes: {
-      fields: {
-        name: string;
-        value: string;
+    };
+  }[];
+  embeddedVariations?: {
+    name: string;
+    value: string;
+    image?: {
+      url: string;
+    };
+  }[];
+  sizes: {
+    fields: {
+      name: string;
+      value: string;
+    };
+  }[];
+}
+
+// Type for Contentful product entry that satisfies EntrySkeletonType
+interface ContentfulProduct extends EntrySkeletonType {
+  fields: ContentfulProductFields;
+  sys: {
+    id: string;
+    contentType: {
+      sys: {
+        id: 'product' | 'Product';
       };
-    }[];
+    };
   };
 }
 
@@ -232,15 +243,21 @@ export async function fetchAllProducts(preview = false): Promise<Product[]> {
     // Try with both lowercase and uppercase content type names
     let entries: EntryCollection<ContentfulProduct>;
     try {
-      entries = await client.getEntries({
+      // Use query parameters in a type-safe way
+      const query: any = {
         content_type: 'product',
         include: 2,
-      });
+      };
+
+      entries = await client.getEntries(query);
     } catch (error) {
-      entries = await client.getEntries({
+      // Try with uppercase content type
+      const query: any = {
         content_type: 'Product',
         include: 2,
-      });
+      };
+
+      entries = await client.getEntries(query);
     }
 
     // Use our helper function to create consistent product objects
@@ -314,17 +331,25 @@ export async function fetchFeaturedProducts(preview = false): Promise<Product[]>
     // Try with both lowercase and uppercase content type names
     let entries: EntryCollection<ContentfulProduct>;
     try {
-      entries = await client.getEntries({
+      // Use query parameters in a type-safe way
+      const query: any = {
         content_type: 'product',
-        'fields.featured': true,
         include: 2,
-      });
+      };
+      // Add the featured filter
+      query['fields.featured'] = true;
+
+      entries = await client.getEntries(query);
     } catch (error) {
-      entries = await client.getEntries({
+      // Try with uppercase content type
+      const query: any = {
         content_type: 'Product',
-        'fields.featured': true,
         include: 2,
-      });
+      };
+      // Add the featured filter
+      query['fields.featured'] = true;
+
+      entries = await client.getEntries(query);
     }
 
     // Use our helper function to create consistent product objects
@@ -375,8 +400,6 @@ export async function fetchProductById(id: string | number, preview = false): Pr
       const entry = await client.getEntry<ContentfulProduct>(id.toString(), {
         include: 2,
       });
-
-      const fields = entry.fields;
 
       // Use our helper function to create a consistent product object
       const product = createProductFromContentful(entry);

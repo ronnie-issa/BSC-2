@@ -242,3 +242,4 @@ docs/
 - Red Hat Display font replace with Noto Sans Display
 - Make Large Omnis Logo Responsive (Use SVG)
 - Email spam protection plan
+- Navbar logo should scroll to top on homepage or (Reload when on astro)
