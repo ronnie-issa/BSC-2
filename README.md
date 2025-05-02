@@ -231,16 +231,17 @@ docs/
 - Moving text on nav bar (https://trikkobrand.com/collections/basics)
 - Priced usd, lbp
 - View button on product card needs to be quick view feature
-   - Quick View button on hover product card
+  - Quick View button on hover product card
 - Choose artwork placement?
 - Stock item availability
 - Toast slides from under the navbar
 - If i click subscribe and i dont have an email, it shows a please fillout this field bubble which has an ornge icon, i want this icon to be black (custom validation, not a priority now)
 - Handle subscribe newsletter locally
-   - A dedicated email marketing platform that handles subscriber management (hubspot)
+  - A dedicated email marketing platform that handles subscriber management (hubspot)
 - Document Toast Comp in design system
 - Red Hat Display font replace with Noto Sans Display
-- Make Large Omnis Logo Responsive (Use SVG)
+- Make Large Omnis Logo Responsive (Use SVG) or https://utopia.fyi/
 - Email spam protection plan
 - Navbar logo should scroll to top on homepage or (Reload when on astro)
 - Loading calulations for product price when incleasing or decreasing quantity in bag page
+- integrate loop with resend to have a wysiwyg editor for email templates
