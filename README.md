@@ -223,7 +223,7 @@ docs/
 
 ### Misc Mini Tasks
 
-- Favicon
+- Meta Image
 - Change placeholder image
 - White variation product image preview not reflecting in dropdown, bagpage, and checkout, confirmation
 - Add number formating on contentful for prices ($1,000)
@@ -243,3 +243,4 @@ docs/
 - Make Large Omnis Logo Responsive (Use SVG)
 - Email spam protection plan
 - Navbar logo should scroll to top on homepage or (Reload when on astro)
+- Loading calulations for product price when incleasing or decreasing quantity in bag page
