@@ -240,7 +240,7 @@ docs/
   - A dedicated email marketing platform that handles subscriber management (hubspot)
 - Document Toast Comp in design system
 - Red Hat Display font replace with Noto Sans Display
-- Make Large Omnis Logo Responsive (Use SVG) or https://utopia.fyi/
+- Make Large Omnis Logo Responsive (Use SVG) or https://utopia.fyi/ or tailwindcss-fluid-type
 - Email spam protection plan
 - Navbar logo should scroll to top on homepage or (Reload when on astro)
 - Loading calulations for product price when incleasing or decreasing quantity in bag page
