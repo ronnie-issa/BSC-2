@@ -67,9 +67,9 @@ const About = () => {
 
             <div className="h-[500px] relative overflow-hidden">
               <img
-                src="/images/about/studio.jpg"
+                src="/images/about/studio.png"
                 alt="OMNIS Studio"
-                className="w-full h-full object-cover object-center"
+                className="w-full h-full object-contain object-center"
                 loading="eager"
               />
             </div>

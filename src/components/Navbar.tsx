@@ -321,12 +321,12 @@ const Navbar = ({ scrollY = 0, showLogoEffect = false }: NavbarProps) => {
                       bagItemCount > 0
                         ? "text-omnis-white"
                         : "text-omnis-lightgray"
-                    } group-hover:text-omnis-white transition-colors duration-200`}
+                    } group-hover:text-omnis-white transition-colors duration-200 p-0.5`}
                   />
                   {bagItemCount > 0 && (
                     <Badge
                       variant="default"
-                      className={`absolute -top-0 -right-0 h-4 w-4 flex items-center justify-center p-0 bg-red-600 text-white text-xs font-medium ${
+                      className={`absolute top-1 right-1 h-4 w-4 flex items-center justify-center p-0 bg-red-600 text-white text-xs font-medium ${
                         animateBadge ? "animate-pulse scale-125" : ""
                       }`}
                     >
@@ -378,12 +378,12 @@ const Navbar = ({ scrollY = 0, showLogoEffect = false }: NavbarProps) => {
                     bagItemCount > 0
                       ? "text-omnis-white"
                       : "text-omnis-lightgray"
-                  } transition-colors duration-200`}
+                  } transition-colors duration-200 p-0.5`}
                 />
                 {bagItemCount > 0 && (
                   <Badge
                     variant="default"
-                    className={`absolute -top-1 -right-1 h-4 w-4 flex items-center justify-center p-0 bg-red-600 text-white text-xs font-medium ${
+                    className={`absolute top-1 right-1 h-4 w-4 flex items-center justify-center p-0 bg-red-600 text-white text-xs font-medium ${
                       animateBadge ? "animate-pulse scale-125" : ""
                     }`}
                   >
