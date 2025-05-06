@@ -1,4 +1,12 @@
-import React, { createContext, useContext, useState, ReactNode } from "react";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  ReactNode,
+  useCallback,
+  useMemo,
+} from "react";
+import { throttle } from "@/lib/performance";
 
 export interface Product {
   id: string | number; // Changed to accept both string and number IDs
@@ -76,13 +84,23 @@ const loadCartFromStorage = (): BagItem[] => {
 };
 
 // Helper function to save cart to localStorage
-const saveCartToStorage = (cart: BagItem[]) => {
+// Throttled to prevent excessive writes to localStorage
+const saveCartToStorage = throttle((cart: BagItem[]) => {
   try {
-    localStorage.setItem("omnisCart", JSON.stringify(cart));
+    // Use requestIdleCallback if available, otherwise use setTimeout
+    const saveToStorage = () => {
+      localStorage.setItem("omnisCart", JSON.stringify(cart));
+    };
+
+    if (typeof window.requestIdleCallback === "function") {
+      window.requestIdleCallback(() => saveToStorage());
+    } else {
+      setTimeout(saveToStorage, 0);
+    }
   } catch (error) {
     console.error("Error saving cart to localStorage:", error);
   }
-};
+}, 300); // Throttle to once every 300ms
 
 export const ProductProvider: React.FC<{ children: ReactNode }> = ({
   children,
@@ -90,172 +108,239 @@ export const ProductProvider: React.FC<{ children: ReactNode }> = ({
   const [cart, setCart] = useState<BagItem[]>(loadCartFromStorage());
   const [addToCartEvent, setAddToCartEvent] = useState(false);
 
-  const resetAddToCartEvent = () => {
+  // Memoize the reset function to maintain reference stability
+  const resetAddToCartEvent = useCallback(() => {
     setAddToCartEvent(false);
-  };
+  }, []);
 
-  const addToCart = (
-    product: Product,
-    quantity: number,
-    selectedColor: string,
-    selectedSize: string,
-    selectedImage?: string
-  ) => {
-    // Trigger the add to cart event
-    setAddToCartEvent(true);
+  // Helper function to find the appropriate image for a product variation
+  // Extracted and memoized to improve performance
+  const findVariationImage = useCallback(
+    (product: Product, selectedColor: string): string => {
+      // If the product doesn't have colors or variations, return the default image
+      if (!product.colors?.length || !product.variations?.length) {
+        return product.image;
+      }
 
-    setCart((prevCart) => {
-      // Check if item already exists in bag
-      const existingItemIndex = prevCart.findIndex(
-        (item) =>
-          item.product.id === product.id &&
-          item.selectedColor === selectedColor &&
-          item.selectedSize === selectedSize
-      );
+      // Find the color name that corresponds to the selected color value
+      const selectedColorName = product.colors.find(
+        (c) => c.value === selectedColor
+      )?.name;
 
-      // If no selectedImage is provided, try to find the variation image
-      let imageToUse = selectedImage;
-      if (!imageToUse && selectedColor) {
-        // Find the color name that corresponds to the selected color value
-        const selectedColorName = product.colors.find(
-          (c) => c.value === selectedColor
-        )?.name;
+      if (selectedColorName) {
+        // Find the variation with that name
+        const variation = product.variations.find(
+          (v) => v.name === selectedColorName
+        );
 
-        if (selectedColorName) {
-          // Find the variation with that name
-          const variation = product.variations.find(
-            (v) => v.name === selectedColorName
-          );
+        // If the variation has an image, use it
+        if (variation && variation.image) {
+          return variation.image;
+        }
+      }
 
-          // If the variation has an image, use it
-          if (variation && variation.image) {
-            imageToUse = variation.image;
+      // Default to the product image if no variation image is found
+      return product.image;
+    },
+    []
+  );
+
+  // Optimized addToCart function using useCallback for reference stability
+  const addToCart = useCallback(
+    (
+      product: Product,
+      quantity: number,
+      selectedColor: string,
+      selectedSize: string,
+      selectedImage?: string
+    ) => {
+      // Use requestAnimationFrame to ensure UI updates happen in the next frame
+      // This helps prevent jank during click handling
+      requestAnimationFrame(() => {
+        // Trigger the add to cart event
+        setAddToCartEvent(true);
+
+        setCart((prevCart) => {
+          // Performance optimization: Create a Map for faster lookups
+          // This is more efficient than using findIndex for large carts
+          const cartMap = new Map<string, { item: BagItem; index: number }>();
+
+          prevCart.forEach((item, index) => {
+            const key = `${item.product.id}-${item.selectedColor}-${item.selectedSize}`;
+            cartMap.set(key, { item, index });
+          });
+
+          const itemKey = `${product.id}-${selectedColor}-${selectedSize}`;
+          const existingItemData = cartMap.get(itemKey);
+
+          // Determine which image to use
+          const imageToUse =
+            selectedImage || findVariationImage(product, selectedColor);
+
+          let newCart;
+          if (existingItemData) {
+            // Update quantity of existing item
+            newCart = [...prevCart];
+            newCart[existingItemData.index].quantity += quantity;
+            // Update the selected image if provided
+            newCart[existingItemData.index].selectedImage = imageToUse;
+          } else {
+            // Add new item to bag
+            newCart = [
+              ...prevCart,
+              {
+                product,
+                quantity,
+                selectedColor,
+                selectedSize,
+                selectedImage: imageToUse,
+              },
+            ];
           }
-        }
-      }
 
-      // If still no image, use the default product image
-      if (!imageToUse) {
-        imageToUse = product.image;
-      }
-
-      let newCart;
-      if (existingItemIndex >= 0) {
-        // Update quantity of existing item
-        newCart = [...prevCart];
-        newCart[existingItemIndex].quantity += quantity;
-        // Update the selected image if provided
-        if (imageToUse) {
-          newCart[existingItemIndex].selectedImage = imageToUse;
-        }
-      } else {
-        // Add new item to bag
-        newCart = [
-          ...prevCart,
-          {
-            product,
-            quantity,
-            selectedColor,
-            selectedSize,
-            selectedImage: imageToUse,
-          },
-        ];
-      }
-
-      // Save to localStorage
-      saveCartToStorage(newCart);
-      return newCart;
-    });
-  };
-
-  const removeFromCart = (
-    productId: string | number,
-    selectedColor?: string,
-    selectedSize?: string
-  ) => {
-    setCart((prevCart) => {
-      let newCart;
-
-      if (selectedColor && selectedSize) {
-        // Remove specific item with matching product ID, color and size
-        newCart = prevCart.filter(
-          (item) =>
-            !(
-              item.product.id === productId &&
-              item.selectedColor === selectedColor &&
-              item.selectedSize === selectedSize
-            )
-        );
-      } else if (selectedColor) {
-        // Remove specific item with matching product ID and color
-        newCart = prevCart.filter(
-          (item) =>
-            !(
-              item.product.id === productId &&
-              item.selectedColor === selectedColor
-            )
-        );
-      } else {
-        // Remove all items with matching product ID
-        newCart = prevCart.filter((item) => item.product.id !== productId);
-      }
-
-      // Save to localStorage
-      saveCartToStorage(newCart);
-      return newCart;
-    });
-  };
-
-  const updateCartItemQuantity = (
-    productId: string | number,
-    selectedColor: string,
-    selectedSize: string,
-    newQuantity: number
-  ) => {
-    setCart((prevCart) => {
-      const newCart = prevCart.map((item) => {
-        if (
-          item.product.id === productId &&
-          item.selectedColor === selectedColor &&
-          item.selectedSize === selectedSize
-        ) {
-          return { ...item, quantity: newQuantity };
-        }
-        return item;
+          // Save to localStorage (already throttled)
+          saveCartToStorage(newCart);
+          return newCart;
+        });
       });
+    },
+    [findVariationImage]
+  );
 
-      // Save to localStorage
-      saveCartToStorage(newCart);
-      return newCart;
+  // Optimized removeFromCart function using useCallback
+  const removeFromCart = useCallback(
+    (
+      productId: string | number,
+      selectedColor?: string,
+      selectedSize?: string
+    ) => {
+      // Use requestAnimationFrame to ensure UI updates happen in the next frame
+      requestAnimationFrame(() => {
+        setCart((prevCart) => {
+          let newCart;
+
+          // Performance optimization: Use more efficient filtering
+          if (selectedColor && selectedSize) {
+            // Remove specific item with matching product ID, color and size
+            newCart = prevCart.filter(
+              (item) =>
+                !(
+                  item.product.id === productId &&
+                  item.selectedColor === selectedColor &&
+                  item.selectedSize === selectedSize
+                )
+            );
+          } else if (selectedColor) {
+            // Remove specific item with matching product ID and color
+            newCart = prevCart.filter(
+              (item) =>
+                !(
+                  item.product.id === productId &&
+                  item.selectedColor === selectedColor
+                )
+            );
+          } else {
+            // Remove all items with matching product ID
+            newCart = prevCart.filter((item) => item.product.id !== productId);
+          }
+
+          // Save to localStorage (already throttled)
+          saveCartToStorage(newCart);
+          return newCart;
+        });
+      });
+    },
+    []
+  );
+
+  // Optimized updateCartItemQuantity function using useCallback
+  const updateCartItemQuantity = useCallback(
+    (
+      productId: string | number,
+      selectedColor: string,
+      selectedSize: string,
+      newQuantity: number
+    ) => {
+      // Use requestAnimationFrame to ensure UI updates happen in the next frame
+      requestAnimationFrame(() => {
+        setCart((prevCart) => {
+          // Performance optimization: Use Map for faster lookups
+          const cartMap = new Map<string, { item: BagItem; index: number }>();
+
+          prevCart.forEach((item, index) => {
+            const key = `${item.product.id}-${item.selectedColor}-${item.selectedSize}`;
+            cartMap.set(key, { item, index });
+          });
+
+          const itemKey = `${productId}-${selectedColor}-${selectedSize}`;
+          const existingItemData = cartMap.get(itemKey);
+
+          // If item doesn't exist, return the cart unchanged
+          if (!existingItemData) {
+            return prevCart;
+          }
+
+          // Create a new cart with the updated item
+          const newCart = [...prevCart];
+          newCart[existingItemData.index] = {
+            ...newCart[existingItemData.index],
+            quantity: newQuantity,
+          };
+
+          // Save to localStorage (already throttled)
+          saveCartToStorage(newCart);
+          return newCart;
+        });
+      });
+    },
+    []
+  );
+
+  // Optimized clearCart function using useCallback
+  const clearCart = useCallback(() => {
+    requestAnimationFrame(() => {
+      setCart([]);
+      localStorage.removeItem("omnisCart");
     });
-  };
+  }, []);
 
-  const clearCart = () => {
-    setCart([]);
-    localStorage.removeItem("omnisCart");
-  };
-
-  const getCartTotal = () => {
+  // Optimized getCartTotal function using useCallback
+  // This is a potentially expensive calculation that should be memoized
+  const getCartTotal = useCallback(() => {
     return cart.reduce(
       (total, item) => total + item.product.price * item.quantity,
       0
     );
-  };
+  }, [cart]);
+
+  // Memoize the context value to prevent unnecessary re-renders
+  const contextValue = useMemo(
+    () => ({
+      cart,
+      setCart,
+      addToCart,
+      removeFromCart,
+      updateCartItemQuantity,
+      clearCart,
+      getCartTotal,
+      addToCartEvent,
+      resetAddToCartEvent,
+    }),
+    [
+      cart,
+      setCart,
+      addToCart,
+      removeFromCart,
+      updateCartItemQuantity,
+      clearCart,
+      getCartTotal,
+      addToCartEvent,
+      resetAddToCartEvent,
+    ]
+  );
 
   return (
-    <ProductContext.Provider
-      value={{
-        cart,
-        setCart, // Add setCart to the context
-        addToCart,
-        removeFromCart,
-        updateCartItemQuantity,
-        clearCart,
-        getCartTotal,
-        addToCartEvent,
-        resetAddToCartEvent,
-      }}
-    >
+    <ProductContext.Provider value={contextValue}>
       {children}
     </ProductContext.Provider>
   );

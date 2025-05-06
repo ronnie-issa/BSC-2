@@ -6,6 +6,11 @@ import QuantitySelector from "@/components/ui/quantity-selector";
 import { Separator } from "@/components/ui/separator";
 import { Icon } from "@/components/ui/icon";
 import { formatPrice } from "@/lib/utils";
+import {
+  useOptimizedClick,
+  useOptimizedClickWithParams,
+} from "@/hooks/use-optimized-click";
+import { useCallback } from "react";
 
 interface BagDropdownProps {
   onClose: () => void;
@@ -19,31 +24,62 @@ const BagDropdown = ({ onClose }: BagDropdownProps) => {
     getCartTotal: getBagTotal,
   } = useProductContext();
 
-  const handleRemoveItem = (
-    productId: string | number,
-    selectedColor: string,
-    selectedSize: string
-  ) => {
-    removeFromBag(productId, selectedColor, selectedSize);
-  };
-
-  const handleQuantityChange = (
-    productId: string | number,
-    selectedColor: string,
-    selectedSize: string,
-    newQuantity: number
-  ) => {
-    if (newQuantity === 0) {
+  // Memoize the handler functions to maintain reference stability
+  const handleRemoveItem = useCallback(
+    (
+      productId: string | number,
+      selectedColor: string,
+      selectedSize: string
+    ) => {
       removeFromBag(productId, selectedColor, selectedSize);
-    } else {
-      updateBagItemQuantity(
-        productId,
-        selectedColor,
-        selectedSize,
-        newQuantity
-      );
+    },
+    [removeFromBag]
+  );
+
+  // Create an optimized version of the remove handler for click events
+  // Using the new useOptimizedClickWithParams hook that properly handles additional parameters
+  const optimizedRemoveHandler = useOptimizedClickWithParams(
+    (
+      e: React.MouseEvent,
+      productId: string | number,
+      selectedColor: string,
+      selectedSize: string
+    ) => {
+      handleRemoveItem(productId, selectedColor, selectedSize);
+    },
+    {
+      measureName: "BagDropdown-RemoveItem",
+      dependencies: [handleRemoveItem],
     }
-  };
+  );
+
+  // Memoize the quantity change handler
+  const handleQuantityChange = useCallback(
+    (
+      productId: string | number,
+      selectedColor: string,
+      selectedSize: string,
+      newQuantity: number
+    ) => {
+      if (newQuantity === 0) {
+        removeFromBag(productId, selectedColor, selectedSize);
+      } else {
+        updateBagItemQuantity(
+          productId,
+          selectedColor,
+          selectedSize,
+          newQuantity
+        );
+      }
+    },
+    [removeFromBag, updateBagItemQuantity]
+  );
+
+  // Create an optimized close button handler
+  const optimizedCloseHandler = useOptimizedClick(onClose, {
+    measureName: "BagDropdown-Close",
+    dependencies: [onClose],
+  });
 
   return (
     <div className="bg-white text-black w-full max-w-md max-h-[80vh] overflow-auto">
@@ -53,7 +89,7 @@ const BagDropdown = ({ onClose }: BagDropdownProps) => {
           Shopping Bag
         </h2>
         <button
-          onClick={onClose}
+          onClick={optimizedCloseHandler}
           className="text-black hover:text-gray-600 p-1"
         >
           <Icon icon={X} size={20} />
@@ -113,10 +149,11 @@ const BagDropdown = ({ onClose }: BagDropdownProps) => {
                     </div>
                   </div>
 
-                  {/* Remove button */}
+                  {/* Remove button - using optimized click handler */}
                   <button
-                    onClick={() =>
-                      handleRemoveItem(
+                    onClick={(e) =>
+                      optimizedRemoveHandler(
+                        e,
                         item.product.id,
                         item.selectedColor,
                         item.selectedSize
@@ -150,7 +187,7 @@ const BagDropdown = ({ onClose }: BagDropdownProps) => {
               variant="outline-light"
               className="w-full text-xs sm:text-sm"
             >
-              <Link to="/bag" onClick={onClose}>
+              <Link to="/bag" onClick={optimizedCloseHandler}>
                 VIEW BAG
               </Link>
             </Button>

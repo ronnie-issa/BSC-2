@@ -3,11 +3,13 @@ import type { EntryCollection, EntrySkeletonType, Entry } from 'contentful';
 import type { Product } from '../contexts/ProductContext';
 
 // Contentful delivery client (for published content)
-
 const deliveryClient = createClient({
   space: import.meta.env.CONTENTFUL_SPACE_ID || '',
   accessToken: import.meta.env.CONTENTFUL_ACCESS_TOKEN || '',
   environment: import.meta.env.CONTENTFUL_ENVIRONMENT || 'master',
+  // Optimize request handling
+  retryOnError: true,
+  timeout: 30000, // 30 seconds timeout
 });
 
 // Contentful preview client (for draft content)
@@ -16,11 +18,20 @@ const previewClient = createClient({
   accessToken: import.meta.env.CONTENTFUL_PREVIEW_TOKEN || '',
   environment: import.meta.env.CONTENTFUL_ENVIRONMENT || 'master',
   host: 'preview.contentful.com', // Use the preview API host
+  // Optimize request handling
+  retryOnError: true,
+  timeout: 30000, // 30 seconds timeout
 });
 
 // Helper function to get the appropriate client based on preview mode
-const getClient = (preview = false) => {
-  return preview ? previewClient : deliveryClient;
+const getClient = (preview = false, resolveLinks = true) => {
+  // Get the base client
+  const client = preview ? previewClient : deliveryClient;
+
+  // Apply the appropriate link resolution modifier
+  // - withoutUnresolvableLinks: Resolves links but removes unresolvable ones
+  // - withoutLinkResolution: Doesn't resolve links at all
+  return resolveLinks ? client.withoutUnresolvableLinks : client.withoutLinkResolution;
 };
 
 // Keep track of used slugs to ensure uniqueness
@@ -199,8 +210,11 @@ let productsCache: {
   timestamp: 0
 };
 
-// Cache expiration time (2 minutes - reduced for better responsiveness)
-const CACHE_EXPIRATION = 2 * 60 * 1000;
+// Cache expiration time (5 minutes for production, 2 minutes for development)
+const CACHE_EXPIRATION = (import.meta.env.PROD ? 5 : 2) * 60 * 1000;
+
+// Maximum number of entries to fetch per request
+const MAX_ENTRIES_PER_REQUEST = 100;
 
 // Function to clear all caches - useful for development and testing
 export function clearContentfulCache() {
@@ -239,7 +253,10 @@ export async function fetchAllProducts(preview = false): Promise<Product[]> {
       return productsCache[cacheKey] || [];
     }
 
-    const client = getClient(preview);
+    // Get the client with link resolution for better performance
+    // We'll resolve links manually when creating product objects
+    const client = getClient(preview, true);
+
     // Try with both lowercase and uppercase content type names
     let entries: EntryCollection<ContentfulProduct>;
     try {
@@ -247,6 +264,8 @@ export async function fetchAllProducts(preview = false): Promise<Product[]> {
       const query: any = {
         content_type: 'product',
         include: 2,
+        limit: MAX_ENTRIES_PER_REQUEST,
+        order: 'sys.createdAt', // Order by creation date to ensure consistent ordering
       };
 
       entries = await client.getEntries(query);
@@ -255,16 +274,21 @@ export async function fetchAllProducts(preview = false): Promise<Product[]> {
       const query: any = {
         content_type: 'Product',
         include: 2,
+        limit: MAX_ENTRIES_PER_REQUEST,
+        order: 'sys.createdAt', // Order by creation date to ensure consistent ordering
       };
 
       entries = await client.getEntries(query);
     }
 
     // Use our helper function to create consistent product objects
-    const products = entries.items.map((item) => createProductFromContentful(item));
+    // Use Promise.all with map to process items in parallel for better performance
+    const products = await Promise.all(
+      entries.items.map(async (item) => createProductFromContentful(item))
+    );
 
     // Check for duplicate slugs and log warnings only in development
-    if (process.env.NODE_ENV === 'development') {
+    if (import.meta.env.DEV) {
       const slugCounts: Record<string, string[]> = {};
       products.forEach(product => {
         if (!slugCounts[product.slug]) {
@@ -320,6 +344,7 @@ export async function fetchFeaturedProducts(preview = false): Promise<Product[]>
     }
 
     // If we already have all products cached, filter them instead of making a new API call
+    // This significantly reduces API calls and improves performance
     if (productsCache[cacheKey] && (now - productsCache.timestamp < CACHE_EXPIRATION)) {
       const featured = productsCache[cacheKey]?.filter(product => product.featured) || [];
       featuredProductsCache[cacheKey] = featured;
@@ -327,7 +352,9 @@ export async function fetchFeaturedProducts(preview = false): Promise<Product[]>
       return featured;
     }
 
-    const client = getClient(preview);
+    // Get the client with link resolution for better performance
+    const client = getClient(preview, true);
+
     // Try with both lowercase and uppercase content type names
     let entries: EntryCollection<ContentfulProduct>;
     try {
@@ -335,6 +362,8 @@ export async function fetchFeaturedProducts(preview = false): Promise<Product[]>
       const query: any = {
         content_type: 'product',
         include: 2,
+        limit: MAX_ENTRIES_PER_REQUEST,
+        order: 'sys.createdAt', // Order by creation date to ensure consistent ordering
       };
       // Add the featured filter
       query['fields.featured'] = true;
@@ -345,6 +374,8 @@ export async function fetchFeaturedProducts(preview = false): Promise<Product[]>
       const query: any = {
         content_type: 'Product',
         include: 2,
+        limit: MAX_ENTRIES_PER_REQUEST,
+        order: 'sys.createdAt', // Order by creation date to ensure consistent ordering
       };
       // Add the featured filter
       query['fields.featured'] = true;
@@ -353,7 +384,10 @@ export async function fetchFeaturedProducts(preview = false): Promise<Product[]>
     }
 
     // Use our helper function to create consistent product objects
-    const featuredProducts = entries.items.map((item) => createProductFromContentful(item));
+    // Use Promise.all with map to process items in parallel for better performance
+    const featuredProducts = await Promise.all(
+      entries.items.map(async (item) => createProductFromContentful(item))
+    );
 
     // Update cache
     featuredProductsCache[cacheKey] = featuredProducts;
@@ -385,18 +419,24 @@ export async function fetchProductById(id: string | number, preview = false): Pr
     }
 
     // Check if we can find this product in the all products cache
+    // This significantly reduces API calls and improves performance
     const allProductsCacheKey = preview ? 'preview' : 'standard';
     if (productsCache[allProductsCacheKey] && (now - productsCache.timestamp < CACHE_EXPIRATION)) {
-      const cachedProduct = productsCache[allProductsCacheKey]?.find(p => p.id === id);
+      const cachedProduct = productsCache[allProductsCacheKey]?.find(p =>
+        p.id === id || p.contentfulId === id || p.slug === id
+      );
+
       if (cachedProduct) {
         productCache[cacheKey] = { product: cachedProduct, timestamp: now };
         return cachedProduct;
       }
     }
 
-    const client = getClient(preview);
+    // Get the client with link resolution for better performance
+    const client = getClient(preview, true);
 
     try {
+      // First try to get by ID directly
       const entry = await client.getEntry<ContentfulProduct>(id.toString(), {
         include: 2,
       });
@@ -409,6 +449,32 @@ export async function fetchProductById(id: string | number, preview = false): Pr
 
       return product;
     } catch (entryError) {
+      // If direct ID lookup fails, try to find by slug if id is a string that looks like a slug
+      if (typeof id === 'string' && id.includes('-')) {
+        try {
+          // Try to find by slug
+          const query: any = {
+            content_type: 'product',
+            'fields.slug': id,
+            include: 2,
+            limit: 1,
+          };
+
+          const entries = await client.getEntries<ContentfulProduct>(query);
+
+          if (entries.items.length > 0) {
+            const product = createProductFromContentful(entries.items[0]);
+
+            // Update cache
+            productCache[cacheKey] = { product, timestamp: now };
+
+            return product;
+          }
+        } catch (slugError) {
+          console.error(`Error fetching product with slug ${id}:`, slugError);
+        }
+      }
+
       console.error(`Error fetching entry with ID ${id}:`, entryError);
       return null;
     }

@@ -5,11 +5,13 @@ import React, {
   useEffect,
   useCallback,
   useRef,
+  useMemo,
 } from "react";
 import {
   fetchAllProducts,
   fetchFeaturedProducts,
   fetchProductById,
+  clearContentfulCache,
 } from "../services/contentful";
 import type { Product } from "./ProductContext";
 
@@ -23,6 +25,7 @@ interface ContentfulProductsContextType {
   setPreviewMode: (mode: boolean) => void;
   refreshProducts: (skipDebounce?: boolean) => Promise<void>;
   getProductById: (id: string) => Promise<Product | null>;
+  clearCache: () => void;
 }
 
 // Create the context with default values
@@ -35,6 +38,7 @@ const ContentfulProductsContext = createContext<ContentfulProductsContextType>({
   setPreviewMode: () => {},
   refreshProducts: async () => {},
   getProductById: async () => null,
+  clearCache: () => {},
 });
 
 // Custom hook to use the context
@@ -71,6 +75,12 @@ export const ContentfulProductsProvider: React.FC<{
     },
     [previewMode]
   );
+
+  // Function to clear the Contentful cache and refresh products
+  const clearCache = useCallback(() => {
+    clearContentfulCache();
+    refreshProducts(true);
+  }, []); // We'll add refreshProducts to the deps array after defining it
 
   // Function to fetch products from Contentful (wrapped in useCallback to maintain reference stability)
   const refreshProducts = useCallback(
@@ -110,12 +120,14 @@ export const ContentfulProductsProvider: React.FC<{
       setError(null);
 
       try {
-        // Fetch all products
-        const allProducts = await fetchAllProducts(previewMode);
-        setProducts(allProducts);
+        // Use Promise.all to fetch both in parallel for better performance
+        const [allProducts, featured] = await Promise.all([
+          fetchAllProducts(previewMode),
+          fetchFeaturedProducts(previewMode),
+        ]);
 
-        // Fetch featured products
-        const featured = await fetchFeaturedProducts(previewMode);
+        // Update state with the fetched data
+        setProducts(allProducts);
         setFeaturedProducts(featured);
       } catch (error) {
         console.error("Error refreshing products:", error);
@@ -130,6 +142,10 @@ export const ContentfulProductsProvider: React.FC<{
     },
     [previewMode]
   );
+
+  // Update clearCache to include refreshProducts in its dependency array
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const memoizedClearCache = useCallback(clearCache, [refreshProducts]);
 
   // Clean up debounce timer on unmount and handle initial fetch
   useEffect(() => {
@@ -162,17 +178,31 @@ export const ContentfulProductsProvider: React.FC<{
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []); // Intentionally not including refreshProducts in deps to avoid infinite loop
 
-  // Provide the context value
-  const contextValue = {
-    products,
-    featuredProducts,
-    isLoading,
-    error,
-    previewMode,
-    setPreviewMode,
-    refreshProducts,
-    getProductById,
-  };
+  // Memoize the context value to prevent unnecessary re-renders
+  const contextValue = useMemo(
+    () => ({
+      products,
+      featuredProducts,
+      isLoading,
+      error,
+      previewMode,
+      setPreviewMode,
+      refreshProducts,
+      getProductById,
+      clearCache: memoizedClearCache,
+    }),
+    [
+      products,
+      featuredProducts,
+      isLoading,
+      error,
+      previewMode,
+      setPreviewMode,
+      refreshProducts,
+      getProductById,
+      memoizedClearCache,
+    ]
+  );
 
   return (
     <ContentfulProductsContext.Provider value={contextValue}>
