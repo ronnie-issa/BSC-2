@@ -144,6 +144,7 @@ const CheckoutPage = () => {
             quantity: item.quantity,
             selectedColor: item.selectedColor,
             selectedSize: item.selectedSize,
+            selectedImage: item.selectedImage || item.product.image,
           }))
         )
       );
@@ -269,6 +270,7 @@ const CheckoutPage = () => {
             quantity: item.quantity,
             selectedColor: item.selectedColor,
             selectedSize: item.selectedSize,
+            selectedImage: item.selectedImage || item.product.image,
           }))
         )
       );
@@ -311,7 +313,7 @@ const CheckoutPage = () => {
                     >
                       <div className="w-20 h-20 bg-omnis-gray flex-shrink-0">
                         <img
-                          src={item.product.image}
+                          src={item.selectedImage || item.product.image}
                           alt={item.product.name}
                           className="w-full h-full object-cover"
                         />

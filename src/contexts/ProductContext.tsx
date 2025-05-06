@@ -30,6 +30,7 @@ export interface BagItem {
   quantity: number;
   selectedColor: string;
   selectedSize: string;
+  selectedImage?: string; // Store the selected variation image URL
 }
 
 interface ProductContextType {
@@ -39,7 +40,8 @@ interface ProductContextType {
     product: Product,
     quantity: number,
     selectedColor: string,
-    selectedSize: string
+    selectedSize: string,
+    selectedImage?: string
   ) => void;
   removeFromCart: (
     productId: string | number,
@@ -96,7 +98,8 @@ export const ProductProvider: React.FC<{ children: ReactNode }> = ({
     product: Product,
     quantity: number,
     selectedColor: string,
-    selectedSize: string
+    selectedSize: string,
+    selectedImage?: string
   ) => {
     // Trigger the add to cart event
     setAddToCartEvent(true);
@@ -110,16 +113,52 @@ export const ProductProvider: React.FC<{ children: ReactNode }> = ({
           item.selectedSize === selectedSize
       );
 
+      // If no selectedImage is provided, try to find the variation image
+      let imageToUse = selectedImage;
+      if (!imageToUse && selectedColor) {
+        // Find the color name that corresponds to the selected color value
+        const selectedColorName = product.colors.find(
+          (c) => c.value === selectedColor
+        )?.name;
+
+        if (selectedColorName) {
+          // Find the variation with that name
+          const variation = product.variations.find(
+            (v) => v.name === selectedColorName
+          );
+
+          // If the variation has an image, use it
+          if (variation && variation.image) {
+            imageToUse = variation.image;
+          }
+        }
+      }
+
+      // If still no image, use the default product image
+      if (!imageToUse) {
+        imageToUse = product.image;
+      }
+
       let newCart;
       if (existingItemIndex >= 0) {
         // Update quantity of existing item
         newCart = [...prevCart];
         newCart[existingItemIndex].quantity += quantity;
+        // Update the selected image if provided
+        if (imageToUse) {
+          newCart[existingItemIndex].selectedImage = imageToUse;
+        }
       } else {
         // Add new item to bag
         newCart = [
           ...prevCart,
-          { product, quantity, selectedColor, selectedSize },
+          {
+            product,
+            quantity,
+            selectedColor,
+            selectedSize,
+            selectedImage: imageToUse,
+          },
         ];
       }
 

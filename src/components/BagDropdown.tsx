@@ -78,7 +78,7 @@ const BagDropdown = ({ onClose }: BagDropdownProps) => {
                   {/* Product image */}
                   <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gray-100 flex-shrink-0">
                     <img
-                      src={item.product.image}
+                      src={item.selectedImage || item.product.image}
                       alt={item.product.name}
                       className="w-full h-full object-cover"
                     />

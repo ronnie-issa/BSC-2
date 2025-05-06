@@ -287,7 +287,8 @@ const ProductPage = () => {
     // Simulate a slight delay for better UX (users expect some processing time)
     setTimeout(() => {
       // Add to cart - the dropdown will automatically open due to the useEffect in Navbar
-      addToCart(product, quantity, selectedColor, selectedSize);
+      // Pass the current image to ensure the correct variation image is used
+      addToCart(product, quantity, selectedColor, selectedSize, currentImage);
 
       // Reset loading state after adding to cart
       setIsAddingToBag(false);

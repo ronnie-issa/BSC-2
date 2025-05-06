@@ -223,11 +223,11 @@ docs/
 
 ### Misc Mini Tasks
 
-- White variation product image preview not reflecting in dropdown, bagpage, and checkout, confirmation
 - Add number formating on contentful for prices ($1,000)
 - SIZE GUIDE chart link on product page, or not link, chart on product page?
 - Moving text on nav bar (https://trikkobrand.com/collections/basics)
 - Priced usd, lbp
+  - Implement a language/currency selector in nav bar or footer
 - View button on product card needs to be quick view feature
   - Quick View button on hover product card
 - Choose artwork placement?

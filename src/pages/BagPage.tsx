@@ -150,7 +150,7 @@ const BagPage = () => {
                         {/* Product image */}
                         <div className="w-full sm:w-32 h-48 sm:h-32 bg-omnis-darkgray flex-shrink-0">
                           <img
-                            src={item.product.image}
+                            src={item.selectedImage || item.product.image}
                             alt={item.product.name}
                             className="w-full h-full object-cover"
                           />
@@ -188,10 +188,39 @@ const BagPage = () => {
                                             cartItem.selectedSize ===
                                               item.selectedSize
                                           ) {
-                                            // Return the updated item
+                                            // Find the variation image for the new color
+                                            let newImage =
+                                              cartItem.selectedImage;
+
+                                            // Find the color name that corresponds to the new color value
+                                            const newColorName =
+                                              cartItem.product.colors.find(
+                                                (c) => c.value === newColor
+                                              )?.name;
+
+                                            if (newColorName) {
+                                              // Find the variation with that name
+                                              const variation =
+                                                cartItem.product.variations.find(
+                                                  (v) => v.name === newColorName
+                                                );
+
+                                              // If the variation has an image, use it
+                                              if (
+                                                variation &&
+                                                variation.image
+                                              ) {
+                                                newImage = variation.image;
+                                              }
+                                            }
+
+                                            // Return the updated item with new color and image
                                             return {
                                               ...cartItem,
                                               selectedColor: newColor,
+                                              selectedImage:
+                                                newImage ||
+                                                cartItem.product.image,
                                             };
                                           }
                                           return cartItem;

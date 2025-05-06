@@ -2,7 +2,7 @@
 
 /**
  * Generates an order confirmation email template
- * 
+ *
  * @param {Object} params - The parameters for the email
  * @param {string} params.name - Customer name
  * @param {string} params.orderNumber - Order number
@@ -12,7 +12,7 @@
  * @param {string} params.domain - The domain for links
  * @returns {string} HTML email template
  */
-exports.orderConfirmation = function({
+exports.orderConfirmation = function ({
   name,
   orderNumber,
   products,
@@ -28,18 +28,28 @@ exports.orderConfirmation = function({
   });
 
   // Generate product items HTML
-  const productItemsHtml = products.map((product, index) => `
+  const productItemsHtml = products.map((product, index) => {
+    // Find the color name that corresponds to the selected color value
+    const colorName = product.colors && product.colors.find(c => c.value === product.selectedColor)?.name || 'Default';
+
+    // Use the selected image if available, otherwise use the default product image
+    const imageUrl = product.selectedImage || product.image || '';
+
+    return `
     <div style="display: flex; border-bottom: 1px solid rgba(255, 255, 255, 0.1); padding: 10px 0;">
-      <div style="width: 40px; height: 40px; background-color: #333; margin-right: 10px;"></div>
+      <div style="width: 40px; height: 40px; background-color: #333; margin-right: 10px; overflow: hidden;">
+        ${imageUrl ? `<img src="${imageUrl}" alt="${product.name}" style="width: 100%; height: 100%; object-fit: cover;">` : ''}
+      </div>
       <div style="flex: 1;">
         <p style="font-weight: bold; margin: 0; font-size: 14px;">${product.name}</p>
         <p style="font-size: 12px; color: rgba(255, 255, 255, 0.8); margin: 4px 0;">
-          Variation: ${product.selectedColor || 'Default'}
+          Variation: ${colorName}
         </p>
         <p style="font-size: 14px; margin: 0;">$${product.price.toFixed(2)}</p>
       </div>
     </div>
-  `).join('');
+  `;
+  }).join('');
 
   // Create HTML template for the email
   return `
@@ -224,25 +234,25 @@ exports.orderConfirmation = function({
         <div class="header">
           <h1 class="logo">OMNIS</h1>
         </div>
-        
+
         <div class="content">
           <h1 class="heading">ORDER CONFIRMED</h1>
-          
+
           <hr class="divider" />
-          
+
           <p class="paragraph">
             Thank you for your purchase
           </p>
-          
+
           <p class="paragraph">
             Your order has been confirmed and will be shipped soon
           </p>
-          
+
           <table width="100%" cellpadding="0" cellspacing="0" border="0">
             <tr>
               <td class="column" width="50%" valign="top">
                 <h2 class="subheading">What's Next</h2>
-                
+
                 <div class="step-container">
                   <div class="step-number">01</div>
                   <div class="step-content">
@@ -252,7 +262,7 @@ exports.orderConfirmation = function({
                     </p>
                   </div>
                 </div>
-                
+
                 <div class="step-container">
                   <div class="step-number">02</div>
                   <div class="step-content">
@@ -262,7 +272,7 @@ exports.orderConfirmation = function({
                     </p>
                   </div>
                 </div>
-                
+
                 <div class="step-container">
                   <div class="step-number">03</div>
                   <div class="step-content">
@@ -273,10 +283,10 @@ exports.orderConfirmation = function({
                   </div>
                 </div>
               </td>
-              
+
               <td class="column" width="50%" valign="top">
                 <h2 class="subheading">Order Details</h2>
-                
+
                 <div class="order-info-container">
                   <div class="order-info-row">
                     <p class="order-info-label">Order Number</p>
@@ -291,16 +301,16 @@ exports.orderConfirmation = function({
                     <p class="order-info-value">WhatsApp Order</p>
                   </div>
                 </div>
-                
+
                 <h3 class="section-title">Items Purchased</h3>
-                
+
                 ${productItemsHtml}
-                
+
                 <div class="total-container">
                   <p class="total-label">Total</p>
                   <p class="total-value">$${total.toFixed(2)}</p>
                 </div>
-                
+
                 ${shippingAddress ? `
                   <h3 class="section-title">Shipping Address</h3>
                   <p class="shipping-address-text">${shippingAddress.replace(/\n/g, '<br>')}</p>
@@ -308,16 +318,16 @@ exports.orderConfirmation = function({
               </td>
             </tr>
           </table>
-          
+
           <div class="cta-section">
             <a href="${domain}/shop" class="button">
               CONTINUE SHOPPING
             </a>
           </div>
         </div>
-        
+
         <hr class="hr" />
-        
+
         <div class="footer">
           <p class="footer-text">
             © ${new Date().getFullYear()} OMNIS. All rights reserved.
@@ -326,7 +336,7 @@ exports.orderConfirmation = function({
             If you have any questions, please contact us at <a href="mailto:support@omnis-lb.com" class="link">support@omnis-lb.com</a>
           </p>
           <p class="footer-text">
-            <a href="${domain}/legal" class="link">Privacy Policy</a> | 
+            <a href="${domain}/legal" class="link">Privacy Policy</a> |
             <a href="${domain}/legal/terms" class="link">Terms of Service</a>
           </p>
         </div>
@@ -338,13 +348,13 @@ exports.orderConfirmation = function({
 
 /**
  * Generates a welcome email template for newsletter subscribers
- * 
+ *
  * @param {Object} params - The parameters for the email
  * @param {string} params.email - Subscriber's email
  * @param {string} params.domain - The domain for links
  * @returns {string} HTML email template
  */
-exports.welcomeEmail = function({
+exports.welcomeEmail = function ({
   email,
   domain = 'https://omnis-lb.netlify.app'
 }) {

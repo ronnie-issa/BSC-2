@@ -35,6 +35,7 @@ const OrderConfirmationPage = () => {
     selectedColor: string;
     selectedSize: string;
     quantity: number;
+    selectedImage?: string;
   })[] => {
     try {
       // First try to get from the new orderedProducts key
@@ -61,6 +62,7 @@ const OrderConfirmationPage = () => {
           selectedColor: item.selectedColor,
           selectedSize: item.selectedSize,
           quantity: item.quantity,
+          selectedImage: item.selectedImage,
         }));
       }
       return [];
@@ -249,9 +251,9 @@ const OrderConfirmationPage = () => {
                       className="flex border-b border-white/10 pb-2"
                     >
                       <div className="w-10 h-10 bg-omnis-darkgray flex-shrink-0 mr-3">
-                        {item.image && (
+                        {(item.selectedImage || item.image) && (
                           <img
-                            src={item.image}
+                            src={item.selectedImage || item.image}
                             alt={item.name}
                             className="w-full h-full object-cover"
                           />
