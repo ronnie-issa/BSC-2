@@ -1,5 +1,6 @@
 import { ArrowUp } from "lucide-react";
 import { Link } from "react-router-dom";
+import { Icon } from "@/components/ui/icon";
 
 const Footer = () => {
   const scrollToTop = () => {
@@ -156,7 +157,8 @@ const Footer = () => {
             <span className="text-xs uppercase tracking-wider">
               Back to top
             </span>
-            <ArrowUp
+            <Icon
+              icon={ArrowUp}
               size={16}
               className="transition-transform group-hover:-translate-y-1"
             />

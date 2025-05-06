@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { useProductContext } from "@/contexts/ProductContext";
 import QuantitySelector from "@/components/ui/quantity-selector";
 import { Separator } from "@/components/ui/separator";
+import { Icon } from "@/components/ui/icon";
 
 interface BagDropdownProps {
   onClose: () => void;
@@ -54,7 +55,7 @@ const BagDropdown = ({ onClose }: BagDropdownProps) => {
           onClick={onClose}
           className="text-black hover:text-gray-600 p-1"
         >
-          <X size={20} />
+          <Icon icon={X} size={20} />
         </button>
       </div>
 
@@ -123,7 +124,7 @@ const BagDropdown = ({ onClose }: BagDropdownProps) => {
                     className="text-gray-500 hover:text-black self-start p-1"
                     aria-label="Remove item"
                   >
-                    <Trash2 size={16} />
+                    <Icon icon={Trash2} size={16} />
                   </button>
                 </div>
               );

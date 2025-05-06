@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { useProductContext } from "@/contexts/ProductContext";
 import { useContentfulProducts } from "@/contexts/ContentfulProductsProvider";
 import { toast } from "@/hooks/use-toast";
+import { Icon } from "@/components/ui/icon";
 
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -528,12 +529,15 @@ const ProductPage = () => {
                 >
                   {isAddingToBag ? (
                     <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      <Icon
+                        icon={Loader2}
+                        className="mr-2 h-4 w-4 animate-spin"
+                      />
                       <span className="inline-block">Adding...</span>
                     </>
                   ) : (
                     <>
-                      <ShoppingBag className="mr-2 h-4 w-4" />
+                      <Icon icon={ShoppingBag} className="mr-2 h-4 w-4" />
                       <span className="inline-block">Add to Bag</span>
                     </>
                   )}
@@ -547,12 +551,15 @@ const ProductPage = () => {
                 >
                   {isWhatsAppLoading ? (
                     <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      <Icon
+                        icon={Loader2}
+                        className="mr-2 h-4 w-4 animate-spin"
+                      />
                       <span className="inline-block">Processing...</span>
                     </>
                   ) : (
                     <>
-                      <MessageSquare className="mr-2 h-4 w-4" />
+                      <Icon icon={MessageSquare} className="mr-2 h-4 w-4" />
                       <span className="inline-block">Buy via WhatsApp</span>
                     </>
                   )}

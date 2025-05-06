@@ -7,6 +7,7 @@ import { motion } from "@/lib/framer";
 import { useEffect, useState } from "react";
 import { sendOrderConfirmationEmail } from "@/services/resend";
 import { Product } from "@/contexts/ProductContext";
+import { Icon } from "@/components/ui/icon";
 
 const OrderConfirmationPage = () => {
   const navigate = useNavigate();
@@ -135,7 +136,7 @@ const OrderConfirmationPage = () => {
           <div className="border-b border-white/10 pb-12 mb-12">
             <div className="flex items-center justify-center mb-8">
               <div className="h-16 w-16 bg-omnis-black border border-white rounded-full flex items-center justify-center">
-                <Check className="h-8 w-8 text-white" strokeWidth={1.5} />
+                <Icon icon={Check} className="h-8 w-8 text-white" />
               </div>
             </div>
 
@@ -328,7 +329,7 @@ const OrderConfirmationPage = () => {
               onClick={() => navigate("/shop")}
             >
               <span className="mr-2">CONTINUE SHOPPING</span>
-              <ArrowRight className="h-4 w-4" />
+              <Icon icon={ArrowRight} className="h-4 w-4" />
             </Button>
           </div>
         </div>

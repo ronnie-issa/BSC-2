@@ -1,10 +1,25 @@
-import { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
-import { Switch } from '@/components/ui/switch';
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
-import { EyeIcon } from 'lucide-react';
-import { useContentfulProducts } from '../contexts/ContentfulProductsProvider';
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
+import { Switch } from "@/components/ui/switch";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import { EyeIcon } from "lucide-react";
+import { useContentfulProducts } from "../contexts/ContentfulProductsProvider";
+import { Icon } from "@/components/ui/icon";
 
 const PreviewToggle = () => {
   const { previewMode, setPreviewMode } = useContentfulProducts();
@@ -13,7 +28,7 @@ const PreviewToggle = () => {
   const handleTogglePreview = () => {
     if (!previewMode) {
       // If turning preview mode on, show confirmation dialog
-      document.getElementById('preview-confirm-trigger')?.click();
+      document.getElementById("preview-confirm-trigger")?.click();
     } else {
       // If turning preview mode off, just do it
       setPreviewMode(false);
@@ -29,7 +44,7 @@ const PreviewToggle = () => {
       <Collapsible
         open={isOpen}
         onOpenChange={setIsOpen}
-        className="bg-black/80 backdrop-blur-sm rounded-lg shadow-lg overflow-hidden"
+        className="bg-black/80 backdrop-blur-md rounded-lg shadow-lg overflow-hidden"
       >
         <CollapsibleTrigger asChild>
           <Button
@@ -37,7 +52,7 @@ const PreviewToggle = () => {
             size="icon"
             className="h-10 w-10 rounded-full bg-black border-white/20 hover:bg-black/90"
           >
-            <EyeIcon className="h-4 w-4 text-white" />
+            <Icon icon={EyeIcon} className="h-4 w-4 text-white" />
             <span className="sr-only">Toggle preview mode</span>
           </Button>
         </CollapsibleTrigger>
@@ -67,7 +82,9 @@ const PreviewToggle = () => {
           <AlertDialogHeader>
             <AlertDialogTitle>Enable Preview Mode?</AlertDialogTitle>
             <AlertDialogDescription>
-              Preview mode will show unpublished content from Contentful. This is intended for testing only and may show content that isn't ready for production.
+              Preview mode will show unpublished content from Contentful. This
+              is intended for testing only and may show content that isn't ready
+              for production.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

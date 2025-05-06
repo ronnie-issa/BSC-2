@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useProductContext } from "@/contexts/ProductContext";
 import { toast } from "@/hooks/use-toast";
+import { Icon } from "@/components/ui/icon";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import Breadcrumbs from "@/components/Breadcrumbs";
@@ -584,7 +585,10 @@ const CheckoutPage = () => {
                       >
                         {isProcessing ? (
                           <>
-                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                            <Icon
+                              icon={Loader2}
+                              className="mr-2 h-4 w-4 animate-spin"
+                            />
                             <span className="inline-block">Processing...</span>
                           </>
                         ) : (
@@ -804,14 +808,20 @@ const CheckoutPage = () => {
                         >
                           {isProcessing ? (
                             <>
-                              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                              <Icon
+                                icon={Loader2}
+                                className="mr-2 h-4 w-4 animate-spin"
+                              />
                               <span className="inline-block">
                                 Processing...
                               </span>
                             </>
                           ) : (
                             <>
-                              <MessageSquare className="mr-2 h-4 w-4" />
+                              <Icon
+                                icon={MessageSquare}
+                                className="mr-2 h-4 w-4"
+                              />
                               <span className="inline-block">
                                 Checkout via WhatsApp
                               </span>

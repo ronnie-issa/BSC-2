@@ -11,6 +11,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { useProductContext } from "@/contexts/ProductContext";
 import { toast } from "@/hooks/use-toast";
+import { Icon } from "@/components/ui/icon";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import Breadcrumbs from "@/components/Breadcrumbs";
@@ -413,7 +414,10 @@ const BagPage = () => {
                 >
                   {isCheckingOut ? (
                     <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      <Icon
+                        icon={Loader2}
+                        className="mr-2 h-4 w-4 animate-spin"
+                      />
                       <span className="inline-block">Processing...</span>
                     </>
                   ) : (
@@ -436,9 +440,17 @@ const BagPage = () => {
                       </h3>
                       <div>
                         {helpOpen ? (
-                          <ChevronUp size={14} className="sm:w-4 sm:h-4" />
+                          <Icon
+                            icon={ChevronUp}
+                            size={14}
+                            className="sm:w-4 sm:h-4"
+                          />
                         ) : (
-                          <ChevronDown size={14} className="sm:w-4 sm:h-4" />
+                          <Icon
+                            icon={ChevronDown}
+                            size={14}
+                            className="sm:w-4 sm:h-4"
+                          />
                         )}
                       </div>
                     </div>
@@ -474,9 +486,17 @@ const BagPage = () => {
                       </h3>
                       <div>
                         {paymentOpen ? (
-                          <ChevronUp size={14} className="sm:w-4 sm:h-4" />
+                          <Icon
+                            icon={ChevronUp}
+                            size={14}
+                            className="sm:w-4 sm:h-4"
+                          />
                         ) : (
-                          <ChevronDown size={14} className="sm:w-4 sm:h-4" />
+                          <Icon
+                            icon={ChevronDown}
+                            size={14}
+                            className="sm:w-4 sm:h-4"
+                          />
                         )}
                       </div>
                     </div>
@@ -507,9 +527,17 @@ const BagPage = () => {
                       </h3>
                       <div>
                         {shippingOpen ? (
-                          <ChevronUp size={14} className="sm:w-4 sm:h-4" />
+                          <Icon
+                            icon={ChevronUp}
+                            size={14}
+                            className="sm:w-4 sm:h-4"
+                          />
                         ) : (
-                          <ChevronDown size={14} className="sm:w-4 sm:h-4" />
+                          <Icon
+                            icon={ChevronDown}
+                            size={14}
+                            className="sm:w-4 sm:h-4"
+                          />
                         )}
                       </div>
                     </div>

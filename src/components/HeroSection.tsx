@@ -3,6 +3,7 @@ import { ArrowDown } from "lucide-react";
 import { Link } from "react-router-dom";
 import { motion } from "@/lib/framer";
 import { useSplitTextAnimation } from "@/lib/framer";
+import { Icon } from "@/components/ui/icon";
 
 const HeroSection = () => {
   const heroRef = useRef<HTMLDivElement>(null);
@@ -126,7 +127,7 @@ const HeroSection = () => {
               <span className="text-xs font-light tracking-widest mb-2">
                 SCROLL
               </span>
-              <ArrowDown size={20} className="text-omnis-white" />
+              <Icon icon={ArrowDown} size={20} className="text-omnis-white" />
             </motion.div>
           </div>
         </div>
@@ -150,7 +151,7 @@ const HeroSection = () => {
         }}
       >
         <span className="text-xs font-light tracking-widest mb-2">SCROLL</span>
-        <ArrowDown size={20} className="text-omnis-white" />
+        <Icon icon={ArrowDown} size={20} className="text-omnis-white" />
       </motion.div>
     </section>
   );

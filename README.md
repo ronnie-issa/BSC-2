@@ -223,7 +223,6 @@ docs/
 
 ### Misc Mini Tasks
 
-- Change placeholder image
 - White variation product image preview not reflecting in dropdown, bagpage, and checkout, confirmation
 - Add number formating on contentful for prices ($1,000)
 - SIZE GUIDE chart link on product page, or not link, chart on product page?
@@ -233,13 +232,10 @@ docs/
   - Quick View button on hover product card
 - Choose artwork placement?
 - Stock item availability
-- Toast slides from under the navbar
-- If i click subscribe and i dont have an email, it shows a please fillout this field bubble which has an ornge icon, i want this icon to be black (custom validation, not a priority now)
 - Handle subscribe newsletter locally
   - A dedicated email marketing platform that handles subscriber management (hubspot)
+  - integrate loop with resend to have a wysiwyg editor for email templates (these need research)
 - Document Toast Comp in design system
 - Make Large Omnis Logo Responsive (Use SVG) or https://utopia.fyi/ or tailwindcss-fluid-type
 - Email spam protection plan
-- Navbar logo should scroll to top on homepage or (Reload when on astro)
 - Loading calulations for product price when incleasing or decreasing quantity in bag page
-- integrate loop with resend to have a wysiwyg editor for email templates

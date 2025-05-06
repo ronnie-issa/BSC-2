@@ -11,6 +11,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import BagDropdown from "./BagDropdown";
+import { Icon } from "@/components/ui/icon";
 
 interface NavbarProps {
   scrollY?: number;
@@ -192,12 +193,12 @@ const Navbar = ({ scrollY = 0, showLogoEffect = false }: NavbarProps) => {
     ? logoScale === finalScale
       ? `${finalSpacing}px`
       : logoScale === initialScale || logoScale > initialScale * 0.9
-      ? `${initialSpacing}px`
-      : `${
-          finalSpacing +
-          ((logoScale - finalScale) / (initialScale - finalScale)) *
-            (initialSpacing - finalSpacing)
-        }px`
+        ? `${initialSpacing}px`
+        : `${
+            finalSpacing +
+            ((logoScale - finalScale) / (initialScale - finalScale)) *
+              (initialSpacing - finalSpacing)
+          }px`
     : `${finalSpacing}px`;
 
   // Calculate Y position - responsive based on screen width
@@ -222,7 +223,7 @@ const Navbar = ({ scrollY = 0, showLogoEffect = false }: NavbarProps) => {
       className={cn(
         "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
         !showLogoEffect || scrolled
-          ? "bg-omnis-black/90 backdrop-blur-sm py-3 md:py-2 shadow-md"
+          ? "bg-omnis-black/90 backdrop-blur-md py-3 md:py-2 shadow-md"
           : "bg-transparent py-5 md:py-4"
       )}
     >
@@ -313,7 +314,8 @@ const Navbar = ({ scrollY = 0, showLogoEffect = false }: NavbarProps) => {
                   className="relative group p-3"
                   aria-label={`Shopping bag with ${bagItemCount} items`}
                 >
-                  <ShoppingBag
+                  <Icon
+                    icon={ShoppingBag}
                     size={24}
                     className={`${
                       bagItemCount > 0
@@ -324,7 +326,7 @@ const Navbar = ({ scrollY = 0, showLogoEffect = false }: NavbarProps) => {
                   {bagItemCount > 0 && (
                     <Badge
                       variant="default"
-                      className={`absolute -top-0 -right-0 h-5 w-5 flex items-center justify-center p-0 bg-red-600 text-white text-xs font-medium ${
+                      className={`absolute -top-0 -right-0 h-4 w-4 flex items-center justify-center p-0 bg-red-600 text-white text-xs font-medium ${
                         animateBadge ? "animate-pulse scale-125" : ""
                       }`}
                     >
@@ -369,7 +371,8 @@ const Navbar = ({ scrollY = 0, showLogoEffect = false }: NavbarProps) => {
                   }
                 }}
               >
-                <ShoppingBag
+                <Icon
+                  icon={ShoppingBag}
                   size={22}
                   className={`${
                     bagItemCount > 0
@@ -380,7 +383,7 @@ const Navbar = ({ scrollY = 0, showLogoEffect = false }: NavbarProps) => {
                 {bagItemCount > 0 && (
                   <Badge
                     variant="default"
-                    className={`absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 bg-red-600 text-white text-xs font-medium ${
+                    className={`absolute -top-1 -right-1 h-4 w-4 flex items-center justify-center p-0 bg-red-600 text-white text-xs font-medium ${
                       animateBadge ? "animate-pulse scale-125" : ""
                     }`}
                   >
