@@ -15,21 +15,21 @@ This document outlines the comprehensive design system for the OMNIS brand, foll
 
 ### Brand Colors
 
-| Name | Hex Code | Usage |
-|------|----------|-------|
-| Black | `#0A0A0A` | Primary background color |
-| Dark Gray | `#1A1A1A` | Secondary background, cards, inputs |
-| Gray | `#333333` | Borders, dividers, secondary elements |
+| Name       | Hex Code  | Usage                                         |
+| ---------- | --------- | --------------------------------------------- |
+| Black      | `#0A0A0A` | Primary background color                      |
+| Dark Gray  | `#1A1A1A` | Secondary background, cards, inputs           |
+| Gray       | `#333333` | Borders, dividers, secondary elements         |
 | Light Gray | `#AAAAAA` | Secondary text, placeholders, disabled states |
-| White | `#F9F9F9` | Primary text, buttons, highlights |
+| White      | `#F9F9F9` | Primary text, buttons, highlights             |
 
 ### Semantic Colors
 
-| Name | Usage |
-|------|-------|
-| Destructive | Error messages, delete actions |
-| Muted | Background elements, disabled states |
-| Accent | Highlights, focus states |
+| Name        | Usage                                |
+| ----------- | ------------------------------------ |
+| Destructive | Error messages, delete actions       |
+| Muted       | Background elements, disabled states |
+| Accent      | Highlights, focus states             |
 
 ### Color Usage Guidelines
 
@@ -44,28 +44,28 @@ This document outlines the comprehensive design system for the OMNIS brand, foll
 
 ### Font Families
 
-| Family | Usage | Font Weight |
-|--------|-------|-------------|
-| Montserrat | Body text, UI elements | 300, 400, 500, 600, 700, 800 |
-| Red Hat Display | Headings, titles | 400, 500, 700, 900 |
-| Noto Serif Display | Logo, special headings | 400, 500, 600, 700 |
+| Family             | Usage                  | Font Weight                  |
+| ------------------ | ---------------------- | ---------------------------- |
+| Montserrat         | Body text, UI elements | 300, 400, 500, 600, 700, 800 |
+| Noto Sans Display  | Headings, titles       | 400, 500, 700, 900           |
+| Noto Serif Display | Logo, special headings | 400, 500, 600, 700           |
 
 ### Text Styles
 
-| Style | Font | Weight | Size | Line Height | Letter Spacing | Usage |
-|-------|------|--------|------|-------------|----------------|-------|
-| Logo | Noto Serif Display | 400 | 60px (40px mobile) | 1.1 | -2.8px | OMNIS logo |
-| H1 | Red Hat Display | 700 | 48px | 1.1 | -0.5px | Page titles |
-| H2 | Red Hat Display | 700 | 36px | 1.2 | -0.3px | Section headings |
-| H3 | Red Hat Display | 700 | 24px | 1.3 | -0.2px | Subsection headings |
-| Body | Montserrat | 400 | 16px | 1.5 | 0 | Main content |
-| Small | Montserrat | 400 | 14px | 1.4 | 0 | Secondary content |
-| Button | Montserrat | 500 | 14px | 1 | 0.05em | Button text |
-| Caption | Montserrat | 400 | 12px | 1.4 | 0 | Captions, footnotes |
+| Style   | Font               | Weight | Size               | Line Height | Letter Spacing | Usage               |
+| ------- | ------------------ | ------ | ------------------ | ----------- | -------------- | ------------------- |
+| Logo    | Noto Serif Display | 400    | 60px (40px mobile) | 1.1         | -2.8px         | OMNIS logo          |
+| H1      | Noto Sans Display  | 700    | 48px               | 1.1         | -0.5px         | Page titles         |
+| H2      | Noto Sans Display  | 700    | 36px               | 1.2         | -0.3px         | Section headings    |
+| H3      | Noto Sans Display  | 700    | 24px               | 1.3         | -0.2px         | Subsection headings |
+| Body    | Montserrat         | 400    | 16px               | 1.5         | 0              | Main content        |
+| Small   | Montserrat         | 400    | 14px               | 1.4         | 0              | Secondary content   |
+| Button  | Montserrat         | 500    | 14px               | 1           | 0.05em         | Button text         |
+| Caption | Montserrat         | 400    | 12px               | 1.4         | 0              | Captions, footnotes |
 
 ### Typography Guidelines
 
-1. Use **Red Hat Display** for all headings
+1. Use **Noto Sans Display** for all headings
 2. Use **Montserrat** for all body text and UI elements
 3. Use **Noto Serif Display** only for the OMNIS logo and special brand elements
 4. Maintain consistent font weights across similar elements
@@ -76,15 +76,15 @@ This document outlines the comprehensive design system for the OMNIS brand, foll
 
 ### Spacing Scale
 
-| Name | Size | Usage |
-|------|------|-------|
-| xs | 4px | Minimal spacing, icons |
-| sm | 8px | Tight spacing, compact elements |
-| md | 16px | Standard spacing between elements |
-| lg | 24px | Generous spacing, section padding |
-| xl | 32px | Large spacing, section margins |
-| 2xl | 48px | Extra large spacing, page sections |
-| 3xl | 64px | Maximum spacing, hero sections |
+| Name | Size | Usage                              |
+| ---- | ---- | ---------------------------------- |
+| xs   | 4px  | Minimal spacing, icons             |
+| sm   | 8px  | Tight spacing, compact elements    |
+| md   | 16px | Standard spacing between elements  |
+| lg   | 24px | Generous spacing, section padding  |
+| xl   | 32px | Large spacing, section margins     |
+| 2xl  | 48px | Extra large spacing, page sections |
+| 3xl  | 64px | Maximum spacing, hero sections     |
 
 ### Spacing Guidelines
 
@@ -98,18 +98,18 @@ This document outlines the comprehensive design system for the OMNIS brand, foll
 
 ### Border Widths
 
-| Width | Usage |
-|-------|-------|
-| 1px | Standard borders, dividers |
-| 2px | Emphasized borders, active states |
+| Width | Usage                             |
+| ----- | --------------------------------- |
+| 1px   | Standard borders, dividers        |
+| 2px   | Emphasized borders, active states |
 
 ### Border Colors
 
-| Color | Usage |
-|-------|-------|
+| Color | Usage                             |
+| ----- | --------------------------------- |
 | White | Light borders on dark backgrounds |
 | Black | Dark borders on light backgrounds |
-| Gray | Subtle borders, dividers |
+| Gray  | Subtle borders, dividers          |
 
 ### Border Guidelines
 
@@ -129,10 +129,12 @@ See [Button System Documentation](./button-system.md) for detailed information.
 Cards are used to group related information and actions.
 
 **Variants:**
+
 - **Default**: Black background with white text
 - **Inverted**: White background with black text
 
 **Guidelines:**
+
 - Use cards to group related content
 - Maintain consistent padding within cards
 - Use appropriate spacing between cards
@@ -143,16 +145,19 @@ Cards are used to group related information and actions.
 Inputs are used to collect user data.
 
 **Variants:**
+
 - **Default**: Transparent background with white border
 - **Filled**: Dark gray background with white border
 
 **States:**
+
 - **Default**: Standard border
 - **Focus**: Highlighted border
 - **Disabled**: Reduced opacity, no interaction
 - **Error**: Destructive border and error message
 
 **Guidelines:**
+
 - Use consistent height for inputs (46px)
 - Align input heights with button heights when used together
 - Use appropriate padding for text within inputs
@@ -163,11 +168,13 @@ Inputs are used to collect user data.
 Navigation elements guide users through the application.
 
 **Variants:**
+
 - **Primary**: Main navigation in header
 - **Secondary**: Footer navigation, breadcrumbs
 - **Mobile**: Hamburger menu with animated transitions
 
 **Guidelines:**
+
 - Use consistent spacing between navigation items
 - Provide clear hover and active states
 - Ensure navigation is accessible via keyboard
@@ -178,12 +185,14 @@ Navigation elements guide users through the application.
 Toasts provide feedback to user actions.
 
 **Variants:**
+
 - **Default**: White background with black text
 - **Success**: Success background with appropriate text
 - **Error**: Destructive background with white text
 - **Warning**: Warning background with appropriate text
 
 **Guidelines:**
+
 - Position toasts at the top of the screen, below the navbar
 - Use consistent width for all toasts
 - Provide auto-dismiss functionality after appropriate time
@@ -193,21 +202,21 @@ Toasts provide feedback to user actions.
 
 ### Transition Durations
 
-| Duration | Usage |
-|----------|-------|
-| Fast (150ms) | Micro-interactions, hover states |
-| Medium (300ms) | Standard transitions, UI changes |
-| Slow (500ms) | Page transitions, major UI changes |
-| Very Slow (800ms+) | Hero animations, special effects |
+| Duration           | Usage                              |
+| ------------------ | ---------------------------------- |
+| Fast (150ms)       | Micro-interactions, hover states   |
+| Medium (300ms)     | Standard transitions, UI changes   |
+| Slow (500ms)       | Page transitions, major UI changes |
+| Very Slow (800ms+) | Hero animations, special effects   |
 
 ### Animation Types
 
-| Type | Usage |
-|------|-------|
-| Fade | Opacity changes, subtle transitions |
-| Slide | Movement transitions, page changes |
-| Scale | Size changes, emphasis |
-| Transform | Complex movements, special effects |
+| Type      | Usage                               |
+| --------- | ----------------------------------- |
+| Fade      | Opacity changes, subtle transitions |
+| Slide     | Movement transitions, page changes  |
+| Scale     | Size changes, emphasis              |
+| Transform | Complex movements, special effects  |
 
 ### Animation Guidelines
 
@@ -221,14 +230,14 @@ Toasts provide feedback to user actions.
 
 ### Breakpoints
 
-| Name | Size | Description |
-|------|------|-------------|
-| xs | < 640px | Mobile phones |
-| sm | >= 640px | Large phones, small tablets |
-| md | >= 768px | Tablets, small laptops |
-| lg | >= 1024px | Laptops, desktops |
-| xl | >= 1280px | Large desktops |
-| 2xl | >= 1536px | Extra large screens |
+| Name | Size      | Description                 |
+| ---- | --------- | --------------------------- |
+| xs   | < 640px   | Mobile phones               |
+| sm   | >= 640px  | Large phones, small tablets |
+| md   | >= 768px  | Tablets, small laptops      |
+| lg   | >= 1024px | Laptops, desktops           |
+| xl   | >= 1280px | Large desktops              |
+| 2xl  | >= 1536px | Extra large screens         |
 
 ### Responsive Guidelines
 

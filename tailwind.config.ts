@@ -24,7 +24,7 @@ export default {
 			},
 			fontFamily: {
 				sans: ['Montserrat', 'sans-serif'],
-				heading: ['Red Hat Display', 'sans-serif'],
+				heading: ['Noto Sans Display', 'sans-serif'],
 				logo: ['Noto Serif Display', 'serif'],
 			},
 			colors: {

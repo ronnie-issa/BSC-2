@@ -223,7 +223,6 @@ docs/
 
 ### Misc Mini Tasks
 
-- Meta Image
 - Change placeholder image
 - White variation product image preview not reflecting in dropdown, bagpage, and checkout, confirmation
 - Add number formating on contentful for prices ($1,000)
@@ -239,7 +238,6 @@ docs/
 - Handle subscribe newsletter locally
   - A dedicated email marketing platform that handles subscriber management (hubspot)
 - Document Toast Comp in design system
-- Red Hat Display font replace with Noto Sans Display
 - Make Large Omnis Logo Responsive (Use SVG) or https://utopia.fyi/ or tailwindcss-fluid-type
 - Email spam protection plan
 - Navbar logo should scroll to top on homepage or (Reload when on astro)

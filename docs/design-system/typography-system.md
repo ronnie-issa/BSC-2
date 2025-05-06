@@ -11,16 +11,16 @@ OMNIS uses three primary font families, each with a specific purpose:
 - **Usage**: Body text, UI elements, buttons, form elements
 - **Weights**: 300 (Light), 400 (Regular), 500 (Medium), 600 (Semibold), 700 (Bold), 800 (Extrabold)
 - **Character**: Modern, clean, highly legible sans-serif
-- **Example**: 
+- **Example**:
   - Regular: "Experience premium streetwear designed for the modern individual."
   - Bold: "FREE SHIPPING ON ALL ORDERS"
 
-### 2. Red Hat Display
+### 2. Noto Sans Display
 
 - **Usage**: Headings, titles, section headers
 - **Weights**: 400 (Regular), 500 (Medium), 700 (Bold), 900 (Black)
 - **Character**: Contemporary, geometric sans-serif with personality
-- **Example**: 
+- **Example**:
   - Bold: "New Collection"
   - Black: "PREMIUM STREETWEAR"
 
@@ -29,33 +29,33 @@ OMNIS uses three primary font families, each with a specific purpose:
 - **Usage**: OMNIS logo, special brand elements
 - **Weights**: 400 (Regular), 500 (Medium), 600 (Semibold), 700 (Bold)
 - **Character**: Elegant, sophisticated serif with high contrast
-- **Example**: 
+- **Example**:
   - Regular: "OMNIS"
   - Bold: "OMNIS"
 
 ## Type Scale
 
-| Level | Size (Desktop) | Size (Mobile) | Line Height | Font | Weight | Letter Spacing | Usage |
-|-------|----------------|---------------|-------------|------|--------|----------------|-------|
-| Logo | 60px | 40px | 1.1 | Noto Serif Display | 400 | -2.8px | OMNIS logo |
-| h1 | 48px | 36px | 1.1 | Red Hat Display | 700 | -0.5px | Page titles |
-| h2 | 36px | 28px | 1.2 | Red Hat Display | 700 | -0.3px | Section headings |
-| h3 | 24px | 20px | 1.3 | Red Hat Display | 700 | -0.2px | Subsection headings |
-| h4 | 20px | 18px | 1.3 | Red Hat Display | 700 | -0.1px | Card headings |
-| h5 | 18px | 16px | 1.4 | Red Hat Display | 700 | 0 | Minor headings |
-| h6 | 16px | 14px | 1.4 | Red Hat Display | 700 | 0 | Small headings |
-| Large | 20px | 18px | 1.5 | Montserrat | 400 | 0 | Featured text |
-| Body | 16px | 16px | 1.5 | Montserrat | 400 | 0 | Main content |
-| Small | 14px | 14px | 1.4 | Montserrat | 400 | 0 | Secondary content |
-| XSmall | 12px | 12px | 1.4 | Montserrat | 400 | 0 | Captions, footnotes |
-| Button | 14px | 14px | 1 | Montserrat | 500 | 0.05em | Button text |
-| Nav | 14px | 14px | 1 | Montserrat | 600 | 0.05em | Navigation text |
+| Level  | Size (Desktop) | Size (Mobile) | Line Height | Font               | Weight | Letter Spacing | Usage               |
+| ------ | -------------- | ------------- | ----------- | ------------------ | ------ | -------------- | ------------------- |
+| Logo   | 60px           | 40px          | 1.1         | Noto Serif Display | 400    | -2.8px         | OMNIS logo          |
+| h1     | 48px           | 36px          | 1.1         | Noto Sans Display  | 700    | -0.5px         | Page titles         |
+| h2     | 36px           | 28px          | 1.2         | Noto Sans Display  | 700    | -0.3px         | Section headings    |
+| h3     | 24px           | 20px          | 1.3         | Noto Sans Display  | 700    | -0.2px         | Subsection headings |
+| h4     | 20px           | 18px          | 1.3         | Noto Sans Display  | 700    | -0.1px         | Card headings       |
+| h5     | 18px           | 16px          | 1.4         | Noto Sans Display  | 700    | 0              | Minor headings      |
+| h6     | 16px           | 14px          | 1.4         | Noto Sans Display  | 700    | 0              | Small headings      |
+| Large  | 20px           | 18px          | 1.5         | Montserrat         | 400    | 0              | Featured text       |
+| Body   | 16px           | 16px          | 1.5         | Montserrat         | 400    | 0              | Main content        |
+| Small  | 14px           | 14px          | 1.4         | Montserrat         | 400    | 0              | Secondary content   |
+| XSmall | 12px           | 12px          | 1.4         | Montserrat         | 400    | 0              | Captions, footnotes |
+| Button | 14px           | 14px          | 1           | Montserrat         | 500    | 0.05em         | Button text         |
+| Nav    | 14px           | 14px          | 1           | Montserrat         | 600    | 0.05em         | Navigation text     |
 
 ## Text Styles
 
 ### Headings
 
-Headings use Red Hat Display with bold weight and negative letter spacing for a brutalist, impactful appearance.
+Headings use Noto Sans Display with bold weight and negative letter spacing for a brutalist, impactful appearance.
 
 ```html
 <h1 class="text-3xl md:text-5xl font-bold tracking-tight">Page Title</h1>
@@ -87,7 +87,9 @@ The OMNIS logo uses Noto Serif Display with specific letter spacing.
 Button text uses Montserrat Medium in uppercase with slight letter spacing.
 
 ```html
-<button class="text-sm font-medium tracking-widest uppercase">Button Text</button>
+<button class="text-sm font-medium tracking-widest uppercase">
+  Button Text
+</button>
 ```
 
 #### Navigation Text
@@ -100,12 +102,12 @@ Navigation text uses Montserrat Semibold in uppercase with slight letter spacing
 
 ## Text Colors
 
-| Color | Hex Code | Usage |
-|-------|----------|-------|
-| White | `#F9F9F9` | Primary text color on dark backgrounds |
+| Color      | Hex Code  | Usage                                       |
+| ---------- | --------- | ------------------------------------------- |
+| White      | `#F9F9F9` | Primary text color on dark backgrounds      |
 | Light Gray | `#AAAAAA` | Secondary text, placeholders, disabled text |
-| Black | `#0A0A0A` | Primary text color on light backgrounds |
-| Gray | `#333333` | Secondary text on light backgrounds |
+| Black      | `#0A0A0A` | Primary text color on light backgrounds     |
+| Gray       | `#333333` | Secondary text on light backgrounds         |
 
 ## Typography Guidelines
 
@@ -148,7 +150,7 @@ Navigation text uses Montserrat Semibold in uppercase with slight letter spacing
 Fonts are loaded via Google Fonts in the global CSS file:
 
 ```css
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&family=Noto+Serif+Display:wght@400;500;600;700&family=Red+Hat+Display:wght@400;500;700;900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&family=Noto+Serif+Display:wght@400;500;600;700&family=Noto+Sans+Display:wght@400;500;700;900&display=swap");
 ```
 
 ### Font Family Classes
@@ -158,7 +160,7 @@ Font families are defined in the Tailwind configuration:
 ```js
 fontFamily: {
   sans: ['Montserrat', 'sans-serif'],
-  heading: ['Red Hat Display', 'sans-serif'],
+  heading: ['Noto Sans Display', 'sans-serif'],
   logo: ['Noto Serif Display', 'serif'],
 }
 ```
@@ -223,9 +225,9 @@ fontFamily: {
 <label className="text-sm font-medium mb-2 block">
   Email Address
 </label>
-<input 
-  type="email" 
-  placeholder="Your email address" 
+<input
+  type="email"
+  placeholder="Your email address"
   className="w-full p-3 bg-transparent border border-omnis-white"
 />
 ```
