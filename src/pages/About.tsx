@@ -3,6 +3,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import SEO from "@/components/SEO";
+import SplineScene from "@/components/ui/spline-scene";
 
 // Simplified About page without heavy animations
 const About = () => {
@@ -141,12 +142,19 @@ const About = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-16">
-            <div className="h-[500px] relative overflow-hidden">
-              <img
-                src="/images/about/team.jpg"
-                alt="OMNIS Team"
-                className="w-full h-full object-cover object-center"
-                loading="eager"
+            <div className="relative overflow-hidden h-[480px] md:h-[500px] min-h-[480px]">
+              <SplineScene
+                scene="https://prod.spline.design/8cxRUUqj9ogXW9gc/scene.splinecode"
+                className="w-full h-full"
+                fallbackClassName="flex items-center justify-center"
+                fallbackContent={
+                  <div className="text-omnis-lightgray">
+                    Loading OMNIS Team 3D Model...
+                  </div>
+                }
+                hideWatermark={true}
+                enableGlobalMouseTracking={true}
+                artistName="@heyvlad"
               />
             </div>
 

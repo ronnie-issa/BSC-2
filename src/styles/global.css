@@ -169,4 +169,25 @@
   .reveal-right {
     transform: translateX(50px);
   }
+
+  /* Ensure Spline container has minimum height on all devices */
+  .spline-container,
+  .spline-container>*,
+  .spline-container canvas,
+  .spline-container iframe {
+    min-height: 480px !important;
+    height: 100% !important;
+  }
+
+  /* Force minimum height on mobile */
+  @media (max-width: 768px) {
+
+    .spline-container,
+    .spline-container>*,
+    .spline-container canvas,
+    .spline-container iframe {
+      min-height: 480px !important;
+      height: 480px !important;
+    }
+  }
 }
