@@ -10,6 +10,7 @@ interface LazyImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {
   wrapperClassName?: string;
   threshold?: number;
   rootMargin?: string;
+  aspectRatio?: string; // Optional aspect ratio (e.g., "3/4", "1/1", "16/9")
   onLoad?: () => void;
   onError?: () => void;
 }
@@ -23,6 +24,7 @@ const LazyImage = ({
   wrapperClassName,
   threshold = 0.1,
   rootMargin = "0px",
+  aspectRatio = "3/4", // Default aspect ratio for product images
   onLoad,
   onError,
   ...props
@@ -30,6 +32,7 @@ const LazyImage = ({
   const [isLoaded, setIsLoaded] = useState(false);
   const [isInView, setIsInView] = useState(false);
   const imgRef = useRef<HTMLImageElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -45,8 +48,8 @@ const LazyImage = ({
       }
     );
 
-    if (imgRef.current) {
-      observer.observe(imgRef.current);
+    if (containerRef.current) {
+      observer.observe(containerRef.current);
     }
 
     return () => {
@@ -63,33 +66,44 @@ const LazyImage = ({
     if (onError) onError();
   };
 
+  // Calculate aspect ratio style
+  const aspectRatioStyle = {
+    aspectRatio,
+  };
+
   return (
-    <div className={cn("relative overflow-hidden", wrapperClassName)}>
-      {/* Placeholder or blurred version */}
+    <div
+      ref={containerRef}
+      className={cn("relative overflow-hidden w-full", wrapperClassName)}
+      style={aspectRatioStyle}
+    >
+      {/* Skeleton loader */}
       {!isLoaded && (
-        <div className="absolute inset-0 bg-omnis-darkgray animate-pulse" />
+        <div
+          className="absolute inset-0 bg-omnis-darkgray animate-pulse flex items-center justify-center"
+          style={aspectRatioStyle}
+        >
+          <span className="text-omnis-lightgray text-sm">OMNIS</span>
+        </div>
       )}
 
-      <img
-        ref={imgRef}
-        src={
-          isInView
-            ? src.startsWith("//")
-              ? `https:${src}`
-              : src
-            : placeholderSrc
-        }
-        alt={alt}
-        loading="lazy"
-        onLoad={handleLoad}
-        onError={handleError}
-        className={cn(
-          imgClassName,
-          "transition-opacity duration-500",
-          isLoaded ? "opacity-100" : "opacity-0"
-        )}
-        {...props}
-      />
+      {/* Only load the actual image when in view */}
+      {isInView && (
+        <img
+          ref={imgRef}
+          src={src.startsWith("//") ? `https:${src}` : src}
+          alt={alt}
+          loading="lazy"
+          onLoad={handleLoad}
+          onError={handleError}
+          className={cn(
+            "w-full h-full object-cover transition-opacity duration-500",
+            imgClassName,
+            isLoaded ? "opacity-100" : "opacity-0"
+          )}
+          {...props}
+        />
+      )}
     </div>
   );
 };

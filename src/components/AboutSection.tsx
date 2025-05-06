@@ -86,12 +86,13 @@ const AboutSection = () => {
             initial="hidden"
             animate={image.controls}
           >
-            <motion.div variants={image.variants} className="w-full h-auto">
+            <motion.div variants={image.variants} className="w-full">
               <LazyImage
                 src="/images/about/designer-at-work.jpg"
                 alt="OMNIS designer at work"
-                imgClassName="w-full h-auto object-cover"
-                wrapperClassName="w-full h-auto"
+                imgClassName="w-full h-full object-cover"
+                wrapperClassName="w-full"
+                aspectRatio="4/3" // Appropriate aspect ratio for this image
               />
             </motion.div>
           </motion.div>

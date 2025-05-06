@@ -42,12 +42,14 @@ const ProductCard = ({ product }: ProductCardProps) => {
                 scale: isHovered ? 1.1 : 1,
               }}
               transition={{ duration: 1.2, ease: "easeOut" }}
+              className="w-full"
             >
               <LazyImage
                 src={product.image}
                 alt={product.name}
                 imgClassName="w-full h-full object-cover"
-                wrapperClassName="w-full h-full"
+                wrapperClassName="w-full"
+                aspectRatio="3/4" // Fixed aspect ratio for product cards
               />
             </motion.div>
             <div className="absolute inset-0 bg-omnis-black/30 transition-all duration-300">
