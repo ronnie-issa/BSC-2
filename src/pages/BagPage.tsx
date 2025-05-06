@@ -44,6 +44,7 @@ const BagPage = () => {
   const [paymentOpen, setPaymentOpen] = useState(false);
   const [shippingOpen, setShippingOpen] = useState(false);
   const [isCheckingOut, setIsCheckingOut] = useState(false);
+  const [isCalculating, setIsCalculating] = useState(false);
 
   const handleQuantityChange = (
     productId: string | number,
@@ -51,6 +52,9 @@ const BagPage = () => {
     selectedSize: string,
     newQuantity: number
   ) => {
+    // Start the calculation animation
+    setIsCalculating(true);
+
     if (newQuantity === 0) {
       // Remove item if quantity becomes 0
       const item = bag.find(
@@ -60,14 +64,22 @@ const BagPage = () => {
           item.selectedSize === selectedSize
       );
 
-      if (!item) return;
+      if (!item) {
+        setIsCalculating(false);
+        return;
+      }
 
-      removeFromBag(productId, selectedColor, selectedSize);
-      toast({
-        title: "Item removed",
-        description: `${item.product.name} has been removed from your bag`,
-        duration: 7000, // 7 seconds
-      });
+      // Simulate calculation time before removing the item
+      setTimeout(() => {
+        removeFromBag(productId, selectedColor, selectedSize);
+        setIsCalculating(false);
+
+        toast({
+          title: "Item removed",
+          description: `${item.product.name} has been removed from your bag`,
+          duration: 7000, // 7 seconds
+        });
+      }, 600); // 600ms delay for the animation
     } else {
       // Update quantity directly to the selected value
       updateBagItemQuantity(
@@ -76,6 +88,11 @@ const BagPage = () => {
         selectedSize,
         newQuantity
       );
+
+      // Simulate calculation time
+      setTimeout(() => {
+        setIsCalculating(false);
+      }, 600); // 600ms delay for the animation
     }
   };
 
@@ -84,20 +101,32 @@ const BagPage = () => {
     selectedColor: string,
     selectedSize: string
   ) => {
+    // Start the calculation animation
+    setIsCalculating(true);
+
     const item = bag.find(
       (item) =>
         item.product.id === productId &&
         item.selectedColor === selectedColor &&
         item.selectedSize === selectedSize
     );
-    if (!item) return;
 
-    removeFromBag(productId, selectedColor, selectedSize);
-    toast({
-      title: "Item removed",
-      description: `${item.product.name} has been removed from your bag`,
-      duration: 7000, // 7 seconds
-    });
+    if (!item) {
+      setIsCalculating(false);
+      return;
+    }
+
+    // Simulate calculation time before removing the item
+    setTimeout(() => {
+      removeFromBag(productId, selectedColor, selectedSize);
+      setIsCalculating(false);
+
+      toast({
+        title: "Item removed",
+        description: `${item.product.name} has been removed from your bag`,
+        duration: 7000, // 7 seconds
+      });
+    }, 600); // 600ms delay for the animation
   };
 
   if (bag.length === 0) {
@@ -177,6 +206,9 @@ const BagPage = () => {
                                   value={item.selectedColor}
                                   onValueChange={(newColor) => {
                                     if (newColor !== item.selectedColor) {
+                                      // Start the calculation animation
+                                      setIsCalculating(true);
+
                                       // Create a new cart with the updated item
                                       const updatedCart = bag.map(
                                         (cartItem) => {
@@ -235,6 +267,11 @@ const BagPage = () => {
 
                                       // Update the cart state without triggering addToCartEvent
                                       setCart(updatedCart);
+
+                                      // Simulate calculation time
+                                      setTimeout(() => {
+                                        setIsCalculating(false);
+                                      }, 600); // 600ms delay for the animation
                                     }
                                   }}
                                 >
@@ -261,6 +298,9 @@ const BagPage = () => {
                                   value={item.selectedSize || ""}
                                   onValueChange={(newSize) => {
                                     if (newSize !== item.selectedSize) {
+                                      // Start the calculation animation
+                                      setIsCalculating(true);
+
                                       // Create a new cart with the updated item
                                       const updatedCart = bag.map(
                                         (cartItem) => {
@@ -290,6 +330,11 @@ const BagPage = () => {
 
                                       // Update the cart state without triggering addToCartEvent
                                       setCart(updatedCart);
+
+                                      // Simulate calculation time
+                                      setTimeout(() => {
+                                        setIsCalculating(false);
+                                      }, 600); // 600ms delay for the animation
                                     }
                                   }}
                                 >
@@ -398,7 +443,19 @@ const BagPage = () => {
                 <div className="space-y-3 sm:space-y-4 mb-6">
                   <div className="flex justify-between text-sm sm:text-base">
                     <span>Subtotal</span>
-                    <span>$ {getBagTotal().toFixed(2)}</span>
+                    {isCalculating ? (
+                      <div className="flex items-center">
+                        <Icon
+                          icon={Loader2}
+                          className="mr-1 h-3 w-3 animate-spin"
+                        />
+                        <span className="text-omnis-lightgray">
+                          Calculating...
+                        </span>
+                      </div>
+                    ) : (
+                      <span>$ {getBagTotal().toFixed(2)}</span>
+                    )}
                   </div>
                   <div className="flex justify-between text-sm sm:text-base">
                     <span>Shipping</span>
@@ -424,7 +481,19 @@ const BagPage = () => {
                 <div className="border-t border-omnis-gray/30 pt-4 mb-6">
                   <div className="flex justify-between font-bold text-base sm:text-lg">
                     <span>Estimated Total</span>
-                    <span>$ {getBagTotal().toFixed(2)}</span>
+                    {isCalculating ? (
+                      <div className="flex items-center">
+                        <Icon
+                          icon={Loader2}
+                          className="mr-1 h-4 w-4 animate-spin"
+                        />
+                        <span className="text-omnis-lightgray">
+                          Calculating...
+                        </span>
+                      </div>
+                    ) : (
+                      <span>$ {getBagTotal().toFixed(2)}</span>
+                    )}
                   </div>
                 </div>
 
