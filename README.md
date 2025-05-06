@@ -223,7 +223,6 @@ docs/
 
 ### Misc Mini Tasks
 
-- Add number formating on contentful for prices ($1,000)
 - SIZE GUIDE chart link on product page, or not link, chart on product page?
 - Moving text on nav bar (https://trikkobrand.com/collections/basics)
 - Priced usd, lbp
@@ -238,4 +237,7 @@ docs/
 - Document Toast Comp in design system
 - Make Large Omnis Logo Responsive (Use SVG) or https://utopia.fyi/ or tailwindcss-fluid-type
 - Email spam protection plan
-- Loading calulations for product price when incleasing or decreasing quantity in bag page
+
+### Ideas
+
+- your idea here

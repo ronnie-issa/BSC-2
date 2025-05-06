@@ -1,5 +1,13 @@
 // Email templates for OMNIS
 
+// Format a number as a price with commas and no decimal places
+function formatPrice(price, decimals = 0) {
+  return price.toLocaleString('en-US', {
+    minimumFractionDigits: decimals,
+    maximumFractionDigits: decimals
+  });
+}
+
 /**
  * Generates an order confirmation email template
  *
@@ -45,7 +53,7 @@ exports.orderConfirmation = function ({
         <p style="font-size: 12px; color: rgba(255, 255, 255, 0.8); margin: 4px 0;">
           Variation: ${colorName}
         </p>
-        <p style="font-size: 14px; margin: 0;">$${product.price.toFixed(2)}</p>
+        <p style="font-size: 14px; margin: 0;">$${formatPrice(product.price)}</p>
       </div>
     </div>
   `;
@@ -308,7 +316,7 @@ exports.orderConfirmation = function ({
 
                 <div class="total-container">
                   <p class="total-label">Total</p>
-                  <p class="total-value">$${total.toFixed(2)}</p>
+                  <p class="total-value">$${formatPrice(total)}</p>
                 </div>
 
                 ${shippingAddress ? `

@@ -5,6 +5,7 @@ import { LazyImage } from "@/components/ui/lazy-image";
 import { Product } from "@/contexts/ProductContext";
 import { VisuallyHidden } from "@/components/ui/visually-hidden";
 import { Button } from "@/components/ui/button";
+import { formatPrice } from "@/lib/utils";
 
 /**
  * ProductCard Component
@@ -33,7 +34,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
       <div className="relative">
         <Link
           to={`/product/${product.slug}`}
-          aria-label={`View ${product.name}, $${product.price}`}
+          aria-label={`View ${product.name}, $${formatPrice(product.price)}`}
           className="block"
         >
           <div className="relative overflow-hidden mb-0 sm:mb-2">
@@ -88,7 +89,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
       <Link to={`/product/${product.slug}`} className="block mt-2">
         <h3 className="text-lg font-bold">{product.name}</h3>
         {product.price && (
-          <p className="text-omnis-lightgray">${product.price}</p>
+          <p className="text-omnis-lightgray">${formatPrice(product.price)}</p>
         )}
       </Link>
     </div>

@@ -5,6 +5,7 @@ import { useProductContext } from "@/contexts/ProductContext";
 import QuantitySelector from "@/components/ui/quantity-selector";
 import { Separator } from "@/components/ui/separator";
 import { Icon } from "@/components/ui/icon";
+import { formatPrice } from "@/lib/utils";
 
 interface BagDropdownProps {
   onClose: () => void;
@@ -90,7 +91,7 @@ const BagDropdown = ({ onClose }: BagDropdownProps) => {
                       {item.product.name}
                     </h3>
                     <p className="text-base sm:text-lg font-bold mt-1">
-                      ${item.product.price.toFixed(2)}
+                      ${formatPrice(item.product.price)}
                     </p>
                     <div className="text-xs text-gray-600 mt-1">
                       <p>Variation: {colorName}</p>

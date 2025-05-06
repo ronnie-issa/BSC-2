@@ -6,6 +6,7 @@ import { useProductContext } from "@/contexts/ProductContext";
 import { useContentfulProducts } from "@/contexts/ContentfulProductsProvider";
 import { toast } from "@/hooks/use-toast";
 import { Icon } from "@/components/ui/icon";
+import { formatPrice } from "@/lib/utils";
 
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -326,10 +327,10 @@ const ProductPage = () => {
       colorName +
       "\n" +
       "Price: $" +
-      product.price.toFixed(2) +
+      formatPrice(product.price) +
       "\n\n" +
       "Total: $" +
-      (product.price * quantity).toFixed(2) +
+      formatPrice(product.price * quantity) +
       "\n\n" +
       "Please let me know how to proceed with my order.";
 
@@ -440,7 +441,7 @@ const ProductPage = () => {
               <h1 className="text-3xl md:text-4xl font-bold mb-2">
                 {product.name}
               </h1>
-              <p className="text-2xl mb-6">${product.price.toFixed(2)}</p>
+              <p className="text-2xl mb-6">${formatPrice(product.price)}</p>
 
               <div className="border-t border-omnis-gray pt-6 mb-6">
                 <div className="text-omnis-lightgray mb-8">

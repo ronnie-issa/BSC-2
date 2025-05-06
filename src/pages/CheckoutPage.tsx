@@ -8,6 +8,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { useProductContext } from "@/contexts/ProductContext";
 import { toast } from "@/hooks/use-toast";
 import { Icon } from "@/components/ui/icon";
+import { formatPrice } from "@/lib/utils";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import Breadcrumbs from "@/components/Breadcrumbs";
@@ -99,10 +100,8 @@ const CheckoutPage = () => {
       message += `   Quantity: ${item.quantity}\n`;
       message += `   Variation: ${colorName}\n`;
       message += `   Size: ${item.selectedSize.toUpperCase()}\n`;
-      message += `   Price: $${item.product.price.toFixed(2)}\n`;
-      message += `   Subtotal: $${(item.product.price * item.quantity).toFixed(
-        2
-      )}\n\n`;
+      message += `   Price: $${formatPrice(item.product.price)}\n`;
+      message += `   Subtotal: $${formatPrice(item.product.price * item.quantity)}\n\n`;
     });
 
     // Add order total
@@ -110,7 +109,7 @@ const CheckoutPage = () => {
       (total, item) => total + item.quantity,
       0
     )}\n`;
-    message += `Order Total: $${getBagTotal().toFixed(2)}\n\n`;
+    message += `Order Total: $${formatPrice(getBagTotal())}\n\n`;
     message +=
       "Please let me know how to proceed with payment and delivery. Thank you!";
 
@@ -176,10 +175,8 @@ const CheckoutPage = () => {
       message += `   Quantity: ${item.quantity}\n`;
       message += `   Variation: ${colorName}\n`;
       message += `   Size: ${item.selectedSize.toUpperCase()}\n`;
-      message += `   Price: $${item.product.price.toFixed(2)}\n`;
-      message += `   Subtotal: $${(item.product.price * item.quantity).toFixed(
-        2
-      )}\n\n`;
+      message += `   Price: $${formatPrice(item.product.price)}\n`;
+      message += `   Subtotal: $${formatPrice(item.product.price * item.quantity)}\n\n`;
     });
 
     // Add order total
@@ -187,7 +184,7 @@ const CheckoutPage = () => {
       (total, item) => total + item.quantity,
       0
     )}\n`;
-    message += `Order Total: $${getBagTotal().toFixed(2)}\n\n`;
+    message += `Order Total: $${formatPrice(getBagTotal())}\n\n`;
     message += "Please confirm my order. Thank you!";
 
     const phoneNumber = "96181386697"; // Lebanon WhatsApp business number
@@ -332,7 +329,7 @@ const CheckoutPage = () => {
                         <div className="flex justify-between mt-1">
                           <span className="text-sm">Qty: {item.quantity}</span>
                           <span>
-                            ${(item.product.price * item.quantity).toFixed(2)}
+                            ${formatPrice(item.product.price * item.quantity)}
                           </span>
                         </div>
                       </div>
@@ -343,7 +340,7 @@ const CheckoutPage = () => {
                 <div className="border-t border-omnis-gray pt-4">
                   <div className="flex justify-between mb-2">
                     <span>Subtotal</span>
-                    <span>${getBagTotal().toFixed(2)}</span>
+                    <span>${formatPrice(getBagTotal())}</span>
                   </div>
                   <div className="flex justify-between mb-2">
                     <span>Shipping</span>
@@ -351,7 +348,7 @@ const CheckoutPage = () => {
                   </div>
                   <div className="flex justify-between font-bold text-lg mt-4 pt-4 border-t border-omnis-gray">
                     <span>Total</span>
-                    <span>${getBagTotal().toFixed(2)}</span>
+                    <span>${formatPrice(getBagTotal())}</span>
                   </div>
                 </div>
               </div>

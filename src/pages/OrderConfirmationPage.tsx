@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import { sendOrderConfirmationEmail } from "@/services/resend";
 import { Product } from "@/contexts/ProductContext";
 import { Icon } from "@/components/ui/icon";
+import { formatPrice } from "@/lib/utils";
 
 const OrderConfirmationPage = () => {
   const navigate = useNavigate();
@@ -266,7 +267,7 @@ const OrderConfirmationPage = () => {
                           Qty: {item.quantity}
                         </p>
                         <p className="text-white text-xs mt-1">
-                          ${(item.price * item.quantity).toFixed(2)}
+                          ${formatPrice(item.price * item.quantity)}
                         </p>
                       </div>
                     </div>
@@ -286,13 +287,13 @@ const OrderConfirmationPage = () => {
                 <span className="font-bold text-white">Total</span>
                 <span className="text-white font-bold">
                   $
-                  {getOrderedProducts()
-                    .reduce(
+                  {formatPrice(
+                    getOrderedProducts().reduce(
                       (sum: number, product: Product & { quantity?: number }) =>
                         sum + product.price * (product.quantity || 1),
                       0
                     )
-                    .toFixed(2)}
+                  )}
                 </span>
               </div>
 

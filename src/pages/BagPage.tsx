@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import { useProductContext } from "@/contexts/ProductContext";
 import { toast } from "@/hooks/use-toast";
 import { Icon } from "@/components/ui/icon";
+import { formatPrice } from "@/lib/utils";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import Breadcrumbs from "@/components/Breadcrumbs";
@@ -195,7 +196,7 @@ const BagPage = () => {
                                 </h3>
                                 <div className="text-right sm:hidden">
                                   <span className="font-medium text-lg">
-                                    $ {item.product.price.toFixed(2)}
+                                    $ {formatPrice(item.product.price)}
                                   </span>
                                 </div>
                               </div>
@@ -360,7 +361,7 @@ const BagPage = () => {
                             </div>
                             <div className="text-right hidden sm:block">
                               <span className="font-medium text-lg">
-                                $ {item.product.price.toFixed(2)}
+                                $ {formatPrice(item.product.price)}
                               </span>
                             </div>
                           </div>
@@ -454,7 +455,7 @@ const BagPage = () => {
                         </span>
                       </div>
                     ) : (
-                      <span>$ {getBagTotal().toFixed(2)}</span>
+                      <span>$ {formatPrice(getBagTotal())}</span>
                     )}
                   </div>
                   <div className="flex justify-between text-sm sm:text-base">
@@ -492,7 +493,7 @@ const BagPage = () => {
                         </span>
                       </div>
                     ) : (
-                      <span>$ {getBagTotal().toFixed(2)}</span>
+                      <span>$ {formatPrice(getBagTotal())}</span>
                     )}
                   </div>
                 </div>
