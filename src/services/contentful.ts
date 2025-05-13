@@ -34,29 +34,14 @@ const getClient = (preview = false, resolveLinks = true) => {
   return resolveLinks ? client.withoutUnresolvableLinks : client.withoutLinkResolution;
 };
 
-// Keep track of used slugs to ensure uniqueness
-const usedSlugs: Record<string, number> = {};
-
-// Helper function to generate a URL-friendly slug from a product name
+// Helper function to generate a URL-friendly slug from a product name (for fallback only)
 const generateSlug = (name: string): string => {
-  // Create the base slug
-  const baseSlug = name
+  return name
     .toLowerCase()
     .replace(/[^\w\s-]/g, '') // Remove special characters
     .replace(/\s+/g, '-') // Replace spaces with hyphens
     .replace(/-+/g, '-') // Replace multiple hyphens with a single one
     .trim(); // Remove leading/trailing spaces
-
-  // Check if this slug has been used before
-  if (usedSlugs[baseSlug] === undefined) {
-    // First time seeing this slug
-    usedSlugs[baseSlug] = 1;
-    return baseSlug;
-  } else {
-    // This slug has been used before, add a numerical suffix
-    usedSlugs[baseSlug]++;
-    return `${baseSlug}-${usedSlugs[baseSlug]}`;
-  }
 };
 
 // Helper function to create a consistent product object from Contentful data
@@ -73,7 +58,6 @@ const createProductFromContentful = (
 
   // Handle description which could be rich text or string
   let description = fields.description;
-  // If it's not a rich text object, convert it to a string for backward compatibility
   if (description && typeof description === 'string') {
     // Keep as is
   } else if (!description) {
@@ -87,21 +71,20 @@ const createProductFromContentful = (
   // Process variations
   const processedVariations = processVariations(fields);
 
-  // Generate a slug from the product name
-  const slug = generateSlug(fields.name);
+  // Use Contentful slug field if available, otherwise fallback to generated slug
+  const slug = fields.slug ? fields.slug : generateSlug(fields.name);
 
-  // Create the product object with the original string ID and slug
   return {
-    id: item.sys.id, // Use the string ID directly
-    contentfulId: item.sys.id, // Store the original Contentful ID
-    slug: slug, // Add the URL-friendly slug
+    id: item.sys.id,
+    contentfulId: item.sys.id,
+    slug: slug,
     name: fields.name,
     price: fields.price,
     description: description,
     image: imageUrl,
     featured: fields.featured || false,
     variations: processedVariations,
-    colors: processedVariations, // Keep colors as an alias for variations for backward compatibility
+    colors: processedVariations,
     sizes: fields.sizes?.map((size) => ({
       name: size.fields.name,
       value: size.fields.value,
@@ -148,8 +131,9 @@ const processVariations = (fields: ContentfulProductFields) => {
 // Interface for Contentful product entry
 interface ContentfulProductFields {
   name: string;
+  slug?: string;
   price: number;
-  description: any; // Using 'any' to handle both string and rich text
+  description: any;
   image: {
     fields: {
       file: {
@@ -231,11 +215,6 @@ export function clearContentfulCache() {
   // Clear product cache
   Object.keys(productCache).forEach(key => {
     delete productCache[key];
-  });
-
-  // Reset the used slugs tracking to ensure fresh slug generation
-  Object.keys(usedSlugs).forEach(key => {
-    delete usedSlugs[key];
   });
 }
 
