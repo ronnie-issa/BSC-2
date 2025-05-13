@@ -167,3 +167,15 @@ docs/
 - Document Toast Comp in design system
 - Make Large Omnis Logo Responsive (Use SVG) or https://utopia.fyi/ or tailwindcss-fluid-type
 - Email spam protection plan
+
+## User Authentication & Order Tracking (Supabase)
+
+OMNIS now supports secure user authentication and order tracking using Supabase:
+
+- **Sign Up & Log In:** Users can create accounts and log in securely.
+- **Order Tracking:** After placing an order, users receive a unique order number. They can track their order status from the "Track Order" page.
+- **Security:** Only authenticated users can view their own orders. Row Level Security (RLS) is enforced in Supabase.
+- **Order Confirmation:** Order numbers are shown on the checkout and confirmation pages, and sent via email (Resend integration).
+
+**Setup & Integration:**
+- See [docs/supabase-auth-order-tracking-guide.md](docs/supabase-auth-order-tracking-guide.md) for full setup and integration instructions.

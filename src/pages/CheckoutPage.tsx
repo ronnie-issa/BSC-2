@@ -26,6 +26,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { supabase } from '@/lib/supabaseClient';
+import { useAuth } from '@/contexts/AuthContext';
 
 const formSchema = z.object({
   fullName: z
@@ -54,6 +56,7 @@ const CheckoutPage = () => {
   const [paymentMethod, setPaymentMethod] = useState("cod");
   const [checkoutMethod, setCheckoutMethod] = useState("website");
   const [isProcessing, setIsProcessing] = useState(false);
+  const { user } = useAuth();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -207,7 +210,7 @@ const CheckoutPage = () => {
 
         // Clear the cart and navigate to confirmation
         clearBag();
-        navigate("/order-confirmation");
+        navigate("/order-confirmation", { state: { orderNumber: localStorage.getItem("currentOrderNumber") } });
       } else {
         // If the window didn't open (possibly blocked or URL issues), provide alternative
         toast({
@@ -241,7 +244,7 @@ const CheckoutPage = () => {
     }, 800); // 800ms delay to match other buttons
   };
 
-  const handleSubmit = (values: z.infer<typeof formSchema>) => {
+  const handleSubmit = async (values: z.infer<typeof formSchema>) => {
     if (paymentMethod !== "cod") {
       toast({
         title: "Payment method not available",
@@ -251,14 +254,20 @@ const CheckoutPage = () => {
       return;
     }
 
-    // Set loading state
+    if (!user) {
+      toast({
+        title: "You must be logged in to place an order.",
+        description: "Please log in to continue.",
+        variant: "destructive",
+      });
+      navigate("/auth");
+      return;
+    }
+
     setIsProcessing(true);
 
-    // Store customer information in localStorage for the order confirmation page
     try {
       localStorage.setItem("customerInfo", JSON.stringify(values));
-
-      // Save the current cart items to localStorage before clearing the cart
       localStorage.setItem(
         "orderedProducts",
         JSON.stringify(
@@ -275,12 +284,40 @@ const CheckoutPage = () => {
       console.error("Error storing order info:", error);
     }
 
-    // Process the order
-    // In a real app, we would send this data to a backend API
+    // Insert order into Supabase
+    const orderNumber = localStorage.getItem("currentOrderNumber");
+    console.log("User at checkout:", user);
+    if (user && orderNumber) {
+      const { error } = await supabase.from("orders").insert([
+        {
+          user_id: user.id,
+          order_number: orderNumber,
+          status: "Processing",
+          products: bag.map((item) => ({
+            id: item.product.id,
+            name: item.product.name,
+            price: item.product.price,
+            quantity: item.quantity,
+            selectedColor: item.selectedColor,
+            selectedSize: item.selectedSize,
+            selectedImage: item.selectedImage || item.product.image,
+          })),
+          shipping_info: values,
+        },
+      ]);
+      if (error) {
+        console.error("Error saving order to Supabase:", error);
+        toast({
+          title: "Order Error",
+          description: "There was a problem saving your order. Please try again.",
+          variant: "destructive",
+        });
+      }
+    }
+
     setTimeout(() => {
       clearBag();
-      navigate("/order-confirmation");
-      // No need to reset loading state as we're navigating away
+      navigate("/order-confirmation", { state: { orderNumber } });
     }, 1000);
   };
 

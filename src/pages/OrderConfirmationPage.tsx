@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { Check, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Navbar from "@/components/Navbar";
@@ -12,13 +12,25 @@ import { formatPrice } from "@/lib/utils";
 
 const OrderConfirmationPage = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [emailSent, setEmailSent] = useState(false);
-  const orderNumber = `ORD-${Math.floor(100000 + Math.random() * 900000)}`; // Generate random order number
+  const [orderNumber, setOrderNumber] = useState<string | null>(null);
   const orderDate = new Date().toLocaleDateString("en-US", {
     year: "numeric",
     month: "long",
     day: "numeric",
   });
+
+  useEffect(() => {
+    // Prefer order number from navigation state, fallback to localStorage
+    const navOrderNumber = location.state?.orderNumber;
+    const savedOrderNumber = localStorage.getItem('currentOrderNumber');
+    setOrderNumber(navOrderNumber || savedOrderNumber || null);
+    // Clear the order number after confirmation so the next order gets a new one
+    return () => {
+      localStorage.removeItem('currentOrderNumber');
+    };
+  }, [location.state]);
 
   // Get customer information from localStorage if available
   const getCustomerInfo = () => {
@@ -221,7 +233,9 @@ const OrderConfirmationPage = () => {
               <div className="space-y-2 text-omnis-lightgray text-sm">
                 <div className="flex justify-between border-b border-white/10 pb-1">
                   <span>Order Number</span>
-                  <span className="text-white">{orderNumber}</span>
+                  <span className="text-white">
+                    {orderNumber || <span className="text-red-500">Not available</span>}
+                  </span>
                 </div>
                 <div className="flex justify-between border-b border-white/10 pb-1">
                   <span>Date</span>

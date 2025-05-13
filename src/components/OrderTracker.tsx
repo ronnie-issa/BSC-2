@@ -26,10 +26,11 @@ export function OrderTracker() {
       .from('orders')
       .select('status')
       .eq('order_number', orderNumber)
-      .eq('user_id', user.id)
-      .single();
+      .eq('user_id', user.id);
     if (error) setError(error.message);
-    else setStatus(data?.status ?? 'Not found');
+    else if (data && data.length === 1) setStatus(data[0].status ?? 'Not found');
+    else if (data && data.length === 0) setError('Order not found.');
+    else setError('Multiple orders found. Please contact support.');
     setLoading(false);
   };
 

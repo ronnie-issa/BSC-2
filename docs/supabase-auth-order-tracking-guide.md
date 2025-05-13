@@ -76,6 +76,30 @@ This guide will walk you through adding user authentication (sign up, log in) an
 
 ---
 
+## Troubleshooting & Best Practices
+
+### Common Issues
+- **Order not found:**
+  - Ensure the order number and user ID match exactly.
+  - Check for typos or extra spaces.
+  - Make sure the order is actually saved in the Supabase `orders` table.
+- **No results in tracker:**
+  - Confirm you are logged in as the correct user.
+  - Check that the order exists for that user in the database.
+- **406 or empty results:**
+  - Make sure you have a Row Level Security (RLS) policy for `SELECT`:
+    - Policy: `user_id = auth.uid()` for SELECT
+    - This allows users to read only their own orders.
+
+### Final Working Flow
+- Users sign up or log in.
+- Place an order: order is saved to Supabase with a unique order number and user ID.
+- Order number is shown on checkout, confirmation, and sent via email.
+- Users can track their order status using the order number (must be logged in).
+- Only the owner of the order can view its status.
+
+---
+
 ## Next Steps
 
 1. Create your Supabase account and project.

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Printer,
@@ -31,6 +31,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
+const generateOrderNumber = () => `ORD-${Math.floor(100000 + Math.random() * 900000)}`;
+
 const BagPage = () => {
   const navigate = useNavigate();
   const {
@@ -46,6 +48,13 @@ const BagPage = () => {
   const [shippingOpen, setShippingOpen] = useState(false);
   const [isCheckingOut, setIsCheckingOut] = useState(false);
   const [isCalculating, setIsCalculating] = useState(false);
+  const [orderNumber, setOrderNumber] = useState<string | null>(null);
+
+  useEffect(() => {
+    // Try to get the order number from localStorage (if user navigates back)
+    const savedOrderNumber = localStorage.getItem('currentOrderNumber');
+    if (savedOrderNumber) setOrderNumber(savedOrderNumber);
+  }, []);
 
   const handleQuantityChange = (
     productId: string | number,
@@ -437,9 +446,6 @@ const BagPage = () => {
                 <h2 className="text-lg sm:text-xl font-bold mb-4 sm:mb-6">
                   ORDER SUMMARY
                 </h2>
-                <p className="text-xs sm:text-sm text-omnis-lightgray mb-4">
-                  USCART{Math.floor(Math.random() * 10000000)}
-                </p>
 
                 <div className="space-y-3 sm:space-y-4 mb-6">
                   <div className="flex justify-between text-sm sm:text-base">
@@ -502,12 +508,14 @@ const BagPage = () => {
                   className="w-full font-bold text-sm sm:text-base"
                   size="lg"
                   onClick={() => {
+                    // Generate and save order number on checkout
+                    const newOrderNumber = generateOrderNumber();
+                    setOrderNumber(newOrderNumber);
+                    localStorage.setItem('currentOrderNumber', newOrderNumber);
                     setIsCheckingOut(true);
-                    // Simulate a slight delay for better UX
                     setTimeout(() => {
                       navigate("/checkout");
-                      // No need to reset the loading state as we're navigating away
-                    }, 800); // 800ms delay for the animation
+                    }, 800);
                   }}
                   disabled={bag.length === 0 || isCheckingOut}
                 >
