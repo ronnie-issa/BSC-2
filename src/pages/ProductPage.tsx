@@ -61,7 +61,7 @@ const ProductPage = () => {
           }
 
           // Fall back to ID matching for backward compatibility
-          if (productId) {
+          if (productId && p.id != null) {
             // Convert both to strings for comparison
             const pId = p.id.toString();
             const searchId = productId.toString();
@@ -109,9 +109,12 @@ const ProductPage = () => {
             await refreshProducts(true);
 
             // Then look for the product again
-            const refreshedProduct = products.find(
-              (p) => p.id.toString() === productId.toString()
-            );
+            let refreshedProduct = null;
+            if (productId != null) {
+              refreshedProduct = products.find(
+                (p) => p.id != null && p.id.toString() === productId.toString()
+              );
+            }
 
             if (refreshedProduct) {
               console.log("Found product after refresh:", refreshedProduct);

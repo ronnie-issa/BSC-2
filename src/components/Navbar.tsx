@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { ShoppingBag } from "lucide-react";
+import { ShoppingBag, User } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useProductContext } from "@/contexts/ProductContext";
 import { Badge } from "@/components/ui/badge";
@@ -12,6 +12,8 @@ import {
 } from "@/components/ui/popover";
 import BagDropdown from "./BagDropdown";
 import { Icon } from "@/components/ui/icon";
+import { useAuth } from '../contexts/AuthContext';
+import { supabase } from '../lib/supabaseClient';
 
 interface NavbarProps {
   scrollY?: number;
@@ -35,6 +37,7 @@ const Navbar = ({ scrollY = 0, showLogoEffect = false }: NavbarProps) => {
   } = useProductContext();
   const prevBagCountRef = useRef(0);
   const location = useLocation();
+  const { user } = useAuth();
 
   // Calculate total items in bag
   const bagItemCount = bag.reduce((total, item) => total + item.quantity, 0);
@@ -218,6 +221,11 @@ const Navbar = ({ scrollY = 0, showLogoEffect = false }: NavbarProps) => {
   // We don't need logoX anymore as we're using CSS centering
   // const logoX = 0;
 
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    // Optionally, you can add a redirect or notification here
+  };
+
   return (
     <header
       className={cn(
@@ -344,6 +352,22 @@ const Navbar = ({ scrollY = 0, showLogoEffect = false }: NavbarProps) => {
                 <BagDropdown onClose={() => setBagDropdownOpen(false)} />
               </PopoverContent>
             </Popover>
+            {user && (
+              <li>
+                <a href="/track-order" className="hover:underline">Track Order</a>
+              </li>
+            )}
+            {user ? (
+              <li>
+                <button onClick={handleLogout} className="hover:underline text-red-600">Logout</button>
+              </li>
+            ) : (
+              <li className="list-none">
+                <a href="/auth" aria-label="Login" className="flex items-center justify-center p-2 rounded hover:bg-zinc-800 transition-colors">
+                  <User size={22} className="text-zinc-200" />
+                </a>
+              </li>
+            )}
           </nav>
 
           {/* Mobile Bag Icon */}
