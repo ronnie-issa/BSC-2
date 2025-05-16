@@ -69,7 +69,7 @@ const HeroSection = () => {
                 variants={headingAnimation.childVariants}
                 className="block"
               >
-                TRUE
+                FALSE
               </motion.span>
               <motion.span
                 variants={headingAnimation.childVariants}
