@@ -100,3 +100,4 @@ OMNIS now supports secure user authentication and order tracking using Supabase:
 
 **Setup & Integration:**
 - See [docs/supabase-auth-order-tracking-guide.md](docs/supabase-auth-order-tracking-guide.md) for full setup and integration instructions.
+1-test sync
